@@ -1,6 +1,6 @@
 {
   "name": "slicknode",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "CLI tool to create GraphQL servers with slicknode",
   "bin": {
     "slicknode": "dist/app.js"
