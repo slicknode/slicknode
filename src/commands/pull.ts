@@ -8,6 +8,9 @@ import {
   isDirectory,
 } from '../validation/options';
 
+import chalk from 'chalk';
+import _ from 'lodash';
+import loadProjectVersion from '../utils/loadProjectVersion';
 import Command from './Command';
 
 interface IPullCommandOptions {
@@ -16,6 +19,17 @@ interface IPullCommandOptions {
 }
 
 interface IPullCommandArguments {}
+
+const loadProjectBundleQuery = `
+query GetProjectBundle($id: ID!) {
+  project: getProjectById(id: $id) {
+    version {
+      id
+      bundle
+    }
+  }
+}
+`;
 
 export default class PullCommand extends Command<IPullCommandOptions, IPullCommandArguments> {
   public static command = 'pull';
@@ -49,6 +63,34 @@ export default class PullCommand extends Command<IPullCommandOptions, IPullComma
       return;
     }
 
-    this.logger.log('Running pull');
+    this.logger.log('Loading current version from the servers');
+
+    // Load project version
+    const env = await this.getEnvironment(this.options.env || 'default');
+    if (!env) {
+      return;
+    }
+
+    // Load project version
+    const result = await this.client.fetch(loadProjectBundleQuery, {
+      id: env.id,
+    });
+    if (result.errors && result.errors.length) {
+      this.logger.error(`Error loading project source: ${result.errors[0].message}`);
+      return;
+    }
+
+    const bundle = _.get(result, 'data.project.version.bundle');
+    if (!bundle) {
+      this.logger.error(
+        'The project does not exist on the Slicknode Servers or you don\'t have enough permissions.',
+      );
+      return;
+    }
+
+    // Load the source from the servers
+    await loadProjectVersion(this.getProjectRoot(), bundle);
+
+    this.logger.info(chalk.green('Local source was successfully updated'));
   }
 }

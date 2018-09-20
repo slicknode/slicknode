@@ -105,7 +105,7 @@ async function pack(root: string): Promise<AdmZip> {
                     .on('error', onError)
                     .pipe(tar.t())
                     .on('entry', (entry) => {
-                      let buffer = new Buffer(0);
+                      let buffer = Buffer.alloc(0);
                       entry.on('data', (chunk: Uint8Array) => {
                         buffer = Buffer.concat([ buffer, chunk ]);
                       });
