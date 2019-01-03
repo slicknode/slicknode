@@ -15,6 +15,7 @@ import {default as playground} from './playground';
 import {default as pull} from './pull';
 import {default as scale} from './scale';
 import {default as status} from './status';
+import {default as runtimeBuild} from './runtime-build';
 
 export default [
   init,
@@ -23,6 +24,7 @@ export default [
   status,
   moduleAdd,
   moduleCreate,
+  runtimeBuild,
   pull,
   login,
   configure,

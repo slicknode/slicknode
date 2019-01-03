@@ -26,3 +26,7 @@ export {
 export {
   default as execute,
 } from './execute';
+
+export {
+  getModuleList,
+} from './getModuleList';

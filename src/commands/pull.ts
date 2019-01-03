@@ -31,13 +31,16 @@ query GetProjectBundle($id: ID!) {
 }
 `;
 
-export default class PullCommand extends Command<IPullCommandOptions, IPullCommandArguments> {
+export default class PullCommand<TOptions = {}, TArguments = {}> extends Command<
+  IPullCommandOptions & TOptions,
+  IPullCommandArguments & TArguments
+> {
   public static command = 'pull';
   public static description = 'Pull the latest changes from the server';
   public static options = [
     {
       name: '-d, --dir <path>',
-      description: 'The target directory, if other than current',
+      description: 'The project directory, if other than current',
       validator: isDirectory,
     },
     {

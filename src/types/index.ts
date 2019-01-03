@@ -15,3 +15,5 @@ export * from './IProjectChangeError';
 export * from './IProjectChange';
 
 export * from './ICluster';
+
+export * from './IModuleConfig';
