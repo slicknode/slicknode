@@ -13,7 +13,7 @@
     "watch": "tsc --watch",
     "test": "npm run lint && npm run testonly",
     "testonly": "mocha --check-leaks --exit --full-trace --require ts-node/register 'src/**/__tests__/**/*-test.{ts,tsx}'",
-    "dist": "npm run clean && tsc",
+    "dist": "npm run clean && tsc && copyfiles -u 2 \"./src/templates/**/*\" ./dist/templates",
     "prepublish": "npm run clean && npm run dist"
   },
   "directories": {
@@ -75,6 +75,7 @@
     "@types/uuid": "^3.4.4",
     "@types/validator": "^9.4.1",
     "chai": "^4.1.2",
+    "copyfiles": "^2.1.0",
     "mocha": "^5.2.0",
     "mocha-sinon": "^2.1.0",
     "rimraf": "^2.6.2",

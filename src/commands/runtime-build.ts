@@ -151,7 +151,7 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
 
           // Build dependency and module package map
           const dependencies: {[name: string]: string} = {
-            'slicknode-runtime': 'https://github.com/slicknode/slicknode-runtime.git'
+            'slicknode-runtime': '^0.1.0'
           };
           const modulePackageMap: {[moduleId: string]: string} = {};
           for (let item of ctx.modules) {
@@ -195,7 +195,7 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
             ` * Date: ${new Date().toLocaleString()}`,
             ' */',
             '',
-            `const SlicknodeRuntime = require('slicknode-runtime');`, '',
+            `const {SlicknodeRuntime} = require('slicknode-runtime');`, '',
             'const runtime = new SlicknodeRuntime();'
           ];
           for (let moduleId in modulePackageMap) {
@@ -204,7 +204,7 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
             );
           }
           runtimeLines.push('');
-          runtimeLines.push('module.export = runtime;');
+          runtimeLines.push('exports.default = runtime;');
           runtimeLines.push('');
           zip.addFile(
             `runtime.js`,
@@ -212,10 +212,18 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
             '',
             0o644
           );
+
+          // @TODO: Add different deployment targets (cloudfunction, lambda, docker etc.)
+          zip.addFile(
+            'index.js',
+            Buffer.from(fs.readFileSync(path.join(__dirname, '../templates/runtime/cloudfunction/index.js'))),
+            '',
+            0o644
+          );
         },
       },
       {
-        title: 'Write deployment file',
+        title: `Write deployment file ${path.resolve(this.args.output)}`,
         task: async () => {
           zip.writeZip(path.resolve(this.args.output));
         },
