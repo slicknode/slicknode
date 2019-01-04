@@ -13,9 +13,9 @@ import {default as moduleAdd} from './module-add';
 import {default as moduleCreate} from './module-create';
 import {default as playground} from './playground';
 import {default as pull} from './pull';
+import {default as runtimeBuild} from './runtime-build';
 import {default as scale} from './scale';
 import {default as status} from './status';
-import {default as runtimeBuild} from './runtime-build';
 
 export default [
   init,

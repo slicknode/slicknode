@@ -1,19 +1,21 @@
 import chalk from 'chalk';
+import fs from 'fs';
+import {mkdirpSync, outputFileSync} from 'fs-extra';
+import inquirer from 'inquirer';
 import Listr from 'listr';
-import {getModuleList} from '../utils';
-import Command from './Command';
-import {isDirectory} from '../validation/options';
-import {IModuleListItem} from '../utils/getModuleList';
+import path from 'path';
+import rimraf from 'rimraf';
 import tar from 'tar';
-import fs from "fs";
-import path from "path";
+import {getModuleList} from '../utils';
 import execute from '../utils/execute';
-import AdmZip from 'adm-zip';
-import program from "caporal";
+import {IModuleListItem} from '../utils/getModuleList';
+import {isDirectory} from '../validation/options';
+import Command from './Command';
 
 interface IRuntimeBuildCommandOptions {
   dir?: string;
   env?: string;
+  force?: boolean;
 }
 
 interface IRuntimeBuildCommandArguments {
@@ -33,6 +35,10 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
       name: '-e, --env <env>',
       description: 'The configured environment name',
     },
+    {
+      name: '-f, --force',
+      description: 'Delete output directory without confirmation if exists',
+    },
   ];
   public static args = [
     {
@@ -42,7 +48,41 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
   ];
 
   public async run() {
-    const zip = new AdmZip();
+    const buildDir = path.resolve(this.args.output);
+    const env = await this.getEnvironment();
+
+    // Prevent deletion of parent folder
+    if (this.getProjectRoot().startsWith(buildDir)) {
+      throw new Error('Cannot build into project or parent directory');
+    }
+
+    if (fs.existsSync(buildDir)) {
+      if (!this.options.force) {
+        const values: any = await inquirer.prompt([
+          {
+            name: 'confirm',
+            type: 'confirm',
+            message: (
+              `WARNING: The output destination ${this.args.output} already exists. \n` +
+              'All content will be deleted! Continue?'
+            ),
+            default: false,
+          },
+        ]);
+
+        if (!values.confirm) {
+          this.logger.error('Build cancelled');
+          return;
+        }
+      }
+
+      // Delete build folder
+      rimraf.sync(buildDir);
+    }
+
+    // Create build dir
+    mkdirpSync(buildDir);
+
     const tasks = new Listr([
       {
         title: 'Load and validate modules',
@@ -70,7 +110,7 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
                     },
                     {
                       title: 'Pack module',
-                      task: async (ctx) => {
+                      task: async (moduleCtx) => {
                         return await new Promise<void>((resolve, reject) => {
                           const packageJson = path.join(item.path, 'package.json');
                           fs.access(packageJson, fs.constants.R_OK, (err) => {
@@ -83,7 +123,7 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
                               })
                                 .then((archive) => {
                                   // Unpack archive and add files to module zip
-                                  ctx.archivePath = path.join(item.path, archive.trim());
+                                  moduleCtx.archivePath = path.join(item.path, archive.trim());
                                   resolve();
                                 })
                                 .catch((e) => {
@@ -94,22 +134,22 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
                                 });
                             }
                           });
-                        })
+                        });
                       },
                     },
                     {
                       title: 'Copy files',
-                      task: async (ctx) => {
+                      task: async (moduleCtx) => {
                         return await new Promise<void>((resolve, reject) => {
                           function onError(err: Error) {
                             reject(new Error(`Error extracting files: ${err.message}`));
                           }
 
                           // Read entries from tgz file and add to module zip
-                          fs.createReadStream(ctx.archivePath)
+                          fs.createReadStream(moduleCtx.archivePath)
                             .on('close', () => {
                               // Delete created archive file
-                              fs.unlink(ctx.archivePath, (e) => {
+                              fs.unlink(moduleCtx.archivePath, (e) => {
                                 if (e) {
                                   onError(e);
                                 } else {
@@ -127,23 +167,25 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
                               entry.on('end', () => {
                                 // Remove package/ prefix
                                 const entryPath = entry.path.split('/').slice(1).join('/');
-                                // console.log('Add entry path', entryPath);
-                                zip.addFile(`modules/${item.config.module.id}/${entryPath}`, buffer, '', 0o644);
+                                outputFileSync(
+                                  path.join(buildDir, `modules/${item.config.module.id}/${entryPath}`),
+                                  buffer,
+                                );
+                                // zip.addFile(`modules/${item.config.module.id}/${entryPath}`, buffer, '', 0o644);
                               });
                             });
-                        })
-                      }
+                        });
+                      },
                     },
                   ]);
                 },
-              }))
+              })),
           );
         },
       },
       {
         title: 'Add meta files',
         task: async (ctx) => {
-          const env = await this.getEnvironment();
           let name = 'unnamed-slicknode-runtime';
           if (env) {
             name = `${env.alias}-slicknode-runtime`;
@@ -151,10 +193,10 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
 
           // Build dependency and module package map
           const dependencies: {[name: string]: string} = {
-            'slicknode-runtime': '^0.1.0'
+            'slicknode-runtime': '^0.1.0',
           };
           const modulePackageMap: {[moduleId: string]: string} = {};
-          for (let item of ctx.modules) {
+          for (const item of ctx.modules) {
             if (item.config.runtime) {
               // Read package name
               const modulePackageJson = fs.readFileSync(path.resolve(item.path, 'package.json'), 'utf8');
@@ -179,11 +221,17 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
             license: 'ISC',
             dependencies,
           };
+          /*
           zip.addFile(
             `package.json`,
             Buffer.from(JSON.stringify(packageJson, null, 2), 'utf-8'),
             '',
             0o644
+          );
+          */
+          outputFileSync(
+            path.join(buildDir, 'package.json'),
+            Buffer.from(JSON.stringify(packageJson, null, 2)),
           );
 
           // Generate runtime.js
@@ -195,63 +243,52 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
             ` * Date: ${new Date().toLocaleString()}`,
             ' */',
             '',
-            `const {SlicknodeRuntime} = require('slicknode-runtime');`, '',
-            'const runtime = new SlicknodeRuntime();'
+            "const {SlicknodeRuntime} = require('slicknode-runtime');", '',
+            'const runtime = new SlicknodeRuntime();',
           ];
-          for (let moduleId in modulePackageMap) {
-            runtimeLines.push(
-              `runtime.register('${moduleId}', '${modulePackageMap[moduleId]}');`
-            );
+          for (const moduleId in modulePackageMap) {
+            if (modulePackageMap.hasOwnProperty(moduleId)) {
+              runtimeLines.push(
+                `runtime.register('${moduleId}', '${modulePackageMap[moduleId]}');`,
+              );
+            }
           }
           runtimeLines.push('');
           runtimeLines.push('exports.default = runtime;');
           runtimeLines.push('');
-          zip.addFile(
-            `runtime.js`,
+
+          outputFileSync(
+            path.join(buildDir, 'runtime.js'),
             Buffer.from(runtimeLines.join('\n'), 'utf-8'),
-            '',
-            0o644
           );
 
           // @TODO: Add different deployment targets (cloudfunction, lambda, docker etc.)
-          zip.addFile(
-            'index.js',
+          outputFileSync(
+            path.join(buildDir, 'index.js'),
             Buffer.from(fs.readFileSync(path.join(__dirname, '../templates/runtime/cloudfunction/index.js'))),
-            '',
-            0o644
           );
         },
       },
       {
-        title: `Write deployment file ${path.resolve(this.args.output)}`,
+        title: `Build complete: ${path.resolve(this.args.output)}`,
         task: async () => {
-          zip.writeZip(path.resolve(this.args.output));
+          // zip.writeZip(path.resolve(this.args.output));
         },
-      }
+      },
     ]);
     await tasks.run();
-  }
 
-  protected buildModules = async () => {
-    const list = await getModuleList(this.getProjectRoot());
-    return new Listr(
-      list
-        .filter((item) => item.config.runtime)
-        .map((item) => ({
-          title: `Module "${item.config.module.id}"`,
-          task: () => {
-            return new Listr([
-              {
-                title: 'Install dependencies',
-                task: () => {
-                  return new Promise(resolve => setTimeout(resolve, 1000));
-                }
-              }
-            ]);
-            console.log('test');
-            throw new Error(JSON.stringify(list));
-          },
-        }))
-    );
+    const functionName = env ? `${env.alias}-runtime` : 'my-slicknode-runtime';
+    this.logger.log(`
+Deploy the build to the google cloud, for example:
+
+  gcloud functions deploy ${functionName} \\
+    --runtime nodejs8 \\
+    --trigger-http \\
+    --source ${this.args.output} \\
+    --region us-east1
+
+Refer to the google cloud functions docs for more information.
+`);
   }
 }

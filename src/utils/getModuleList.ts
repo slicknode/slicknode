@@ -1,7 +1,7 @@
-import { IModuleConfig } from '../types';
-import yaml from 'js-yaml';
 import fs from 'fs';
+import yaml from 'js-yaml';
 import path from 'path';
+import { IModuleConfig } from '../types';
 import {PRIVATE_MODULE_NAME_REGEX, validateConfig, validateModule} from '../validation';
 
 export interface IModuleListItem {

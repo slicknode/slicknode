@@ -20,6 +20,7 @@
     "lib": "./dist"
   },
   "dependencies": {
+    "@types/rimraf": "^2.0.2",
     "adm-zip": "git://github.com/ivome/adm-zip.git",
     "babel-runtime": "^6.26.0",
     "caporal": "^0.10.0",
@@ -33,9 +34,11 @@
     "joi": "^13.6.0",
     "js-yaml": "^3.12.0",
     "listr": "^0.14.3",
+    "listr-verbose-renderer": "^0.5.0",
     "lodash": "^4.17.10",
     "mkdirp": "^0.5.1",
     "node-fetch": "^2.2.0",
+    "rimraf": "^2.6.3",
     "slicknode-auth-email-password": "^0.1.2",
     "slicknode-client": "^0.2.2",
     "tar": "^4.4.6",
@@ -78,7 +81,6 @@
     "copyfiles": "^2.1.0",
     "mocha": "^5.2.0",
     "mocha-sinon": "^2.1.0",
-    "rimraf": "^2.6.2",
     "sinon": "^6.1.5",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",

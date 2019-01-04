@@ -27,5 +27,5 @@ export interface IModuleConfig {
   listeners?: Listener[];
   resolvers?: {[typeName: string]: {[fieldName: string]: {
     handler: string,
-  }}}
+  }}};
 }
