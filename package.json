@@ -14,14 +14,13 @@
     "test": "npm run lint && npm run testonly",
     "testonly": "mocha --check-leaks --exit --full-trace --require ts-node/register 'src/**/__tests__/**/*-test.{ts,tsx}'",
     "dist": "npm run clean && tsc && copyfiles -u 2 \"./src/templates/**/*\" ./dist/templates",
-    "prepublish": "npm run clean && npm run dist"
+    "prepare": "npm run clean && npm run dist"
   },
   "directories": {
     "lib": "./dist"
   },
   "dependencies": {
-    "@types/rimraf": "^2.0.2",
-    "adm-zip": "git://github.com/ivome/adm-zip.git",
+    "adm-zip": "^0.4.13",
     "babel-runtime": "^6.26.0",
     "caporal": "^0.10.0",
     "chalk": "^2.4.1",
@@ -54,7 +53,10 @@
   "repository": "slicknode/slicknode",
   "keywords": [
     "graphql",
-    "slicknode"
+    "slicknode",
+    "headless",
+    "serverless",
+    "cms"
   ],
   "author": "Ivo Meißner",
   "license": "MIT",
@@ -74,6 +76,7 @@
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.5",
     "@types/node-fetch": "^2.1.2",
+    "@types/rimraf": "^2.0.2",
     "@types/tar": "^4.0.0",
     "@types/uuid": "^3.4.4",
     "@types/validator": "^9.4.1",
