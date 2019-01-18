@@ -123,7 +123,12 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
                               })
                                 .then((archive) => {
                                   // Unpack archive and add files to module zip
-                                  moduleCtx.archivePath = path.join(item.path, archive.trim());
+                                  moduleCtx.archivePath = path.join(
+                                    item.path,
+                                    // Pack outputs the filename as last output,
+                                    // ignore all other output from build scripts
+                                    archive.trim().split('\n').pop().trim(),
+                                  );
                                   resolve();
                                 })
                                 .catch((e) => {

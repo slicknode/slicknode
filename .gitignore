@@ -3,3 +3,6 @@ node_modules
 .DS_Store
 .idea
 /site
+
+# We don't need package-lock.json, using yarn
+/package-lock.json
