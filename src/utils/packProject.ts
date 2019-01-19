@@ -20,7 +20,11 @@ import execute from './execute';
 
 const glob = promisify(originalGlob);
 
-async function pack(root: string): Promise<AdmZip> {
+interface IPackOptions {
+  runtimeSources?: boolean;
+}
+
+async function pack(root: string, options: IPackOptions = {}): Promise<AdmZip> {
   try {
     const zip = new AdmZip();
     const rawData = fs.readFileSync(
@@ -71,7 +75,7 @@ async function pack(root: string): Promise<AdmZip> {
         }
 
         // Pack runtime files if we have package.json file in module root and configured runtime
-        const buildRuntime = moduleConfig.runtime ? new Promise<void>((resolve, reject) => {
+        const buildRuntime = moduleConfig.runtime && options.runtimeSources ? new Promise<void>((resolve, reject) => {
           function onError(err: Error) {
             reject(new Error(`Invalid runtime for module ${name}: ${err.message}`));
           }

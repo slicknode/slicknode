@@ -198,7 +198,7 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
 
           // Build dependency and module package map
           const dependencies: {[name: string]: string} = {
-            'slicknode-runtime': '^0.1.0',
+            'slicknode-runtime': '^0.1.2',
           };
           const modulePackageMap: {[moduleId: string]: string} = {};
           for (const item of ctx.modules) {
