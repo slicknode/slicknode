@@ -14,7 +14,7 @@ import path from 'path';
 import Client from 'slicknode-client';
 import {ConfigStorage} from './api';
 import commands from './commands';
-import Command from './commands/Command';
+import {Command} from './commands/command';
 import {
   DEFAULT_API_ENDPOINT,
 } from './config';
