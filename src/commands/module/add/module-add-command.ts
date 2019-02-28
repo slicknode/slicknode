@@ -9,11 +9,11 @@ import _ from 'lodash';
 import path from 'path';
 import {
   sortKeys,
-} from '../../../utils/index';
+} from '../../../utils';
 import {
   PUBLIC_MODULE_NAME_REGEX,
-} from '../../../validation/constants';
-import Command from '../../Command';
+} from '../../../validation';
+import {Command} from '../../command';
 
 interface IModuleAddCommandOptions {}
 interface IModuleAddCommandArguments {

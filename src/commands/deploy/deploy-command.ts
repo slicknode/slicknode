@@ -5,21 +5,21 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import {
+  ICluster,
   IEnvironmentConfig, IProjectChangeError,
-} from '../../types/index';
+} from '../../types';
 import {
   loadProjectVersion,
-} from '../../utils/index';
-import {PROJECT_ALIAS_REGEX} from '../../validation/index';
+} from '../../utils';
 import {
   isDirectory,
 } from '../../validation/options';
 import validate from '../../validation/validate';
-import StatusCommand from '../status/status';
+import {StatusCommand} from '../status/';
 
 import _ from 'lodash';
 import fetch from 'node-fetch';
-import {ICluster} from '../../types/ICluster';
+import {PROJECT_ALIAS_REGEX} from '../../validation';
 
 interface IDeployCommandOptions {
   force?: boolean;

@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import {
   IEnvironmentConfig,
-} from '../../types/index';
+} from '../../types';
 import {
   isDirectory,
 } from '../../validation/options';

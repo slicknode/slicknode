@@ -6,11 +6,11 @@ import Listr from 'listr';
 import path from 'path';
 import rimraf from 'rimraf';
 import tar from 'tar';
+import {getModuleList} from '../../../utils';
 import execute from '../../../utils/execute';
 import {IModuleListItem} from '../../../utils/getModuleList';
-import {getModuleList} from '../../../utils/index';
 import {isDirectory} from '../../../validation/options';
-import Command from '../../Command';
+import {Command} from '../../command';
 
 interface IRuntimeBuildCommandOptions {
   dir?: string;

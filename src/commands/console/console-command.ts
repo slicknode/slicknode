@@ -3,7 +3,7 @@
  */
 
 import chalk from 'chalk';
-import {openUrl} from '../../utils/index';
+import {openUrl} from '../../utils';
 import {
   isDirectory,
 } from '../../validation/options';

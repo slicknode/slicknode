@@ -11,13 +11,13 @@ import mkdirp from 'mkdirp';
 import path from 'path';
 import {
   sortKeys,
-} from '../../../utils/index';
+} from '../../../utils';
 import {
   MODULE_LABEL_MAX_LENGTH,
   NAMESPACE_REGEX,
   PUBLIC_MODULE_NAME_REGEX,
 } from '../../../validation/constants';
-import Command from '../../Command';
+import {Command} from '../../command';
 
 interface IModuleCreateCommandOptions {
   namespace?: string;
