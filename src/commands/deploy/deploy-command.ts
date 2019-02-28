@@ -6,23 +6,24 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import {
   IEnvironmentConfig, IProjectChangeError,
-} from '../types';
+} from '../../types/index';
 import {
   loadProjectVersion,
-} from '../utils';
-import {PROJECT_ALIAS_REGEX} from '../validation';
+} from '../../utils/index';
+import {PROJECT_ALIAS_REGEX} from '../../validation/index';
 import {
   isDirectory,
-} from '../validation/options';
-import validate from '../validation/validate';
-import StatusCommand from './status';
+} from '../../validation/options';
+import validate from '../../validation/validate';
+import StatusCommand from '../status/status';
 
 import _ from 'lodash';
 import fetch from 'node-fetch';
-import {ICluster} from '../types/ICluster';
+import {ICluster} from '../../types/ICluster';
 
 interface IDeployCommandOptions {
   force?: boolean;
+  account?: string;
 }
 interface IDeployCommandArguments {}
 
@@ -32,7 +33,7 @@ interface IChangeCounts {
   remove: number;
 }
 
-export default class DeployCommand extends StatusCommand<IDeployCommandOptions, IDeployCommandArguments> {
+export class DeployCommand extends StatusCommand<IDeployCommandOptions, IDeployCommandArguments> {
   public static command = 'deploy';
   public static description = 'Deploy the current project state to the slicknode servers';
   public static options = [
@@ -48,6 +49,10 @@ export default class DeployCommand extends StatusCommand<IDeployCommandOptions, 
     {
       name: '-f, --force <force>',
       description: 'Forces the deployment without asking for confirmation',
+    },
+    {
+      name: '-a, --account <account>',
+      description: 'The account identifier of the account where the project should be deployed',
     },
   ];
 
@@ -83,7 +88,7 @@ export default class DeployCommand extends StatusCommand<IDeployCommandOptions, 
       return;
     }
 
-    // Run migration migration
+    // Run migration
     const env = await this.getOrCreateEnvironment();
     const validStatus = await this.loadAndPrintStatus(env);
 
@@ -236,6 +241,7 @@ export default class DeployCommand extends StatusCommand<IDeployCommandOptions, 
         name: newName,
         alias: newAlias,
         cluster: cluster.id,
+        account: this.options.account || null,
       },
     };
     const result = await this.client.fetch(query, variables);

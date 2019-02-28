@@ -11,15 +11,15 @@ import {
   IEnvironmentConfig,
   IProjectChange,
   IProjectChangeError,
-} from '../types';
+} from '../../types/index';
 import {
   packProject,
-} from '../utils';
+} from '../../utils/index';
 import {
   isDirectory,
-} from '../validation/options';
-import validate from '../validation/validate';
-import Command from './Command';
+} from '../../validation/options';
+import validate from '../../validation/validate';
+import {Command} from '../command';
 
 export interface IStatusCommentOptions {
   dir?: string;
@@ -28,7 +28,7 @@ export interface IStatusCommentOptions {
 
 export interface IStatusCommandArguments {}
 
-export default class StatusCommand<TOptions, TArguments> extends Command<
+export class StatusCommand<TOptions, TArguments> extends Command<
   TOptions & IStatusCommentOptions,
   TArguments & IStatusCommandArguments
 > {

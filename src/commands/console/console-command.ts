@@ -3,21 +3,22 @@
  */
 
 import chalk from 'chalk';
+import {openUrl} from '../../utils/index';
 import {
   isDirectory,
-} from '../validation/options';
-import Command from './Command';
+} from '../../validation/options';
+import {Command} from '../command';
 
-interface IEndpointCommandOptions {
+interface IConsoleCommandOptions {
   dir?: string;
   env?: string;
 }
 
-interface IEndpointCommandArguments {}
+interface IConsoleCommandArguments {}
 
-export default class EndpointCommand extends Command<IEndpointCommandOptions, IEndpointCommandArguments> {
-  public static command = 'endpoint';
-  public static description = 'Return the GraphQL API endpoint';
+export class ConsoleCommand extends Command<IConsoleCommandOptions, IConsoleCommandArguments> {
+  public static command = 'console';
+  public static description = 'Open the Slicknode console';
   public static options = [
     {
       name: '-d, --dir <path>',
@@ -35,7 +36,7 @@ export default class EndpointCommand extends Command<IEndpointCommandOptions, IE
       this.options.env || 'default',
     );
     if (environment) {
-      this.logger.log(environment.endpoint);
+      openUrl(environment.consoleUrl, this.logger);
     } else {
       this.logger.error(chalk.red(
         'ERROR: The directory is not a valid slicknode project. ' +

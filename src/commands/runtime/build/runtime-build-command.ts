@@ -6,11 +6,11 @@ import Listr from 'listr';
 import path from 'path';
 import rimraf from 'rimraf';
 import tar from 'tar';
-import {getModuleList} from '../utils';
-import execute from '../utils/execute';
-import {IModuleListItem} from '../utils/getModuleList';
-import {isDirectory} from '../validation/options';
-import Command from './Command';
+import execute from '../../../utils/execute';
+import {IModuleListItem} from '../../../utils/getModuleList';
+import {getModuleList} from '../../../utils/index';
+import {isDirectory} from '../../../validation/options';
+import Command from '../../Command';
 
 interface IRuntimeBuildCommandOptions {
   dir?: string;
@@ -22,7 +22,7 @@ interface IRuntimeBuildCommandArguments {
   output: string;
 }
 
-export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOptions, IRuntimeBuildCommandArguments> {
+export class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOptions, IRuntimeBuildCommandArguments> {
   public static command = 'runtime build';
   public static description = 'Builds the source package for the runtime to be deployed';
   public static options = [

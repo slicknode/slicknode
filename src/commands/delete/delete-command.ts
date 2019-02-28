@@ -6,12 +6,12 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import {
   IEnvironmentConfig,
-} from '../types';
+} from '../../types/index';
 import {
   isDirectory,
-} from '../validation/options';
+} from '../../validation/options';
 
-import Command from './Command';
+import {Command} from '../command';
 
 interface IDeleteCommandOptions {
   dir?: string;
@@ -21,7 +21,7 @@ interface IDeleteCommandOptions {
 
 interface IDeleteCommandArguments {}
 
-export default class DeleteCommand extends Command<IDeleteCommandOptions, IDeleteCommandArguments> {
+export class DeleteCommand extends Command<IDeleteCommandOptions, IDeleteCommandArguments> {
   public static command = 'delete';
   public static description = 'Delete the current project deployment from the slicknode servers.';
   public static options = [

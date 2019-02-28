@@ -4,12 +4,12 @@
  * @flow
  */
 
-import Command from './Command';
+import {Command} from '../command';
 
 interface ILoginCommandOptions {}
 interface ILoginCommandArguments {}
 
-export default class LoginCommand extends Command<ILoginCommandOptions, ILoginCommandArguments> {
+export class LoginCommand extends Command<ILoginCommandOptions, ILoginCommandArguments> {
   public static command = 'login';
   public static description = 'Login to a slicknode account / change user';
   public async run() {

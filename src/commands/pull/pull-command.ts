@@ -6,12 +6,12 @@
 
 import {
   isDirectory,
-} from '../validation/options';
+} from '../../validation/options';
 
 import chalk from 'chalk';
 import _ from 'lodash';
-import loadProjectVersion from '../utils/loadProjectVersion';
-import Command from './Command';
+import loadProjectVersion from '../../utils/loadProjectVersion';
+import {Command} from '../command';
 
 interface IPullCommandOptions {
   dir?: string;
@@ -31,7 +31,7 @@ query GetProjectBundle($id: ID!) {
 }
 `;
 
-export default class PullCommand<TOptions = {}, TArguments = {}> extends Command<
+export class PullCommand<TOptions = {}, TArguments = {}> extends Command<
   IPullCommandOptions & TOptions,
   IPullCommandArguments & TArguments
 > {

@@ -11,23 +11,23 @@ import mkdirp from 'mkdirp';
 import path from 'path';
 import {
   sortKeys,
-} from '../utils';
+} from '../../../utils/index';
 import {
   MODULE_LABEL_MAX_LENGTH,
   NAMESPACE_REGEX,
   PUBLIC_MODULE_NAME_REGEX,
-} from '../validation/constants';
-import Command from './Command';
+} from '../../../validation/constants';
+import Command from '../../Command';
 
-interface ICreateModuleCommandOptions {
+interface IModuleCreateCommandOptions {
   namespace?: string;
   label?: string;
 }
-interface ICreateModuleCommandArguments {
+interface IModuleCreateCommandArguments {
   name: string;
 }
 
-export default class CreateModuleCommand extends Command<ICreateModuleCommandOptions, ICreateModuleCommandArguments> {
+export class ModuleCreateCommand extends Command<IModuleCreateCommandOptions, IModuleCreateCommandArguments> {
   public static command = 'module create';
   public static description = 'Creates a new module';
 
