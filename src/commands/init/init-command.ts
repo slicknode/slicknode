@@ -58,7 +58,7 @@ export class InitCommand extends Command<InitCommandOptions, InitCommandArgument
     },
     {
       name: '-a, --account <account>',
-      description: 'The account identifier of the account where the project should be deployed',
+      description: 'The identifier of the account where the project should be deployed',
     },
   ];
 

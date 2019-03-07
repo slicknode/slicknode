@@ -52,7 +52,7 @@ export class DeployCommand extends StatusCommand<IDeployCommandOptions, IDeployC
     },
     {
       name: '-a, --account <account>',
-      description: 'The account identifier of the account where the project should be deployed',
+      description: 'The identifier of the account where the project should be deployed',
     },
   ];
 
