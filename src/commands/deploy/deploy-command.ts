@@ -24,6 +24,8 @@ import {PROJECT_ALIAS_REGEX} from '../../validation';
 interface IDeployCommandOptions {
   force?: boolean;
   account?: string;
+  alias?: string;
+  name?: string;
 }
 interface IDeployCommandArguments {}
 
@@ -53,6 +55,14 @@ export class DeployCommand extends StatusCommand<IDeployCommandOptions, IDeployC
     {
       name: '-a, --account <account>',
       description: 'The identifier of the account where the project should be deployed',
+    },
+    {
+      name: '-n, --name <name>',
+      description: 'The name of the project as displayed in the console',
+    },
+    {
+      name: '--alias <alias>',
+      description: 'The alias of the project which is part of the endpoint URL',
     },
   ];
 
@@ -187,40 +197,54 @@ export class DeployCommand extends StatusCommand<IDeployCommandOptions, IDeployC
       }
     }`;
 
+    let suggestedName;
+    let suggestedAlias;
+
     let newName;
     let newAlias;
-    if (name !== 'default') {
-      // Derive alias / name from default environment
-      const defaultEnv = await this.getEnvironment('default');
-      if (defaultEnv) {
-        newName = `${defaultEnv.name} (${name})`;
-        newAlias = `${defaultEnv.alias}-${name}`;
-      }
-    }
 
     // We don't have new name, show prompt
-    if (!newName) {
-      const values = await inquirer.prompt([
-        {
+    const defaultEnv = await this.getEnvironment('default');
+    if (defaultEnv) {
+      suggestedName = this.options.name || `${defaultEnv.name} (${name})`;
+      suggestedAlias = this.options.alias || `${defaultEnv.alias}-${name}`;
+    }
+    if (this.options.force) {
+      newName = suggestedName;
+      newAlias = suggestedAlias;
+    } else {
+      const valuePrompts = [];
+
+      if (!this.options.name) {
+        valuePrompts.push({
           name: 'name',
           type: 'input',
-          message: 'Project name:',
-          validate: (input) => {
+          default: suggestedName,
+          message: 'Project name (as displayed in console):',
+          validate: (input: any) => {
             return input && String(input).length > 1;
           },
-        },
-        {
+        });
+      }
+      if (!this.options.alias) {
+        valuePrompts.push({
           name: 'alias',
           type: 'input',
           message: 'Project alias:',
-          validate: (input) => {
+          default: suggestedAlias,
+          validate: (input: any) => {
             if (String(input).match(PROJECT_ALIAS_REGEX)) {
               return true;
             }
             return 'Project alias contains invalid characters';
           },
-        },
-      ]) as {alias: string, name: string};
+        })
+      }
+      const values = {
+        name: suggestedName,
+        alias: suggestedAlias,
+        ...(await inquirer.prompt(valuePrompts) as {alias?: string, name?: string})
+      };
 
       newAlias = values.alias;
       newName = values.name;
@@ -244,6 +268,7 @@ export class DeployCommand extends StatusCommand<IDeployCommandOptions, IDeployC
         account: this.options.account || null,
       },
     };
+
     const result = await this.client.fetch(query, variables);
     const project = _.get(result, 'data.createProject.node');
     if (!project) {

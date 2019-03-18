@@ -212,7 +212,7 @@ export class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOptions, IR
           }
 
           // Get slicknode CLI version
-          const data = fs.readFileSync(path.resolve(__dirname, '../../package.json'), 'utf8');
+          const data = fs.readFileSync(path.resolve(__dirname, '../../../../package.json'), 'utf8');
           const cliVersion = JSON.parse(data).version || '0.0.0';
 
           // Add package.json
@@ -270,7 +270,7 @@ export class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOptions, IR
           // @TODO: Add different deployment targets (cloudfunction, lambda, docker etc.)
           outputFileSync(
             path.join(buildDir, 'index.js'),
-            Buffer.from(fs.readFileSync(path.join(__dirname, '../templates/runtime/cloudfunction/index.js'))),
+            Buffer.from(fs.readFileSync(path.join(__dirname, '../../../templates/runtime/cloudfunction/index.js'))),
           );
         },
       },

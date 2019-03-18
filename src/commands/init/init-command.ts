@@ -50,7 +50,7 @@ export class InitCommand extends Command<InitCommandOptions, InitCommandArgument
     },
     {
       name: '-n, --name <name>',
-      description: 'The name of the project',
+      description: 'The name of the project as displayed in the console',
     },
     {
       name: '-a, --alias <alias>',
