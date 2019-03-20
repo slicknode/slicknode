@@ -5,8 +5,8 @@
 import chalk from 'chalk';
 import {
   isDirectory,
-} from '../validation/options';
-import Command from './Command';
+} from '../../validation/options';
+import {Command} from '../command';
 
 interface IEndpointCommandOptions {
   dir?: string;
@@ -15,7 +15,7 @@ interface IEndpointCommandOptions {
 
 interface IEndpointCommandArguments {}
 
-export default class EndpointCommand extends Command<IEndpointCommandOptions, IEndpointCommandArguments> {
+export class EndpointCommand extends Command<IEndpointCommandOptions, IEndpointCommandArguments> {
   public static command = 'endpoint';
   public static description = 'Return the GraphQL API endpoint';
   public static options = [

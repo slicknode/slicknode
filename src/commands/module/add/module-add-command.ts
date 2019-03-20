@@ -9,18 +9,18 @@ import _ from 'lodash';
 import path from 'path';
 import {
   sortKeys,
-} from '../utils';
+} from '../../../utils';
 import {
   PUBLIC_MODULE_NAME_REGEX,
-} from '../validation/constants';
-import Command from './Command';
+} from '../../../validation';
+import {Command} from '../../command';
 
-interface IAddModuleCommandOptions {}
-interface IAddModuleCommandArguments {
+interface IModuleAddCommandOptions {}
+interface IModuleAddCommandArguments {
   names: string[];
 }
 
-export default class AddModuleCommand extends Command<IAddModuleCommandOptions, IAddModuleCommandArguments> {
+export class ModuleAddCommand extends Command<IModuleAddCommandOptions, IModuleAddCommandArguments> {
   public static command = 'module add';
   public static description = 'Adds a module as a dependency to the project';
 

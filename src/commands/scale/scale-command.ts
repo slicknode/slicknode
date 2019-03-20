@@ -7,8 +7,8 @@
 import chalk from 'chalk';
 import {
   isDirectory,
-} from '../validation/options';
-import Command from './Command';
+} from '../../validation/options';
+import {Command} from '../command';
 
 interface IScaleInput {
   active: boolean;
@@ -28,7 +28,7 @@ interface IScaleCommandOptions {
 
 interface IScaleCommandArguments {}
 
-export default class ScaleCommand extends Command<IScaleCommandOptions, IScaleCommandArguments> {
+export class ScaleCommand extends Command<IScaleCommandOptions, IScaleCommandArguments> {
   public static command = 'scale';
   public static description = 'Scale the cloud infrastructure of the project';
   public static options = [

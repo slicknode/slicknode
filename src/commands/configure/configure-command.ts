@@ -4,11 +4,11 @@
 
 import {
   DEFAULT_API_ENDPOINT,
-} from '../config';
+} from '../../config';
 import {
   isUrl,
-} from '../validation/options';
-import Command from './Command';
+} from '../../validation/options';
+import {Command} from '../command';
 
 interface IConfigureCommandOptions {
   endpoint?: string;
@@ -16,7 +16,7 @@ interface IConfigureCommandOptions {
 
 interface IConfigureCommandArguments {}
 
-export default class ConfigureCommand extends Command<IConfigureCommandOptions, IConfigureCommandArguments> {
+export class ConfigureCommand extends Command<IConfigureCommandOptions, IConfigureCommandArguments> {
   public static command = 'configure';
   public static description = 'Update local configuration of the slicknode CLI. ';
   public static options = [

@@ -58,7 +58,7 @@ const LATEST_VERSION_CACHE_KEY = 'latestVersion';
 const MIN_VERSION_CACHE_KEY = 'minVersion';
 const LAST_VERSION_CHECK_CACHE_KEY = 'lastVersionCheck';
 
-export default class Command<TOptions, TArguments> {
+export class Command<TOptions, TArguments> {
   /**
    * Name of the command
    */

@@ -6,11 +6,11 @@ import Listr from 'listr';
 import path from 'path';
 import rimraf from 'rimraf';
 import tar from 'tar';
-import {getModuleList} from '../utils';
-import execute from '../utils/execute';
-import {IModuleListItem} from '../utils/getModuleList';
-import {isDirectory} from '../validation/options';
-import Command from './Command';
+import {getModuleList} from '../../../utils';
+import execute from '../../../utils/execute';
+import {IModuleListItem} from '../../../utils/getModuleList';
+import {isDirectory} from '../../../validation/options';
+import {Command} from '../../command';
 
 interface IRuntimeBuildCommandOptions {
   dir?: string;
@@ -22,7 +22,7 @@ interface IRuntimeBuildCommandArguments {
   output: string;
 }
 
-export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOptions, IRuntimeBuildCommandArguments> {
+export class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOptions, IRuntimeBuildCommandArguments> {
   public static command = 'runtime build';
   public static description = 'Builds the source package for the runtime to be deployed';
   public static options = [
@@ -198,7 +198,7 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
 
           // Build dependency and module package map
           const dependencies: {[name: string]: string} = {
-            'slicknode-runtime': '^0.1.2',
+            'slicknode-runtime': '~0.2.0',
           };
           const modulePackageMap: {[moduleId: string]: string} = {};
           for (const item of ctx.modules) {
@@ -212,7 +212,7 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
           }
 
           // Get slicknode CLI version
-          const data = fs.readFileSync(path.resolve(__dirname, '../../package.json'), 'utf8');
+          const data = fs.readFileSync(path.resolve(__dirname, '../../../../package.json'), 'utf8');
           const cliVersion = JSON.parse(data).version || '0.0.0';
 
           // Add package.json
@@ -270,7 +270,7 @@ export default class RuntimeBuildCommand extends Command<IRuntimeBuildCommandOpt
           // @TODO: Add different deployment targets (cloudfunction, lambda, docker etc.)
           outputFileSync(
             path.join(buildDir, 'index.js'),
-            Buffer.from(fs.readFileSync(path.join(__dirname, '../templates/runtime/cloudfunction/index.js'))),
+            Buffer.from(fs.readFileSync(path.join(__dirname, '../../../templates/runtime/cloudfunction/index.js'))),
           );
         },
       },

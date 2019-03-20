@@ -1,26 +1,24 @@
 /**
  * Created by Ivo Meißner on 08.08.17.
- *
- * @flow
  */
 
 import chalk from 'chalk';
-import {openUrl} from '../utils';
+import {openUrl} from '../../utils';
 import {
   isDirectory,
-} from '../validation/options';
-import Command from './Command';
+} from '../../validation/options';
+import {Command} from '../command';
 
-interface IPullCommandOptions {
+interface IConsoleCommandOptions {
   dir?: string;
   env?: string;
 }
 
-interface IPullCommandArguments {}
+interface IConsoleCommandArguments {}
 
-export default class PlaygroundCommand extends Command<IPullCommandOptions, IPullCommandArguments> {
-  public static command = 'playground';
-  public static description = 'Open the GraphiQL API Playground';
+export class ConsoleCommand extends Command<IConsoleCommandOptions, IConsoleCommandArguments> {
+  public static command = 'console';
+  public static description = 'Open the Slicknode console';
   public static options = [
     {
       name: '-d, --dir <path>',
@@ -38,7 +36,7 @@ export default class PlaygroundCommand extends Command<IPullCommandOptions, IPul
       this.options.env || 'default',
     );
     if (environment) {
-      openUrl(environment.playgroundUrl, this.logger);
+      openUrl(environment.consoleUrl, this.logger);
     } else {
       this.logger.error(chalk.red(
         'ERROR: The directory is not a valid slicknode project. ' +

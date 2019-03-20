@@ -5,24 +5,27 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import {
+  ICluster,
   IEnvironmentConfig, IProjectChangeError,
-} from '../types';
+} from '../../types';
 import {
   loadProjectVersion,
-} from '../utils';
-import {PROJECT_ALIAS_REGEX} from '../validation';
+} from '../../utils';
 import {
   isDirectory,
-} from '../validation/options';
-import validate from '../validation/validate';
-import StatusCommand from './status';
+} from '../../validation/options';
+import validate from '../../validation/validate';
+import {StatusCommand} from '../status/';
 
 import _ from 'lodash';
 import fetch from 'node-fetch';
-import {ICluster} from '../types/ICluster';
+import {PROJECT_ALIAS_REGEX} from '../../validation';
 
 interface IDeployCommandOptions {
   force?: boolean;
+  account?: string;
+  alias?: string;
+  name?: string;
 }
 interface IDeployCommandArguments {}
 
@@ -32,7 +35,7 @@ interface IChangeCounts {
   remove: number;
 }
 
-export default class DeployCommand extends StatusCommand<IDeployCommandOptions, IDeployCommandArguments> {
+export class DeployCommand extends StatusCommand<IDeployCommandOptions, IDeployCommandArguments> {
   public static command = 'deploy';
   public static description = 'Deploy the current project state to the slicknode servers';
   public static options = [
@@ -48,6 +51,18 @@ export default class DeployCommand extends StatusCommand<IDeployCommandOptions, 
     {
       name: '-f, --force <force>',
       description: 'Forces the deployment without asking for confirmation',
+    },
+    {
+      name: '-a, --account <account>',
+      description: 'The identifier of the account where the project should be deployed',
+    },
+    {
+      name: '-n, --name <name>',
+      description: 'The name of the project as displayed in the console',
+    },
+    {
+      name: '--alias <alias>',
+      description: 'The alias of the project which is part of the endpoint URL',
     },
   ];
 
@@ -83,7 +98,7 @@ export default class DeployCommand extends StatusCommand<IDeployCommandOptions, 
       return;
     }
 
-    // Run migration migration
+    // Run migration
     const env = await this.getOrCreateEnvironment();
     const validStatus = await this.loadAndPrintStatus(env);
 
@@ -182,40 +197,54 @@ export default class DeployCommand extends StatusCommand<IDeployCommandOptions, 
       }
     }`;
 
+    let suggestedName;
+    let suggestedAlias;
+
     let newName;
     let newAlias;
-    if (name !== 'default') {
-      // Derive alias / name from default environment
-      const defaultEnv = await this.getEnvironment('default');
-      if (defaultEnv) {
-        newName = `${defaultEnv.name} (${name})`;
-        newAlias = `${defaultEnv.alias}-${name}`;
-      }
-    }
 
     // We don't have new name, show prompt
-    if (!newName) {
-      const values = await inquirer.prompt([
-        {
+    const defaultEnv = await this.getEnvironment('default');
+    if (defaultEnv) {
+      suggestedName = this.options.name || `${defaultEnv.name} (${name})`;
+      suggestedAlias = this.options.alias || `${defaultEnv.alias}-${name}`;
+    }
+    if (this.options.force) {
+      newName = suggestedName;
+      newAlias = suggestedAlias;
+    } else {
+      const valuePrompts = [];
+
+      if (!this.options.name) {
+        valuePrompts.push({
           name: 'name',
           type: 'input',
-          message: 'Project name:',
-          validate: (input) => {
+          default: suggestedName,
+          message: 'Project name (as displayed in console):',
+          validate: (input: any) => {
             return input && String(input).length > 1;
           },
-        },
-        {
+        });
+      }
+      if (!this.options.alias) {
+        valuePrompts.push({
           name: 'alias',
           type: 'input',
           message: 'Project alias:',
-          validate: (input) => {
+          default: suggestedAlias,
+          validate: (input: any) => {
             if (String(input).match(PROJECT_ALIAS_REGEX)) {
               return true;
             }
             return 'Project alias contains invalid characters';
           },
-        },
-      ]) as {alias: string, name: string};
+        });
+      }
+      const values = {
+        name: suggestedName,
+        alias: suggestedAlias,
+        ...(await inquirer.prompt(valuePrompts) as {alias?: string, name?: string}),
+      };
 
       newAlias = values.alias;
       newName = values.name;
@@ -236,8 +265,10 @@ export default class DeployCommand extends StatusCommand<IDeployCommandOptions, 
         name: newName,
         alias: newAlias,
         cluster: cluster.id,
+        account: this.options.account || null,
       },
     };
+
     const result = await this.client.fetch(query, variables);
     const project = _.get(result, 'data.createProject.node');
     if (!project) {

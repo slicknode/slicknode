@@ -13,26 +13,27 @@ import fetch from 'node-fetch';
 import os from 'os';
 import path from 'path';
 import uuid from 'uuid';
-import {ICluster} from '../types';
+import {ICluster} from '../../types/index';
 import {
   randomName,
-} from '../utils';
+} from '../../utils/index';
 import {
   isDirectory,
-} from '../validation/options';
-import Command from './Command';
+} from '../../validation/options';
+import {Command} from '../command';
 
 interface InitCommandOptions {
   dir?: string;
   name?: string;
   alias?: string;
+  account?: string;
 }
 
 interface InitCommandArguments {
   name?: string;
 }
 
-export default class InitCommand extends Command<InitCommandOptions, InitCommandArguments> {
+export class InitCommand extends Command<InitCommandOptions, InitCommandArguments> {
   public static command = 'init';
   public static description = 'Initialize a new slicknode project';
   public static args = [
@@ -49,11 +50,15 @@ export default class InitCommand extends Command<InitCommandOptions, InitCommand
     },
     {
       name: '-n, --name <name>',
-      description: 'The name of the project',
+      description: 'The name of the project as displayed in the console',
     },
     {
       name: '-a, --alias <alias>',
       description: 'The alias of the project which is part of the endpoint URL',
+    },
+    {
+      name: '-a, --account <account>',
+      description: 'The identifier of the account where the project should be deployed',
     },
   ];
 
@@ -76,8 +81,8 @@ export default class InitCommand extends Command<InitCommandOptions, InitCommand
       return;
     }
 
-    let name = this.options.name;
-    let alias = this.options.alias;
+    let {name, alias} = this.options;
+    const account = this.options.account || null;
 
     // Create directory if name was provided via args and directory does not exist
     let targetDir = this.getProjectRoot();
@@ -128,6 +133,7 @@ export default class InitCommand extends Command<InitCommandOptions, InitCommand
         name,
         alias,
         cluster: cluster.id,
+        account,
       },
     };
     const result = await this.client.fetch(query, variables);
