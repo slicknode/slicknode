@@ -33,7 +33,7 @@ To get a list of all the available commands:
 
     slicknode
     
-Do get help for a certain command: 
+To get help for a certain command: 
 
     slicknode help <command>
 
