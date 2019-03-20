@@ -238,12 +238,12 @@ export class DeployCommand extends StatusCommand<IDeployCommandOptions, IDeployC
             }
             return 'Project alias contains invalid characters';
           },
-        })
+        });
       }
       const values = {
         name: suggestedName,
         alias: suggestedAlias,
-        ...(await inquirer.prompt(valuePrompts) as {alias?: string, name?: string})
+        ...(await inquirer.prompt(valuePrompts) as {alias?: string, name?: string}),
       };
 
       newAlias = values.alias;
