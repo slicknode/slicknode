@@ -1,7 +1,10 @@
-# Slicknode CLI tool
+# [Slicknode](https://slicknode.com) 
 
-Utility to create serverless GraphQL backends with slicknode. [Get your **FREE** Slicknode account
-now](http://www.slicknode.com) to create production ready GraphQL Backends in minutes.
+[![npm version](https://badge.fury.io/js/slicknode.svg)](https://badge.fury.io/js/slicknode) [![CircleCI](https://circleci.com/gh/slicknode/slicknode.svg?style=shield)](https://circleci.com/gh/slicknode/slicknode)
+
+GraphQL-First application framework and CMS for rapid software development: Serverless, declarative and extensible. 
+
+To lean more, check out the [website](https://slicknode.com).
 
 **Features:**
 
@@ -14,6 +17,7 @@ now](http://www.slicknode.com) to create production ready GraphQL Backends in mi
 -   **Headless CMS**
 -   Extensible with custom code (Javascript, TypeScript, Flow etc.)
 
+[Sign up](https://console.slicknode.com/register) to create production ready GraphQL Backends in minutes.
 
 To stay up to date on the latest updates and features, follow us on [Twitter](https://twitter.com/SlicknodeHQ)
 and [Facebook](https://www.facebook.com/SlicknodeHQ/). 
