@@ -45,7 +45,7 @@ export default class ConfigStorage {
         const data = fs.readFileSync(this.file, 'utf8');
         this.cache = JSON.parse(data) || {};
       }
-      return this.cache;
+      return this.cache || {};
     } catch (e) {
       return {};
     }

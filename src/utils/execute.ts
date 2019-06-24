@@ -30,15 +30,19 @@ export default function execute(
     });
     let result = '';
     let err = '';
-    cmd.stdout.on('data', (output) => {
-      result += output + '\n';
-    });
-    cmd.stderr.on('data', (output) => {
-      err += output;
-    });
+    if (cmd.stdout) {
+      cmd.stdout.on('data', (output) => {
+        result += output + '\n';
+      });
+    }
+    if (cmd.stderr) {
+      cmd.stderr.on('data', (output) => {
+        err += output;
+      });
+    }
 
     // If we have stdin write to kubectl
-    if (stdin) {
+    if (stdin && cmd.stdin) {
       cmd.stdin.write(stdin);
       cmd.stdin.end();
     }

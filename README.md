@@ -71,5 +71,4 @@ To get help for a certain command:
      -V, --version      Display version                                   
      --no-color         Disable colors                                    
      --quiet            Quiet mode - only displays warn and error messages
-     -v, --verbose      Verbose mode - will also output debug messages    
-
+     -v, --verbose      Verbose mode - will also output debug messages

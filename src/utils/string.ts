@@ -33,7 +33,7 @@ const noun = [
  * @returns {string}
  */
 export function randomName(): string {
-  return _.startCase(_.sample(adjectives)) + '-' + _.startCase(_.sample(noun) + _.sample(noun));
+  return _.startCase(_.sample(adjectives)) + '-' + _.startCase(_.sample(noun)! + _.sample(noun));
 }
 
 /**
