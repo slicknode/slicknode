@@ -78,6 +78,7 @@
   "license": "MIT",
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.0",
+    "@oclif/test": "^1.2.4",
     "@types/adm-zip": "^0.4.31",
     "@types/chai": "^4.1.4",
     "@types/es6-promisify": "^6.0.0",
@@ -94,6 +95,7 @@
     "@types/mocha": "^5.2.5",
     "@types/node-fetch": "^2.1.2",
     "@types/rimraf": "^2.0.2",
+    "@types/sinon": "^7.0.13",
     "@types/tar": "^4.0.0",
     "@types/uuid": "^3.4.4",
     "@types/validator": "^9.4.1",
@@ -101,7 +103,8 @@
     "copyfiles": "^2.1.0",
     "mocha": "^5.2.0",
     "mocha-sinon": "^2.1.0",
-    "sinon": "^6.1.5",
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "typescript": "^3.0.3"
