@@ -1,5 +1,5 @@
 import {expect, test} from '@oclif/test'
-import ConfigStorage from '../../../src/api/ConfigStorage';
+import ConfigStorage from '../../../src/api/config-storage';
 
 describe('config:get', () => {
   test

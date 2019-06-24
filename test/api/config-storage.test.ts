@@ -5,7 +5,7 @@
 import {expect} from 'chai';
 import * as os from 'os';
 import * as path from 'path';
-import ConfigStorage from '../../src/api/ConfigStorage';
+import ConfigStorage from '../../src/api/config-storage';
 
 const storage = new ConfigStorage(path.join(os.tmpdir(), 'slicknode', 'ConfigStorage-test'));
 

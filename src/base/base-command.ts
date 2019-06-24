@@ -10,7 +10,7 @@ import path from 'path';
 import loginAuthenticator from 'slicknode-auth-email-password';
 import Client from 'slicknode-client';
 import validator from 'validator';
-import ConfigStorage from '../api/ConfigStorage';
+import ConfigStorage from '../api/config-storage';
 import {DEFAULT_API_ENDPOINT} from '../config';
 import {
   IEnvironmentConfig,

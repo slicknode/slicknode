@@ -1,5 +1,5 @@
 import {expect, test} from '@oclif/test'
-import ConfigStorage from '../../../src/api/ConfigStorage';
+import ConfigStorage from '../../../src/api/config-storage';
 import sinon, {SinonSpy} from 'sinon';
 
 describe('config:set', () => {
