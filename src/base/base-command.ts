@@ -1,5 +1,6 @@
 import Command from '@oclif/command';
 import chalk from 'chalk';
+import cli from 'cli-ux';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import 'isomorphic-fetch';
@@ -76,8 +77,9 @@ export class BaseCommand extends Command {
 
     // Refresh access token
     if (client.hasRefreshToken()) {
-      this.log('Logging in to the slicknode servers...');
+      cli.action.start('Authenticating');
       const userResult = await client.fetch('query {viewer {user {id}}}');
+      cli.action.stop();
       if (_.get(userResult, 'data.viewer.user.id')) {
         return client.hasAccessToken();
       }
@@ -229,9 +231,13 @@ export class BaseCommand extends Command {
    * NULL if could not be found
    *
    * @param name
+   * @param silent
    * @returns {Promise.<void>}
    */
-  protected async getEnvironment(name: string = 'default'): Promise<IEnvironmentConfig | null> {
+  protected async getEnvironment(
+    name: string = 'default',
+    silent: boolean = false,
+  ): Promise<IEnvironmentConfig | null> {
     try {
       const directory = this.getProjectRoot();
       const data = fs.readFileSync(
@@ -254,11 +260,13 @@ export class BaseCommand extends Command {
         return null;
       }
     } catch (e) {
-      this.log(
-        'There are no environments created yet. \n' +
-        'To create a new environment, run:\n\n' +
-        '  ' + chalk.bold('slicknode init') + '\n',
-      );
+      if (!silent) {
+        this.log(
+          'There are no environments created yet. \n' +
+          'To create a new environment, run:\n\n' +
+          '  ' + chalk.bold('slicknode init') + '\n',
+        );
+      }
       return null;
     }
   }

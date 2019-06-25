@@ -1,6 +1,7 @@
 import {flags} from '@oclif/command';
 import AdmZip from 'adm-zip';
 import chalk from 'chalk';
+import cli from 'cli-ux';
 import fs from 'fs-extra';
 import _ from 'lodash';
 import mkdirp from 'mkdirp';
@@ -75,7 +76,7 @@ export class InitCommand extends BaseCommand {
 
   public async run() {
     // Check if directory is already initialized
-    const env = await this.getEnvironment();
+    const env = await this.getEnvironment('default', true);
     if (env) {
       this.error('The directory is already initialized as a slicknode project');
       return;
@@ -141,22 +142,25 @@ export class InitCommand extends BaseCommand {
     try {
       const project = _.get(result, 'data.createProject.node');
       if (!project) {
-        this.error('ERROR: Could not create project. Please try again later.');
+        const messages = [
+          'ERROR: Could not create project. Please try again later.',
+        ];
         if (result.errors && result.errors.length) {
           result.errors.forEach(
-            (err) => this.error(
-              chalk.red(err.message),
+            (err) => messages.push(
+              err.message,
             ),
           );
         }
+        this.error(messages.join('\n'));
         return;
       }
       const bundle = _.get(project, 'version.bundle');
       if (!bundle) {
-        this.error(chalk.red(
+        this.error(
           'Project was created but could not be fully initialized, possibly because of no available capacity. ' +
           'Try to clone the project later.',
-        ));
+        );
         return;
       }
       const response = await fetch(project.version.bundle);
@@ -232,9 +236,9 @@ Find more help in the documentation: http://slicknode.com
    * @returns {Promise.<void>}
    */
   public async getCluster(): Promise<ICluster | null> {
+    cli.action.start('Load available clusters');
     const result = await this.getClient().fetch(LIST_CLUSTER_QUERY);
     const edges = _.get(result, 'data.listCluster.edges', []) as Array<{node: ICluster}>;
-    this.log('Load available clusters');
 
     const dcTimers = edges.map(async ({node}) => {
       const start = Date.now();
@@ -251,6 +255,7 @@ Find more help in the documentation: http://slicknode.com
       };
     });
 
+    let cluster = null;
     try {
       const timedDcs = await Promise.all(dcTimers);
       const availableDcs = timedDcs
@@ -258,12 +263,13 @@ Find more help in the documentation: http://slicknode.com
         .sort((a, b) => a.latency! < b.latency! ? 1 : 0);
 
       if (availableDcs.length) {
-        return availableDcs[0].cluster;
+        cluster = availableDcs[0].cluster;
       }
     } catch (e) {
-      return null;
+      cluster = null;
     }
+    cli.action.stop();
 
-    return null;
+    return cluster;
   }
 }

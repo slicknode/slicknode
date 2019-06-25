@@ -780,7 +780,7 @@ cli-truncate@^0.2.1:
     slice-ansi "0.0.4"
     string-width "^1.0.1"
 
-cli-ux@^5.2.1:
+cli-ux@^5.2.1, cli-ux@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/cli-ux/-/cli-ux-5.3.0.tgz#6f6183e03a2b765fb1d973af484d5a47775d2a9c"
   dependencies:
