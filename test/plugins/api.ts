@@ -41,7 +41,9 @@ export function api(request: MockRequest, response: MockResponse) {
     });
   }
   // sinon.stub(fakeClient, 'fetch').returns(Promise.resolve(response));
-  const stub = sinon.stub(BaseCommand.prototype, 'getClient').returns(fakeClient);
+  if (!BaseCommand.prototype.getClient.hasOwnProperty('restore')) {
+    sinon.stub(BaseCommand.prototype, 'getClient').returns(fakeClient);
+  }
   nock(DUMMY_ENDPOINT)
     .post(() => true, (body) => {
       if (body.query !== mockRequest.query) {
@@ -63,7 +65,8 @@ export function api(request: MockRequest, response: MockResponse) {
       ctx.api++;
     },
     finally(ctx: {error?: Error, api: number}) {
-      stub.called;
+      // stub.called;
+      // stub.restore();
     },
   }
 }

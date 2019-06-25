@@ -77,7 +77,7 @@ export class InitCommand extends BaseCommand {
     // Check if directory is already initialized
     const env = await this.getEnvironment();
     if (env) {
-      this.error(chalk.red('The directory is already initialized as a slicknode project'));
+      this.error('The directory is already initialized as a slicknode project');
       return;
     }
 
