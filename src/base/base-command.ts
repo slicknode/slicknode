@@ -42,7 +42,7 @@ export class BaseCommand extends Command {
   /**
    * Returns an instance of the client to the Slicknode API
    */
-  protected getClient(): Client {
+  public getClient(): Client {
     const authStorage = new ConfigStorage(path.join(os.homedir(), '.slicknode', 'auth.json'));
     const configStorage = this.getConfigStorage();
 
@@ -357,8 +357,8 @@ export class BaseCommand extends Command {
    * Returns the path to the project root directory
    */
   protected getProjectRoot(): string {
-    throw new Error('Not implemented');
-    // return path.resolve(this.options.hasOwnProperty('dir') && this.options.dir || '');
+    const options = this.parse(this.constructor as any) as any;
+    return path.resolve(options.flags.dir);
   }
 
   /**
