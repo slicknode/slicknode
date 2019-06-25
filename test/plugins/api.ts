@@ -1,15 +1,9 @@
 import nock from 'nock';
-import {DEFAULT_API_ENDPOINT} from '../../src/config';
-import sinon from 'sinon';
-import {BaseCommand} from '../../src/base/base-command';
-import Client, {MemoryStorage} from 'slicknode-client';
-import {parse, print} from 'graphql';
 
 type MockRequest = string | {
   query: string,
   variables?: {[key: string]: any},
   operationName?: string,
-  authorized?: boolean,
 };
 
 export interface ResponseError {
@@ -26,27 +20,12 @@ type MockResponse = {
 export function api(request: MockRequest, response: MockResponse) {
   const mockRequest = typeof request === 'string' ? {query: request} : request;
 
-  const storage = new MemoryStorage();
   const DUMMY_ENDPOINT = 'http://localhost';
-  const fakeClient = new Client({
-    endpoint: DUMMY_ENDPOINT,
-    storage,
-  });
-  if (mockRequest.authorized !== false) {
-    fakeClient.setAuthTokenSet({
-      accessToken: '123',
-      accessTokenLifetime: 24000,
-      refreshToken: 'sef',
-      refreshTokenLifetime: 344356,
-    });
-  }
-  // sinon.stub(fakeClient, 'fetch').returns(Promise.resolve(response));
-  if (!BaseCommand.prototype.getClient.hasOwnProperty('restore')) {
-    sinon.stub(BaseCommand.prototype, 'getClient').returns(fakeClient);
-  }
-  nock(DUMMY_ENDPOINT)
+
+  const interceptor = nock(DUMMY_ENDPOINT)
     .post(() => true, (body) => {
       if (body.query !== mockRequest.query) {
+        console.log('Query', body.query);
         return false;
       }
       if (mockRequest.variables && JSON.stringify(mockRequest.variables) !== JSON.stringify(body.variables)) {
@@ -65,8 +44,13 @@ export function api(request: MockRequest, response: MockResponse) {
       ctx.api++;
     },
     finally(ctx: {error?: Error, api: number}) {
-      // stub.called;
-      // stub.restore();
+      if (!ctx.error) {
+        interceptor.done();
+      }
+      if (ctx.api === 0) {
+        nock.cleanAll();
+      }
+      ctx.api--;
     },
   }
 }

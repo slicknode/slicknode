@@ -141,7 +141,7 @@ export class InitCommand extends BaseCommand {
     try {
       const project = _.get(result, 'data.createProject.node');
       if (!project) {
-        this.error(chalk.red('ERROR: Could not create project. Please try again later.'));
+        this.error('ERROR: Could not create project. Please try again later.');
         if (result.errors && result.errors.length) {
           result.errors.forEach(
             (err) => this.error(
@@ -221,9 +221,9 @@ Start exploring now...
 Find more help in the documentation: http://slicknode.com
 `);
     } catch (e) {
-      this.error(chalk.red(
-        'Initialization failed: ', e,
-      ));
+      this.error(
+        `Initialization failed: ${e.message}`,
+      );
     }
   }
 
