@@ -82,6 +82,7 @@
     "@oclif/test": "^1.2.4",
     "@types/adm-zip": "^0.4.31",
     "@types/chai": "^4.1.4",
+    "@types/copyfiles": "^2.1.1",
     "@types/es6-promisify": "^6.0.0",
     "@types/fs-extra": "^5.0.4",
     "@types/glob": "^5.0.35",

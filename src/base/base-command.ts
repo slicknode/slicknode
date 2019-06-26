@@ -1,4 +1,4 @@
-import Command from '@oclif/command';
+import Command, {flags} from '@oclif/command';
 import chalk from 'chalk';
 import cli from 'cli-ux';
 import fs from 'fs';
@@ -13,6 +13,7 @@ import Client from 'slicknode-client';
 import validator from 'validator';
 import ConfigStorage from '../api/config-storage';
 import {DEFAULT_API_ENDPOINT} from '../config';
+import {directory} from '../parsers';
 import {
   IEnvironmentConfig,
   IEnvironmentConfigMap,
@@ -33,6 +34,15 @@ const MIN_VERSION_CACHE_KEY = 'minVersion';
 const LAST_VERSION_CHECK_CACHE_KEY = 'lastVersionCheck';
 
 export class BaseCommand extends Command {
+  public static flags = {
+    dir: flags.string({
+      char: 'd',
+      parse: directory,
+      description: 'The target directory, if other than current',
+      default: './',
+    }),
+  };
+
   /**
    * Runs the command
    */
@@ -239,9 +249,9 @@ export class BaseCommand extends Command {
     silent: boolean = false,
   ): Promise<IEnvironmentConfig | null> {
     try {
-      const directory = this.getProjectRoot();
+      const dir = this.getProjectRoot();
       const data = fs.readFileSync(
-        path.join(directory, '.slicknoderc'),
+        path.join(dir, '.slicknoderc'),
         'utf8',
       );
       try {
@@ -286,8 +296,8 @@ export class BaseCommand extends Command {
     // Read existing config
     let envMap: IEnvironmentConfigMap = {};
     try {
-      const directory = targetDir || this.getProjectRoot();
-      const configFile = path.join(directory, '.slicknoderc');
+      const dir = targetDir || this.getProjectRoot();
+      const configFile = path.join(dir, '.slicknoderc');
       let data = '{}';
       try {
         data = fs.readFileSync(configFile, 'utf8');

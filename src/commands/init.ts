@@ -46,7 +46,8 @@ export const CREATE_PROJECT_MUTATION = `mutation CreateProject($input: createPro
   }
 }`;
 
-export class InitCommand extends BaseCommand {
+export default class InitCommand extends BaseCommand {
+  public static description = 'Create a new Slicknode project';
   public static args = [
     {
       name: 'name',
@@ -55,12 +56,7 @@ export class InitCommand extends BaseCommand {
   ];
 
   public static flags = {
-    dir: flags.string({
-      char: 'd',
-      parse: directory,
-      description: 'The target directory, if other than current',
-      default: './',
-    }),
+    ...BaseCommand.flags,
     name: flags.string({
       char: 'n',
       description: 'The name of the project as displayed in the console',
