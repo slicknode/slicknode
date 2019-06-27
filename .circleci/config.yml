@@ -2,31 +2,64 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
+---
 version: 2
 jobs:
-  build:
+  node-latest: &test
     docker:
-      # specify the version you desire here
-      - image: circleci/node:latest
-
-    working_directory: ~/repo
-
+      - image: node:latest
+    working_directory: ~/cli
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
+      - restore_cache: &restore_cache
           keys:
-          - v1-dependencies-{{ checksum "yarn.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
-      - run: yarn
-
+            - v1-npm-{{checksum ".circleci/config.yml"}}-{{checksum "yarn.lock"}}
+            - v1-npm-{{checksum ".circleci/config.yml"}}
+      - run:
+          name: Install dependencies
+          command: yarn
+      - run: ./bin/run --version
+      - run: ./bin/run --help
+      - run:
+          name: Testing
+          command: yarn test
+      - run:
+          name: Submitting code coverage to codecov
+          command: |
+            ./node_modules/.bin/nyc report --reporter text-lcov > coverage.lcov
+            curl -s https://codecov.io/bash | bash
+  node-8:
+    <<: *test
+    docker:
+      - image: node:8
+  node-10:
+    <<: *test
+    docker:
+      - image: node:10
+  cache:
+    <<: *test
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: yarn
       - save_cache:
+          key: v1-npm-{{checksum ".circleci/config.yml"}}-{{checksum "yarn.lock"}}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "yarn.lock" }}
+            - ~/cli/node_modules
+            - /usr/local/share/.cache/yarn
+            - /usr/local/share/.config/yarn
 
-      # run tests!
-      - run: yarn test
+workflows:
+  version: 2
+  "slicknode":
+    jobs:
+      - node-latest
+      - node-8
+      - node-10
+      - cache:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
