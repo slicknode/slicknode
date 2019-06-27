@@ -32,6 +32,7 @@ export function api(request: MockRequest, response: MockResponse) {
 
       const DUMMY_ENDPOINT = 'http://localhost';
       ctx.apiMocks = ctx.apiMocks || [];
+
       const interceptor = nock(DUMMY_ENDPOINT)
         .post(() => true, (body) => {
           // We have multipart request
