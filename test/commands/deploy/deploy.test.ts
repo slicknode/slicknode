@@ -1,18 +1,12 @@
 import {expect, test} from '../../test';
 import path from 'path';
 import {MIGRATE_PROJECT_MUTATION} from '../../../src/commands/status';
-import {mkdirpSync} from 'fs-extra';
-import copyfiles from 'copyfiles';
-import os from "os";
-import uuid from 'uuid';
 
 function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);
 }
 
 describe('deploy', () => {
-  const tmpWorkspace = path.join(os.tmpdir(), uuid.v1());
-
   test
     .login()
     .stdout()
@@ -36,7 +30,7 @@ describe('deploy', () => {
 
   test
     .login()
-    .stdout({stripColor: true, print: true})
+    .stdout({stripColor: true})
     .stderr()
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
@@ -149,25 +143,12 @@ describe('deploy', () => {
         }
       }
     }})
-    .do(async () => {
-      return await new Promise((resolve) => {
-        const testDir = path.join(tmpWorkspace, 'test1');
-        const sourceDir = projectPath('with-module');
-        mkdirpSync(testDir);
-        copyfiles([
-          path.join(sourceDir, '.slicknode', '**', '*'),
-          path.join(sourceDir, '**', '*'),
-          path.join(sourceDir, '.*'),
-          testDir,
-        ], {up: sourceDir.split('/').length}, resolve);
-      });
-    })
     .nock(
       'http://localhost',
        loader => loader.get('/dummybundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
     )
     .prompt([ true ])
-    .command(['deploy', '--dir', path.join(tmpWorkspace, 'test1')])
+    .workspaceCommand(projectPath('with-module'), ['deploy'])
     .it('migrates project successfully', ctx => {
       expect(ctx.stdout).to.contain('Deployment successful');
     });
