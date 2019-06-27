@@ -5,7 +5,7 @@ export function prompt(values: any[]) {
   const valueStack = [...values];
 
   return {
-    run(ctx: {prompt?: SinonStub}) {
+    async run(ctx: {prompt?: SinonStub}) {
       ctx.prompt = sinon.stub(inquirer, 'prompt').callsFake(async (questions: Questions<any>) => {
         if (questions instanceof Array) {
           return questions.reduce((result, question) => {
@@ -26,8 +26,10 @@ export function prompt(values: any[]) {
 
     },
 
-    finally(ctx: {prompt: SinonStub}) {
-      ctx.prompt.restore();
+    finally(ctx: {prompt?: SinonStub}) {
+      if (ctx.prompt) {
+        ctx.prompt.restore();
+      }
     }
   }
 }
