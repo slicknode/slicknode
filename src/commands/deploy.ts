@@ -19,6 +19,7 @@ import _ from 'lodash';
 import fetch from 'node-fetch';
 import * as parsers from '../parsers';
 import {PROJECT_ALIAS_REGEX} from '../validation';
+import {CREATE_PROJECT_MUTATION, LIST_CLUSTER_QUERY} from './init';
 
 interface IChangeCounts {
   update: number;
@@ -69,7 +70,7 @@ export class DeployCommand extends StatusCommand {
     if (errors.length) {
       this.log(chalk.red('Project configuration has errors: \n'));
       errors.forEach((error, index) => {
-        this.log(chalk.red(`  ${index + 1}. ${error.toString()}\n`));
+        this.error(chalk.red(`  ${index + 1}. ${error.toString()}\n`), {exit: false});
       });
       this.error(chalk.red('Deployment aborted'));
       return;
@@ -169,22 +170,6 @@ export class DeployCommand extends StatusCommand {
 
     // We don't have project for this env yet, create one...
     this.log(`Creating project for env "${name}"`);
-    const query = `mutation CreateProject($input: createProjectInput!) {
-      createProject(input: $input) {
-        node {
-          id
-          alias
-          name
-          endpoint
-          consoleUrl
-          playgroundUrl
-          version {
-            bundle
-            id
-          }
-        }
-      }
-    }`;
 
     let suggestedName;
     let suggestedAlias;
@@ -258,7 +243,7 @@ export class DeployCommand extends StatusCommand {
       },
     };
 
-    const result = await this.getClient().fetch(query, variables);
+    const result = await this.getClient().fetch(CREATE_PROJECT_MUTATION, variables);
     const project = _.get(result, 'data.createProject.node');
     if (!project) {
       this.log(chalk.red('ERROR: Could not create project. Please try again later.'));
@@ -291,19 +276,7 @@ export class DeployCommand extends StatusCommand {
    * @returns {Promise.<void>}
    */
   public async getCluster(): Promise<ICluster | null> {
-    const query = `query {
-      listCluster(first: 100) {
-        edges {
-          node {
-            id
-            alias
-            name
-            pingUrl
-          }
-        }
-      }
-    }`;
-    const result = await this.getClient().fetch(query);
+    const result = await this.getClient().fetch(LIST_CLUSTER_QUERY);
     const edges = _.get(result, 'data.listCluster.edges', []) as Array<{node: ICluster}>;
     this.log('Load available clusters');
     if (_.get(result, 'errors[0]')) {

@@ -1,0 +1,13 @@
+{
+  "data": {
+    "createProject": {
+      "node": {
+        "id": "234",
+        "version": {
+          "id": "someid",
+          "bundle": "http://localhost/fakeversionbundle.zip"
+        }
+      }
+    }
+  }
+}

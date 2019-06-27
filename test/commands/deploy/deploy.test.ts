@@ -1,6 +1,9 @@
 import {expect, test} from '../../test';
 import path from 'path';
 import {MIGRATE_PROJECT_MUTATION} from '../../../src/commands/status';
+import {CREATE_PROJECT_MUTATION, LIST_CLUSTER_QUERY} from '../../../src/commands/init';
+import listClusterResult from './list-cluster.json';
+import createProjectResult from './create-project.json';
 
 function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);
@@ -125,7 +128,7 @@ describe('deploy', () => {
 
   test
     .login()
-    .stdout({stripColor: true, print: true})
+    .stdout({stripColor: true})
     .stderr()
     // Dry run request
     .api(MIGRATE_PROJECT_MUTATION, {data: {
@@ -151,5 +154,55 @@ describe('deploy', () => {
     .workspaceCommand(projectPath('with-module'), ['deploy'])
     .it('migrates project successfully', ctx => {
       expect(ctx.stdout).to.contain('Deployment successful');
+    });
+
+  test
+    .login()
+    .stdout({stripColor: true})
+    .stderr()
+    // Dry run request
+    .api(MIGRATE_PROJECT_MUTATION, {data: {
+      migrateProject: {
+        changes: []
+      }
+    }})
+    // Actual migration
+    .api(MIGRATE_PROJECT_MUTATION, {data: {
+      migrateProject: {
+        node: {
+          version: {
+            bundle: 'http://localhost/dummybundle.zip'
+          }
+        }
+      }
+    }})
+    .api(LIST_CLUSTER_QUERY, listClusterResult)
+    .nock(
+      'http://localhost',
+       loader => loader.get('/dummybundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+    )
+    .api(CREATE_PROJECT_MUTATION, createProjectResult)
+    .prompt([ true, true, true ])
+    .workspaceCommand(projectPath('with-module'), ['deploy', '--env', 'staging'])
+    .it('creates new project for unknown env', ctx => {
+      expect(ctx.stdout).to.contain('Deployment successful');
+    });
+
+  test
+    .login()
+    .stdout({stripColor: true})
+    .stderr()
+    // Dry run request
+    .api(MIGRATE_PROJECT_MUTATION, {data: {
+      migrateProject: {
+        changes: []
+      }
+    }})
+    .api(LIST_CLUSTER_QUERY, listClusterResult)
+    .api(CREATE_PROJECT_MUTATION, createProjectResult)
+    .prompt([ true, true, false ])
+    .workspaceCommand(projectPath('with-module'), ['deploy', '--env', 'staging'])
+    .it('aborts project deployment for new env on user input', ctx => {
+      expect(ctx.stdout).to.contain('Deployment aborted');
     });
 });
