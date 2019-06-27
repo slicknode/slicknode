@@ -11,9 +11,6 @@ import {
 import {
   loadProjectVersion,
 } from '../utils';
-import {
-  isDirectory,
-} from '../validation/options';
 import validate from '../validation/validate';
 import StatusCommand from './status';
 

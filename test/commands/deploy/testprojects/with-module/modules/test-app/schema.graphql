@@ -1,0 +1,12 @@
+"""TestDescription"""
+type Test_TestType {
+  """Field description"""
+  stringField: String @validateRegex(regex:"/^(a-z)$/i")
+  requiredStringField: String!
+  intField: Int
+  floatField: Float
+  booleanField: Boolean
+  idField: ID
+  listField(query: String = "query"): [String]
+  requiredListField: [String!]! @unique
+}
