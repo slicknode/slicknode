@@ -5,15 +5,13 @@
  */
 
 import {spawn} from 'child_process';
-import {ILogger} from '../types';
 
 /**
  * Opens the URL in the default browser of the operating system
  *
  * @param url
- * @param logger
  */
-export default function openUrl(url: string, logger: ILogger): void {
+export default function openUrl(url: string): void {
   let command;
   switch (process.platform) {
     case 'darwin':
@@ -26,11 +24,10 @@ export default function openUrl(url: string, logger: ILogger): void {
       command = 'xdg-open';
       break;
     default:
-      logger.error(
+      throw new Error(
         `Could not automatically open URL, unsupported platform ${process.platform}. ` +
         `Open the URL ${url} in your browser`,
       );
-      return;
   }
 
   const child = spawn(command, [ url ]);
@@ -42,7 +39,7 @@ export default function openUrl(url: string, logger: ILogger): void {
 
   child.stderr.on('end', () => {
     if (errorMessage) {
-      logger.error(errorMessage);
+      throw new Error(errorMessage);
     }
   });
 }
