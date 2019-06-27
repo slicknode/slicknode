@@ -18,7 +18,7 @@ describe('endpoint', () => {
     .stdout({stripColor: true})
     .stderr({stripColor: true})
     .command(['endpoint', '--dir', projectPath('initialized')])
-    .it('prints playground endpoint', ctx => {
+    .it('prints API endpoint', ctx => {
       expect(ctx.stdout).to.equal('http://test-ad2f5a5e.dev.slicknode.local:30081\n');
     });
 });

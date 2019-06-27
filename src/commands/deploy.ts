@@ -27,7 +27,7 @@ interface IChangeCounts {
   remove: number;
 }
 
-export class DeployCommand extends StatusCommand {
+export default class DeployCommand extends StatusCommand {
   public static command = 'deploy';
   public static description = 'Deploy the current project state to the slicknode servers';
 

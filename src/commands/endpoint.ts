@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import {EnvCommand} from '../base/env-command';
 
-export class EndpointCommand extends EnvCommand {
+export default class EndpointCommand extends EnvCommand {
   public static command = 'endpoint';
   public static description = 'Return the GraphQL API endpoint';
 

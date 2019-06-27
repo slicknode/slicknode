@@ -131,7 +131,7 @@ export class BaseCommand extends Command {
 
         return true;
       } catch (e) {
-        this.error(chalk.red('Login failed, please try again. Message:', e.message));
+        this.error(chalk.red('Login failed, please try again. Message:', e.message), {exit: false});
       }
       loginCount++;
     }

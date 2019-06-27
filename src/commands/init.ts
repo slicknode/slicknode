@@ -10,7 +10,6 @@ import os from 'os';
 import path from 'path';
 import uuid from 'uuid';
 import {BaseCommand} from '../base/base-command';
-import {directory} from '../parsers';
 import {ICluster} from '../types';
 import {
   randomName,
