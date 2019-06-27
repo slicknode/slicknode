@@ -3,8 +3,9 @@ import {expect} from '@oclif/test';
 import os from 'os';
 import uuid from 'uuid';
 import copyfiles from 'copyfiles';
-import {mkdirpSync} from 'fs-extra';
+import {mkdirpSync, readFileSync} from 'fs-extra';
 import {test} from '../../../test';
+import yaml from 'js-yaml';
 
 describe('init', () => {
   const tmpWorkspace = path.join(os.tmpdir(), uuid.v1());
@@ -123,7 +124,30 @@ describe('init', () => {
     })
     .prompt(['MyNamespace', 'Testlabel'])
     .command(['module:create', 'blog', '--dir', path.join(tmpWorkspace, 'test6')])
-    .it('creates module successfully', () => {
-      // @TODO: Validate created folder content
+    .it('creates module successfully', (ctx: {stdout: string}) => {
+      const projectDir = path.join(tmpWorkspace, 'test6');
+      const projectConfig = yaml.safeLoad(readFileSync(path.join(projectDir, 'slicknode.yml')).toString());
+      expect(projectConfig).to.deep.equal({
+        dependencies: {
+          '@private/blog': './modules/blog',
+          auth: 'latest',
+          core: 'latest',
+          relay: 'latest'
+        }
+      });
+      expect(ctx.stdout).to.contain('SUCCESS! Module was created');
+      expect(ctx.stdout).to.contain('Add your type definitions to ./modules/blog/schema.graphql');
+
+      const moduleConfig = yaml.safeLoad(
+        readFileSync(path.join(projectDir, 'modules', 'blog', 'slicknode.yml')).toString()
+      );
+      console.log(moduleConfig);
+      expect(moduleConfig).to.deep.equal({
+        module:{
+          id: '@private/blog',
+          label: 'Testlabel',
+          namespace: 'MyNamespace'
+        }
+      });
     });
 });
