@@ -363,6 +363,7 @@ export class BaseCommand extends Command {
     } catch (e) {
       this.error(
         'This directory does not have a valid slicknode.yml file. \n' +
+        'Are you running it in the right directory (project root)? \n' +
         'To initialize a new project, run:\n\n' +
         '  ' + chalk.bold('slicknode init') + '\n',
       );

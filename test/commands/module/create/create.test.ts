@@ -7,7 +7,7 @@ import {mkdirpSync, readFileSync} from 'fs-extra';
 import {test} from '../../../test';
 import yaml from 'js-yaml';
 
-describe('init', () => {
+describe('module:create', () => {
   const tmpWorkspace = path.join(os.tmpdir(), uuid.v1());
 
   test
