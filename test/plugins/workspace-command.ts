@@ -7,7 +7,7 @@ import uuid from 'uuid';
 import rimraf = require('rimraf');
 import _ from 'lodash';
 
-export function workspaceCommand(sourcePath: string, args: string[] | string) {
+export function workspaceCommand(sourcePath: string, args: string[] | string | ((ctx: any) => string[] | string)) {
   return {
     async run(ctx: {workspace?: string, plugins: {[k: string]: FancyTypes.PluginBuilder<any, any>}}) {
       // Copy all files from source to temp folder
@@ -24,7 +24,9 @@ export function workspaceCommand(sourcePath: string, args: string[] | string) {
       });
 
       if (ctx.plugins && ctx.plugins.command) {
-        const allArgs = (_.isArray(args) ? args : [args]).concat(['--dir', workspace]);
+        let resolvedArgs = typeof args === 'function' ? args(ctx) : args;
+        const allArgs = (_.isArray(resolvedArgs) ? resolvedArgs : [resolvedArgs]).concat(['--dir', workspace]);
+        console.log('All args', allArgs);
         const cmdPlugin = (ctx.plugins.command(allArgs) as FancyTypes.Plugin<typeof ctx>);
         if (cmdPlugin && cmdPlugin.run) {
           await cmdPlugin.run(ctx);
