@@ -7,11 +7,11 @@ function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);
 }
 
-describe('console', () => {
+describe('playground', () => {
   test
     .stdout({stripColor: true})
     .stderr({stripColor: true})
-    .command(['console', '--dir', projectPath('empty')])
+    .command(['playground', '--dir', projectPath('empty')])
     .catch(/The directory is not a valid slicknode project/)
     .it('fails for folder without slicknode.yml', ctx => {
     });
@@ -22,11 +22,11 @@ describe('console', () => {
     .do((ctx: {stub?: SinonStub}) => {
       ctx.stub = sinon.stub(utils, 'openUrl');
     })
-    .command(['console', '--dir', projectPath('initialized')])
+    .command(['playground', '--dir', projectPath('initialized')])
     .finally(ctx => {
       ctx.stub!.restore();
     })
-    .it('opens console', ctx => {
-      expect(ctx.stub!.calledWith('http://localhost:3001/p/test-ad2f5a5e')).to.be.true;
+    .it('opens playground', ctx => {
+      expect(ctx.stub!.calledWith('http://localhost:3001/p/test-ad2f5a5e/playground')).to.be.true;
     });
 });
