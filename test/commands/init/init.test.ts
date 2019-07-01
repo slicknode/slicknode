@@ -2,7 +2,6 @@ import {expect, test} from '../../test';
 import {LIST_CLUSTER_QUERY, CREATE_PROJECT_MUTATION} from '../../../src/commands/init';
 import path from 'path';
 import fs from 'fs';
-import rimraf from 'rimraf';
 import yaml from 'js-yaml';
 import {Kind, parse} from 'graphql';
 
@@ -120,17 +119,12 @@ describe('init', () => {
         }
       }
     }})
-    .command(['init', '--dir', EMPTY_DIR])
-    .finally(async () => {
-      await new Promise((resolve) => {
-        rimraf(path.join(EMPTY_DIR, '{*,.*}'), resolve);
-      });
-    })
+    .workspaceCommand(EMPTY_DIR, ['init'])
     .it('initializes project successfully', ctx => {
       expect(ctx.stdout).to.contain('Creating project');
       // Check slicknoderc contents
       const slicknodeRc = JSON.parse(
-        fs.readFileSync(path.join(EMPTY_DIR, '.slicknoderc')).toString()
+        fs.readFileSync(path.join(ctx.workspace!, '.slicknoderc')).toString()
       );
       expect(slicknodeRc).to.deep.equal({
         default: {
@@ -143,7 +137,7 @@ describe('init', () => {
 
       // Check slicknode.yml content
       const slicknodeYml = yaml.safeLoad(
-        fs.readFileSync(path.join(EMPTY_DIR, 'slicknode.yml')).toString()
+        fs.readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString()
       );
       expect(slicknodeYml).to.deep.equal({
         dependencies: {
@@ -157,13 +151,17 @@ describe('init', () => {
 
       // Check if core modules were added to cache
       const coreModuleYml = yaml.safeLoad(
-        fs.readFileSync(path.join(EMPTY_DIR, '.slicknode', 'cache', 'modules', 'core', 'slicknode.yml')).toString(),
+        fs.readFileSync(
+          path.join(ctx.workspace!, '.slicknode', 'cache', 'modules', 'core', 'slicknode.yml')
+        ).toString(),
       );
       expect(coreModuleYml).to.deep.equal({ module: { id: 'core', label: 'Core' } });
 
       // Check schema.graphql of core module
       const coreSchema = parse(
-        fs.readFileSync(path.join(EMPTY_DIR, '.slicknode', 'cache', 'modules', 'core', 'schema.graphql')).toString(),
+        fs.readFileSync(
+          path.join(ctx.workspace!, '.slicknode', 'cache', 'modules', 'core', 'schema.graphql')
+        ).toString(),
       );
       expect(coreSchema.kind).to.equal(Kind.DOCUMENT);
       expect(coreSchema.definitions.length).to.be.above(5);
