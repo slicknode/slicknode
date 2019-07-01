@@ -6,6 +6,7 @@ describe('config:set', () => {
   const TEST_URL = 'https://localhost';
   test
     .stdout()
+    .timeout(10000)
     .stub(ConfigStorage.prototype, 'setValues', sinon.stub())
     .command(['config:set', 'endpoint', TEST_URL])
     .it('sets the endpoint', ctx => {
