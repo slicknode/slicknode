@@ -11,25 +11,9 @@ import {EnvCommand} from '../../base/env-command';
 import {getModuleList} from '../../utils';
 import execute from '../../utils/execute';
 import {IModuleListItem} from '../../utils/getModuleList';
-import {isDirectory} from '../../validation/options';
 
 export class RuntimeBuildCommand extends EnvCommand {
   public static description = 'Builds the source package for the runtime to be deployed';
-  public static options = [
-    {
-      name: '-d, --dir <path>',
-      description: 'The project directory, if other than current',
-      validator: isDirectory,
-    },
-    {
-      name: '-e, --env <env>',
-      description: 'The configured environment name',
-    },
-    {
-      name: '-f, --force',
-      description: 'Delete output directory without confirmation if exists',
-    },
-  ];
   public static args = [
     {
       name: 'output',

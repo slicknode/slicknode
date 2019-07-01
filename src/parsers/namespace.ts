@@ -5,8 +5,8 @@
 import {NAMESPACE_REGEX} from '../validation/constants';
 
 export function namespace(value: string) {
-  if (value.match(NAMESPACE_REGEX)) {
-    throw new Error('Value is not a valid namespace');
+  if (!value.match(NAMESPACE_REGEX)) {
+    throw new Error(`Value "${value}" is not a valid namespace`);
   }
 
   return value;
