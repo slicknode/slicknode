@@ -25,6 +25,7 @@ describe('runtime:build', () => {
     .stderr({stripColor: true})
     .tmpdir()
     .prompt([ true ])
+    .timeout(20000)
     .workspaceCommand(projectPath('initialized'), ctx => ['runtime:build', ctx.tmpdir])
     .do(async (ctx) => {
       await execute('npm', [ 'install' ], null, {
