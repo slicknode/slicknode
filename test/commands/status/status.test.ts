@@ -94,4 +94,26 @@ describe('status', () => {
       expect(ctx.stdout).to.contain('remove:');
       expect(ctx.stdout).to.contain('add:');
     });
+
+  test
+    .login()
+    .stdout({stripColor: true})
+    .stderr({stripColor: true})
+    .command(['status', '--dir', projectPath('with-syntax-error')])
+    .catch(/Abort/)
+    .it('fails for syntax error in GraphQL schema', ctx => {
+      expect(ctx.stderr).to.contain('Error parsing schema');
+      expect(ctx.stderr).to.contain('Unexpected Name "some"');
+    });
+
+
+  test
+    .login()
+    .stdout({stripColor: true})
+    .stderr({stripColor: true})
+    .command(['status', '--dir', projectPath('with-invalid-module-slicknode-yml')])
+    .catch(/Abort/)
+    .it('fails for invalid module slicknode.yml', ctx => {
+      expect(ctx.stderr).to.contain('Invalid value at path "module,invalidAttribute"');
+    });
 });

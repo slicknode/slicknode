@@ -41,12 +41,11 @@ export default class StatusCommand extends BaseCommand {
     const errors = await validate(this.getProjectRoot(), config);
 
     if (errors.length) {
-      this.log(chalk.red('Project configuration has errors: \n'));
+      this.error(chalk.red('Project configuration has errors: \n'), {exit: false});
       errors.forEach((error, index) => {
-        this.log(chalk.red(`  ${index + 1}. ${error.toString()}\n`));
+        this.error(chalk.red(`  ${index + 1}. ${error.toString()}\n`), {exit: false});
       });
-      this.error('Aborted');
-      return;
+      this.error('Abort');
     }
 
     // Check if we have environment already
