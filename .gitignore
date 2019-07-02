@@ -1,8 +1,13 @@
 /dist
+/lib
 node_modules
 .DS_Store
 .idea
 /site
+/_src
+/oclif.manifest.json
+/.nyc_output
 
 # We don't need package-lock.json, using yarn
 /package-lock.json
+/yarn-error.log

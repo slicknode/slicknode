@@ -1,0 +1,230 @@
+"""An ISO-8601 encoded UTC date string."""
+scalar DateTime
+
+"""Interface for objects that automatically get timestamped values"""
+interface TimeStampedInterface {
+  """The time when the object was first added"""
+  createdAt: DateTime! @index
+
+  """The time when the object was last updated"""
+  lastUpdatedAt: DateTime @index
+}
+
+"""The root query type of the GraphQL endpoint"""
+type Query {
+  """The current viewer object"""
+  viewer: Viewer!
+}
+
+"""The root mutation type of the GraphQL endpoint"""
+type Mutation {
+  """Dummy field to allow printing / parsing of types without fields"""
+  _dummy: Boolean
+}
+
+"""The current viewer"""
+type Viewer {
+  """Dummy field to allow printing / parsing of types without fields"""
+  _dummy: Boolean
+}
+
+"""The filter for string fields"""
+input IDFilter {
+  """Field is equal to the provided value"""
+  eq: ID = null
+
+  """Field is not equal to the provided value"""
+  notEq: ID = null
+
+  """Field value is equal to one of the given values"""
+  in: [ID] = null
+
+  """Field value is not equal to any of the given values"""
+  notIn: [ID] = null
+
+  """Field is greater than the provided value"""
+  gt: ID = null
+
+  """Field is greater than or equal ot the provided value"""
+  gte: ID = null
+
+  """Field is less than the provided value"""
+  lt: ID = null
+
+  """Field is less than or equal ot the provided value"""
+  lte: ID = null
+
+  """Field has no value"""
+  isNull: Boolean = null
+}
+
+"""The filter for string fields"""
+input StringFilter {
+  """Field is equal to the provided value"""
+  eq: String = null
+
+  """Field is not equal to the provided value"""
+  notEq: String = null
+
+  """Field value is equal to one of the given values"""
+  in: [String] = null
+
+  """Field value is not equal to any of the given values"""
+  notIn: [String] = null
+
+  """Field is greater than the provided value"""
+  gt: String = null
+
+  """Field is greater than or equal ot the provided value"""
+  gte: String = null
+
+  """Field is less than the provided value"""
+  lt: String = null
+
+  """Field is less than or equal ot the provided value"""
+  lte: String = null
+
+  """Field has no value"""
+  isNull: Boolean = null
+
+  """Field value starts with the provided string"""
+  startsWith: String = null
+
+  """Field value ends with the provided string"""
+  endsWith: String = null
+
+  """Field value contains the provided string"""
+  contains: String = null
+}
+
+"""The filter for string fields"""
+input IntFilter {
+  """Field is equal to the provided value"""
+  eq: Int = null
+
+  """Field is not equal to the provided value"""
+  notEq: Int = null
+
+  """Field value is equal to one of the given values"""
+  in: [Int] = null
+
+  """Field value is not equal to any of the given values"""
+  notIn: [Int] = null
+
+  """Field is greater than the provided value"""
+  gt: Int = null
+
+  """Field is greater than or equal ot the provided value"""
+  gte: Int = null
+
+  """Field is less than the provided value"""
+  lt: Int = null
+
+  """Field is less than or equal ot the provided value"""
+  lte: Int = null
+
+  """Field has no value"""
+  isNull: Boolean = null
+}
+
+"""The filter for string fields"""
+input FloatFilter {
+  """Field is equal to the provided value"""
+  eq: Float = null
+
+  """Field is not equal to the provided value"""
+  notEq: Float = null
+
+  """Field value is equal to one of the given values"""
+  in: [Float] = null
+
+  """Field value is not equal to any of the given values"""
+  notIn: [Float] = null
+
+  """Field is greater than the provided value"""
+  gt: Float = null
+
+  """Field is greater than or equal to the provided value"""
+  gte: Float = null
+
+  """Field is less than the provided value"""
+  lt: Float = null
+
+  """Field is less than or equal to the provided value"""
+  lte: Float = null
+
+  """Field has no value"""
+  isNull: Boolean = null
+}
+
+"""The filter for string fields"""
+input DateTimeFilter {
+  """Field is equal to the provided value"""
+  eq: DateTime = null
+
+  """Field is not equal to the provided value"""
+  notEq: DateTime = null
+
+  """Field value is equal to one of the given values"""
+  in: [DateTime] = null
+
+  """Field value is not equal to any of the given values"""
+  notIn: [DateTime] = null
+
+  """Field is greater than the provided value"""
+  gt: DateTime = null
+
+  """Field is greater than or equal ot the provided value"""
+  gte: DateTime = null
+
+  """Field is less than the provided value"""
+  lt: DateTime = null
+
+  """Field is less than or equal ot the provided value"""
+  lte: DateTime = null
+
+  """Field has no value"""
+  isNull: Boolean = null
+}
+
+"""The sorting order of a set of nodes"""
+enum OrderDirection {
+  """Sorts the nodes in ascending order"""
+  ASC
+
+  """Sorts the nodes in descending order"""
+  DESC
+}
+
+"""A decimal value string"""
+scalar Decimal
+
+"""The filter for string fields"""
+input DecimalFilter {
+  """Field is equal to the provided value"""
+  eq: Decimal = null
+
+  """Field is not equal to the provided value"""
+  notEq: Decimal = null
+
+  """Field value is equal to one of the given values"""
+  in: [Decimal] = null
+
+  """Field value is not equal to any of the given values"""
+  notIn: [Decimal] = null
+
+  """Field is greater than the provided value"""
+  gt: Decimal = null
+
+  """Field is greater than or equal to the provided value"""
+  gte: Decimal = null
+
+  """Field is less than the provided value"""
+  lt: Decimal = null
+
+  """Field is less than or equal to the provided value"""
+  lte: Decimal = null
+
+  """Field has no value"""
+  isNull: Boolean = null
+}

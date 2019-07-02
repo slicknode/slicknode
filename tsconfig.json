@@ -1,13 +1,18 @@
 {
   "compilerOptions": {
+    "declaration": true,
+    "importHelpers": true,
     "module": "commonjs",
+    "outDir": "lib",
+    "rootDir": "src",
+    "strict": true,
+    "target": "es2017",
     "esModuleInterop": true,
-    "target": "es6",
     "noImplicitAny": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
-    "outDir": "dist",
     "baseUrl": ".",
     "lib": [
       "es7",

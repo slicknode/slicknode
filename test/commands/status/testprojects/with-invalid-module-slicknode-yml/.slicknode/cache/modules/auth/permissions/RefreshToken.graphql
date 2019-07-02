@@ -1,0 +1,14 @@
+query RefreshTokenPermission1 {
+  scope(role: ADMIN, operations: [READ])
+}
+
+
+query RefreshTokenPermission2 {
+  scope(role: STAFF, operations: [READ])
+}
+
+
+query RefreshTokenPermission3($user_id: ID!) {
+  scope(role: AUTHENTICATED, operations: [READ])
+  node(filter: {user: {id: {eq: $user_id}}})
+}

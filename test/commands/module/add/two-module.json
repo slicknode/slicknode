@@ -1,0 +1,18 @@
+{
+  "data": {
+    "listRegistryModule": {
+      "edges": [
+        {
+          "node": {
+            "name": "file"
+          }
+        },
+        {
+          "node": {
+            "name": "image"
+          }
+        }
+      ]
+    }
+  }
+}

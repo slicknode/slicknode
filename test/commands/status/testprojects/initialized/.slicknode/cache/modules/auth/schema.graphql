@@ -1,0 +1,169 @@
+"""A user of the project"""
+type User implements Node & TimeStampedInterface {
+  """The global ID of the object"""
+  id: ID! @validateGid
+
+  """The first name of the user"""
+  firstName: String @validateLength(max:128)
+
+  """The last name of the user"""
+  lastName: String @validateLength(max:128)
+
+  """Email address of the user"""
+  email: String @unique @index @validateEmail
+
+  """Username of the user"""
+  username: String @unique @index @validateLength(max:128)
+
+  """Indicates if the user is active"""
+  isActive: Boolean!
+
+  """Indicates if the user is a staff user"""
+  isStaff: Boolean!
+
+  """Indicates if the user is an admin user"""
+  isAdmin: Boolean!
+
+  """The last time the user logged into the system"""
+  lastLogin: DateTime
+
+  """The password to log in"""
+  password: String @validateLength(min:8) @input(type: PASSWORD)
+
+  """Time when the password was last changed"""
+  passwordChanged: DateTime
+
+  """The time when the object was first added"""
+  createdAt: DateTime! @index
+
+  """The time when the object was last updated"""
+  lastUpdatedAt: DateTime @index
+
+  """The logins of the user"""
+  logins: [Login]! @relation(path: "User=user.Login")
+
+  """The refresh tokens (active devices) of a user"""
+  refreshTokens: [RefreshToken]! @relation(path: "User=user.RefreshToken")
+}
+
+"""The role of client accessing the GraphQL server"""
+enum Role {
+  """A user with full access to the backend."""
+  ADMIN
+
+  """A staff user that can login to the backend."""
+  STAFF
+
+  """A user that is authenticated in the system."""
+  AUTHENTICATED
+
+  """A guest user, this can be anyone."""
+  ANONYMOUS
+
+  """The runtime environment for custom code."""
+  RUNTIME
+}
+
+"""A user of the project"""
+type PasswordResetToken implements Node & TimeStampedInterface {
+  """The global ID of the object"""
+  id: ID! @validateGid
+
+  """The time when the reset token expires"""
+  expires: DateTime!
+
+  """The token to reset the password"""
+  secret: String!
+
+  """The user that the reset token is valid for"""
+  user: User!
+
+  """The time when the object was first added"""
+  createdAt: DateTime! @index
+
+  """The time when the object was last updated"""
+  lastUpdatedAt: DateTime @index
+}
+
+"""A refresh token to obtain a new access token"""
+type RefreshToken implements Node & TimeStampedInterface {
+  """The global ID of the object"""
+  id: ID! @validateGid
+
+  """The owner of the token"""
+  user: User! @index
+
+  """The time when the token expires"""
+  expires: DateTime!
+
+  """The user agent the created the refresh token"""
+  userAgent: String
+
+  """The IP address of the client that requested the token"""
+  ip: String!
+
+  """The time when the object was first added"""
+  createdAt: DateTime! @index
+
+  """The time when the object was last updated"""
+  lastUpdatedAt: DateTime @index
+}
+
+"""A permanent access token"""
+type AccessToken implements Node & TimeStampedInterface {
+  """The global ID of the object"""
+  id: ID! @validateGid
+
+  """The owner of the token"""
+  user: User! @index
+
+  """The time when the token expires"""
+  expires: DateTime!
+
+  """Only allow read operations"""
+  readOnly: Boolean!
+
+  """The IP address of the client that requested the token"""
+  ip: String!
+
+  """The secret that belongs to the token"""
+  secret: String!
+
+  """The time when the object was first added"""
+  createdAt: DateTime! @index
+
+  """The time when the object was last updated"""
+  lastUpdatedAt: DateTime @index
+}
+
+"""A login by a user"""
+type Login implements Node & TimeStampedInterface {
+  """The global ID of the object"""
+  id: ID! @validateGid
+
+  """The user that logged in"""
+  user: User!
+
+  """IP address of the logged in client"""
+  ip: String
+
+  """The module that was used to login"""
+  module: String
+
+  """User agent of the logged in client"""
+  userAgent: String
+
+  """The time when the object was first added"""
+  createdAt: DateTime! @index
+
+  """The time when the object was last updated"""
+  lastUpdatedAt: DateTime @index
+}
+
+extend type Viewer {
+  """The currently logged in user"""
+  user: User
+
+  """Auth roles of the current user"""
+  roles: [Role]
+}

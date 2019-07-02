@@ -1,0 +1,16 @@
+{
+  "data": {
+    "listCluster": {
+      "edges": [
+        {
+          "node": {
+            "id": "Q2x1c3Rlcjox",
+            "alias": "gcp.us-east1",
+            "name": "Google US East 1 (South Carolina)",
+            "pingUrl": "http://ping.us-east1.slicknode.com/"
+          }
+        }
+      ]
+    }
+  }
+}
