@@ -31,160 +31,160 @@ type Viewer {
 """The filter for string fields"""
 input IDFilter {
   """Field is equal to the provided value"""
-  eq: ID = null
+  eq: ID
 
   """Field is not equal to the provided value"""
-  notEq: ID = null
+  notEq: ID
 
   """Field value is equal to one of the given values"""
-  in: [ID] = null
+  in: [ID!]
 
   """Field value is not equal to any of the given values"""
-  notIn: [ID] = null
+  notIn: [ID!]
 
   """Field is greater than the provided value"""
-  gt: ID = null
+  gt: ID
 
   """Field is greater than or equal ot the provided value"""
-  gte: ID = null
+  gte: ID
 
   """Field is less than the provided value"""
-  lt: ID = null
+  lt: ID
 
   """Field is less than or equal ot the provided value"""
-  lte: ID = null
+  lte: ID
 
   """Field has no value"""
-  isNull: Boolean = null
+  isNull: Boolean
 }
 
 """The filter for string fields"""
 input StringFilter {
   """Field is equal to the provided value"""
-  eq: String = null
+  eq: String
 
   """Field is not equal to the provided value"""
-  notEq: String = null
+  notEq: String
 
   """Field value is equal to one of the given values"""
-  in: [String] = null
+  in: [String!]
 
   """Field value is not equal to any of the given values"""
-  notIn: [String] = null
+  notIn: [String!]
 
   """Field is greater than the provided value"""
-  gt: String = null
+  gt: String
 
   """Field is greater than or equal ot the provided value"""
-  gte: String = null
+  gte: String
 
   """Field is less than the provided value"""
-  lt: String = null
+  lt: String
 
   """Field is less than or equal ot the provided value"""
-  lte: String = null
+  lte: String
 
   """Field has no value"""
-  isNull: Boolean = null
+  isNull: Boolean
 
   """Field value starts with the provided string"""
-  startsWith: String = null
+  startsWith: String
 
   """Field value ends with the provided string"""
-  endsWith: String = null
+  endsWith: String
 
   """Field value contains the provided string"""
-  contains: String = null
+  contains: String
 }
 
 """The filter for string fields"""
 input IntFilter {
   """Field is equal to the provided value"""
-  eq: Int = null
+  eq: Int
 
   """Field is not equal to the provided value"""
-  notEq: Int = null
+  notEq: Int
 
   """Field value is equal to one of the given values"""
-  in: [Int] = null
+  in: [Int!]
 
   """Field value is not equal to any of the given values"""
-  notIn: [Int] = null
+  notIn: [Int!]
 
   """Field is greater than the provided value"""
-  gt: Int = null
+  gt: Int
 
   """Field is greater than or equal ot the provided value"""
-  gte: Int = null
+  gte: Int
 
   """Field is less than the provided value"""
-  lt: Int = null
+  lt: Int
 
   """Field is less than or equal ot the provided value"""
-  lte: Int = null
+  lte: Int
 
   """Field has no value"""
-  isNull: Boolean = null
+  isNull: Boolean
 }
 
 """The filter for string fields"""
 input FloatFilter {
   """Field is equal to the provided value"""
-  eq: Float = null
+  eq: Float
 
   """Field is not equal to the provided value"""
-  notEq: Float = null
+  notEq: Float
 
   """Field value is equal to one of the given values"""
-  in: [Float] = null
+  in: [Float!]
 
   """Field value is not equal to any of the given values"""
-  notIn: [Float] = null
+  notIn: [Float!]
 
   """Field is greater than the provided value"""
-  gt: Float = null
+  gt: Float
 
   """Field is greater than or equal to the provided value"""
-  gte: Float = null
+  gte: Float
 
   """Field is less than the provided value"""
-  lt: Float = null
+  lt: Float
 
   """Field is less than or equal to the provided value"""
-  lte: Float = null
+  lte: Float
 
   """Field has no value"""
-  isNull: Boolean = null
+  isNull: Boolean
 }
 
 """The filter for string fields"""
 input DateTimeFilter {
   """Field is equal to the provided value"""
-  eq: DateTime = null
+  eq: DateTime
 
   """Field is not equal to the provided value"""
-  notEq: DateTime = null
+  notEq: DateTime
 
   """Field value is equal to one of the given values"""
-  in: [DateTime] = null
+  in: [DateTime!]
 
   """Field value is not equal to any of the given values"""
-  notIn: [DateTime] = null
+  notIn: [DateTime!]
 
   """Field is greater than the provided value"""
-  gt: DateTime = null
+  gt: DateTime
 
   """Field is greater than or equal ot the provided value"""
-  gte: DateTime = null
+  gte: DateTime
 
   """Field is less than the provided value"""
-  lt: DateTime = null
+  lt: DateTime
 
   """Field is less than or equal ot the provided value"""
-  lte: DateTime = null
+  lte: DateTime
 
   """Field has no value"""
-  isNull: Boolean = null
+  isNull: Boolean
 }
 
 """The sorting order of a set of nodes"""
@@ -202,29 +202,79 @@ scalar Decimal
 """The filter for string fields"""
 input DecimalFilter {
   """Field is equal to the provided value"""
-  eq: Decimal = null
+  eq: Decimal
 
   """Field is not equal to the provided value"""
-  notEq: Decimal = null
+  notEq: Decimal
 
   """Field value is equal to one of the given values"""
-  in: [Decimal] = null
+  in: [Decimal!]
 
   """Field value is not equal to any of the given values"""
-  notIn: [Decimal] = null
+  notIn: [Decimal!]
 
   """Field is greater than the provided value"""
-  gt: Decimal = null
+  gt: Decimal
 
   """Field is greater than or equal to the provided value"""
-  gte: Decimal = null
+  gte: Decimal
 
   """Field is less than the provided value"""
-  lt: Decimal = null
+  lt: Decimal
 
   """Field is less than or equal to the provided value"""
-  lte: Decimal = null
+  lte: Decimal
 
   """Field has no value"""
-  isNull: Boolean = null
+  isNull: Boolean
 }
+
+"""The input element types"""
+enum InputElementType {
+  TEXT
+  TEXTAREA
+  MARKDOWN
+  PASSWORD
+}
+
+"""Set the default input element for the field"""
+directive @input(
+  """The input element type"""
+  type: InputElementType!
+) on FIELD_DEFINITION
+
+"""Adds an index in the database for the field"""
+directive @index on FIELD_DEFINITION
+
+"""Define a relation between the field and other nodes"""
+directive @relation(
+  """The path between the related objects"""
+  path: String!
+) on FIELD_DEFINITION
+
+"""Adds a unique constraint to the field"""
+directive @unique on FIELD_DEFINITION
+
+"""Adds email validation to a field"""
+directive @validateEmail on FIELD_DEFINITION
+
+"""Adds length validation to a field"""
+directive @validateLength(
+  """The minimum length of the value"""
+  min: Int
+
+  """The maximum length of the value"""
+  max: Int
+) on FIELD_DEFINITION
+
+"""Adds regular expression validation to a field"""
+directive @validateRegex(
+  """Regular expression pattern that the values is matched against"""
+  pattern: String!
+) on FIELD_DEFINITION
+
+"""Adds global ID validation to a field"""
+directive @validateGid on FIELD_DEFINITION
+
+"""Adds url validation to a field"""
+directive @validateUrl on FIELD_DEFINITION
