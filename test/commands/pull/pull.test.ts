@@ -117,5 +117,18 @@ describe('pull', () => {
       );
       expect(coreSchema.kind).to.equal(Kind.DOCUMENT);
       expect(coreSchema.definitions.length).to.be.above(5);
+
+      // Check for core schema directives
+      const directives = [
+        'index', 'unique', 'validateEmail', 'validateLength', 'validateRegex', 'validateGid', 'validateUrl'
+      ];
+      for (const directive of directives) {
+        const directiveDefinition = coreSchema.definitions.find(def => {
+          if (def.kind === Kind.DIRECTIVE_DEFINITION) {
+            return def.name.value === directive;
+          }
+        });
+        expect(directiveDefinition).to.be.an('object');
+      }
     });
 });
