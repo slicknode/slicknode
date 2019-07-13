@@ -213,6 +213,28 @@ describe('pull', () => {
     .stdout()
     .stderr()
     .login()
+    .api(LOAD_PROJECT_BUNDLE_QUERY, {data: {
+      project: {
+        id: '234',
+        endpoint: 'http://testproject',
+        name: 'TestName',
+        version: {
+          id: 'someid',
+          bundle: 'http://localhost/fakeversionbundle.zip'
+        }
+      }
+    }})
+    .api(GET_REPOSITORY_URL_QUERY, {errors: [{message: 'Internatl Server Error'}], data: null})
+    .workspaceCommand(projectPath('initialized'), ['pull'])
+    .catch(/Failed to load repository URL from API/)
+    .it('fails if source archive cannot be loaded', () => {
+
+    });
+
+  test
+    .stdout()
+    .stderr()
+    .login()
     .nock(
       'http://localhost',
        loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
@@ -238,7 +260,7 @@ describe('pull', () => {
     .api(GET_REPOSITORY_URL_QUERY, {data: {repositoryUrl: 'http://localhost/repository/'}})
     .workspaceCommand(projectPath('initialized'), ['pull'])
     .catch(/Update of module "auth" failed: Metadata could not be loaded. Make sure you are online and try again./)
-    .it('fails if source archive cannot be loaded', () => {
+    .it('fails if repository URL cannot be loaded', () => {
 
     });
 
