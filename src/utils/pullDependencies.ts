@@ -7,6 +7,7 @@ import path from 'path';
 import rimraf from 'rimraf';
 import Client from 'slicknode-client';
 import {IProjectConfig} from '../types';
+import {PRIVATE_MODULE_NAME_REGEX} from '../validation';
 
 interface IPullDependenciesParams {
   config: IProjectConfig;
@@ -36,10 +37,18 @@ export async function pullDependencies(params: IPullDependenciesParams) {
     }
   }
 
-  for (const id of Object.keys(config.dependencies)) {
+  // Only update the dependencies that are in registry
+  const publicDependencies = Object.keys(config.dependencies)
+    .filter(id => !id.match(PRIVATE_MODULE_NAME_REGEX));
+
+  for (const id of publicDependencies) {
     try {
       // Load module details from registry
-      const result = await fetch(`${repositoryUrl}${id}`);
+      const detailUrl = `${repositoryUrl}${id}`;
+      const result = await fetch(detailUrl);
+      if (result.status !== 200) {
+        throw new Error('Metadata could not be loaded. Make sure you are online and try again.');
+      }
       const data = await result.json();
 
       // Check if version is tag, get right zip URL
@@ -77,7 +86,7 @@ export async function pullDependencies(params: IPullDependenciesParams) {
         }
       }
     } catch (e) {
-      throw new Error(`Update of module ${id} failed: ${e.message}`);
+      throw new Error(`Update of module "${id}" failed: ${e.message}`);
     }
     cli.action.stop();
   }

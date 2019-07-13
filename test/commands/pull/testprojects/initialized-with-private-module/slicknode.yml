@@ -1,0 +1,5 @@
+dependencies:
+  '@private/blog': ./modules/blog
+  auth: latest
+  core: latest
+  relay: latest

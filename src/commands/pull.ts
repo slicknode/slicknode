@@ -41,16 +41,23 @@ export default class PullCommand extends EnvCommand {
       return;
     }
 
-    this.log('Loading current version from the servers');
+    const projectRoot = this.getProjectRoot();
+    const client = this.getClient();
 
     // Load project version
-    const env = await this.getEnvironment(input.flags.env || 'default');
+    const env = await this.getEnvironment(input.flags.env || 'default', true);
     if (!env) {
+      // Update non private modules from registry
+      await pullDependencies({
+        config,
+        client,
+        dir: projectRoot,
+      });
+      this.log(chalk.green('Local source was successfully updated'));
       return;
     }
 
     // Load project version
-    const client = this.getClient();
     const result = await client.fetch(LOAD_PROJECT_BUNDLE_QUERY, {
       id: env.id,
     });
@@ -68,10 +75,13 @@ export default class PullCommand extends EnvCommand {
     }
 
     // Load the source from the servers
-    const projectRoot = this.getProjectRoot();
-    await loadProjectVersion(projectRoot, bundle);
+    try {
+      await loadProjectVersion(projectRoot, bundle);
+    } catch (e) {
+      this.error(`Updating private modules failed: ${e.message}`, {exit: false});
+    }
 
-    // Update native modules from registry
+    // Update non private modules from registry
     await pullDependencies({
       config,
       client,
