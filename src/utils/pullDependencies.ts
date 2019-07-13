@@ -39,7 +39,7 @@ export async function pullDependencies(params: IPullDependenciesParams) {
 
   // Only update the dependencies that are in registry
   const publicDependencies = Object.keys(config.dependencies)
-    .filter(id => !id.match(PRIVATE_MODULE_NAME_REGEX));
+    .filter((id) => !id.match(PRIVATE_MODULE_NAME_REGEX));
 
   for (const id of publicDependencies) {
     try {
