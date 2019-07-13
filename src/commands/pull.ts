@@ -2,9 +2,11 @@ import chalk from 'chalk';
 import _ from 'lodash';
 import {EnvCommand} from '../base/env-command';
 import loadProjectVersion from '../utils/loadProjectVersion';
+import {pullDependencies} from '../utils/pullDependencies';
 
 export const LOAD_PROJECT_BUNDLE_QUERY = `
 query GetProjectBundle($id: ID!) {
+  registryUrl
   project: getProjectById(id: $id) {
     version {
       id
@@ -48,7 +50,8 @@ export default class PullCommand extends EnvCommand {
     }
 
     // Load project version
-    const result = await this.getClient().fetch(LOAD_PROJECT_BUNDLE_QUERY, {
+    const client = this.getClient();
+    const result = await client.fetch(LOAD_PROJECT_BUNDLE_QUERY, {
       id: env.id,
     });
     if (result.errors && result.errors.length) {
@@ -65,7 +68,15 @@ export default class PullCommand extends EnvCommand {
     }
 
     // Load the source from the servers
-    await loadProjectVersion(this.getProjectRoot(), bundle);
+    const projectRoot = this.getProjectRoot();
+    await loadProjectVersion(projectRoot, bundle);
+
+    // Update native modules from registry
+    await pullDependencies({
+      config,
+      client,
+      dir: projectRoot,
+    });
 
     this.log(chalk.green('Local source was successfully updated'));
   }

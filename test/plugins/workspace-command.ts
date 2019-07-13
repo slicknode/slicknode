@@ -26,7 +26,6 @@ export function workspaceCommand(sourcePath: string, args: string[] | string | (
       if (ctx.plugins && ctx.plugins.command) {
         let resolvedArgs = typeof args === 'function' ? args(ctx) : args;
         const allArgs = (_.isArray(resolvedArgs) ? resolvedArgs : [resolvedArgs]).concat(['--dir', workspace]);
-        console.log('All args', allArgs);
         const cmdPlugin = (ctx.plugins.command(allArgs) as FancyTypes.Plugin<typeof ctx>);
         if (cmdPlugin && cmdPlugin.run) {
           await cmdPlugin.run(ctx);

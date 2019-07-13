@@ -26,10 +26,10 @@ describe('init', () => {
   const EMPTY_DIR = path.join(__dirname, 'testprojects', 'empty');
 
   test
-    .login()
-    .api(LIST_CLUSTER_QUERY, {data: null, errors: [{message: 'Error'}]})
     .stdout()
     .stderr()
+    .login()
+    .api(LIST_CLUSTER_QUERY, {data: null, errors: [{message: 'Error'}]})
     .command(['init'])
     .catch('Could not load available clusters. Make sure you have a working internet connection and try again.')
     .it('shows error when cluster could not be loaded', ctx => {

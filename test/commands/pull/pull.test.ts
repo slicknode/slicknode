@@ -4,6 +4,7 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import {Kind, parse} from 'graphql';
 import {LOAD_PROJECT_BUNDLE_QUERY} from '../../../src/commands/pull';
+import {GET_REPOSITORY_URL_QUERY} from '../../../src/utils/pullDependencies';
 
 function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);
@@ -37,6 +38,35 @@ describe('pull', () => {
       'http://localhost',
        loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
     )
+
+    // Mock repository detail requests for modules
+    .nock(
+      'http://localhost',
+       loader => loader.get('/repository/core').reply(200, require('./fixtures/modules/core.json'))
+    )
+    .nock(
+      'http://localhost',
+       loader => loader.get('/repository/auth').reply(200, require('./fixtures/modules/auth.json'))
+    )
+    .nock(
+      'http://localhost',
+       loader => loader.get('/repository/relay').reply(200, require('./fixtures/modules/relay.json'))
+    )
+
+    // Mock source archives for modules
+    .nock(
+      'http://localhost',
+       loader => loader.get('/repository/core.zip').replyWithFile(200, path.join(__dirname, 'fixtures', 'modules', 'core_0.0.1.zip'))
+    )
+    .nock(
+      'http://localhost',
+       loader => loader.get('/repository/auth.zip').replyWithFile(200, path.join(__dirname, 'fixtures', 'modules', 'auth_0.0.1.zip'))
+    )
+    .nock(
+      'http://localhost',
+       loader => loader.get('/repository/relay.zip').replyWithFile(200, path.join(__dirname, 'fixtures', 'modules', 'relay_0.0.1.zip'))
+    )
+
     .api(LOAD_PROJECT_BUNDLE_QUERY, {data: {
       project: {
         id: '234',
@@ -48,6 +78,7 @@ describe('pull', () => {
         }
       }
     }})
+    .api(GET_REPOSITORY_URL_QUERY, {data: {repositoryUrl: 'http://localhost/repository/'}})
     .workspaceCommand(projectPath('initialized'), ['pull'])
     .it('pulls project sources successfully', ctx => {
       expect(ctx.stdout).to.contain('Local source was successfully updated');
