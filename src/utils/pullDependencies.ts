@@ -16,7 +16,7 @@ interface IPullDependenciesParams {
   repositoryUrl?: string;
 }
 
-export const GET_REPOSITORY_URL_QUERY = '{repositoryUrl}';
+export const GET_REPOSITORY_URL_QUERY = '{registryUrl}';
 
 /**
  *
@@ -31,7 +31,7 @@ export async function pullDependencies(params: IPullDependenciesParams) {
   if (!repositoryUrl) {
     const result = await client.fetch(GET_REPOSITORY_URL_QUERY);
 
-    repositoryUrl = _.get(result, 'data.repositoryUrl');
+    repositoryUrl = _.get(result, 'data.registryUrl');
     if (!repositoryUrl) {
       throw new Error('Failed to load repository URL from API. Are you offline? Please try again');
     }

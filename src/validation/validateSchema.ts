@@ -6,6 +6,7 @@
 
 import {promisify} from 'es6-promisify';
 import fs from 'fs';
+import yaml from 'js-yaml';
 import path from 'path';
 import {
   IProjectConfig,
@@ -17,9 +18,12 @@ import ValidationError from './ValidationError';
 const readFile = promisify(fs.readFile) as Function; // tslint:disable-line
 import {
   buildASTSchema,
-  parse,
-  validateSchema as graphqlValidateSchema,
+  buildSchema,
+  Kind,
+  parse, print, printSchema, validateSchema as graphqlValidateSchema,
 } from 'graphql';
+import {RenameRootFields, RenameTypes, transformSchema} from 'graphql-tools';
+import _ from 'lodash';
 
 async function validateSchema(projectDir: string, config: IProjectConfig): Promise<any> {
   try {
@@ -42,10 +46,26 @@ async function validateSchema(projectDir: string, config: IProjectConfig): Promi
         return '';
       }
 
+      // Read schema config
+      let moduleConfig;
+      try {
+        const configFile = path.join(modulePath, 'slicknode.yml');
+        const rawModuleConfig = await readFile(configFile, 'utf8');
+        moduleConfig = yaml.safeLoad(rawModuleConfig);
+      } catch (e) {
+        moduleConfig = null;
+      }
+
       // Parse partial schema, so we can display path to .graphql file
       if (rawModuleSchema) {
         try {
+          // Parse to see if is valid GraphQL document
           parse(rawModuleSchema);
+
+          // Add namespace to types / root fields if we have remote module
+          if (_.get(moduleConfig, 'module.remote')) {
+            return transformRemoteSchema(rawModuleSchema, _.get(moduleConfig, 'module.namespace'));
+          }
         } catch (e) {
           throw new Error(`Could not parse GraphQL schema ${path.relative(projectDir, schemaFile)}: ${e.message}`);
         }
@@ -63,6 +83,50 @@ async function validateSchema(projectDir: string, config: IProjectConfig): Promi
   } catch (e) {
     return [ new ValidationError(`Invalid schema: ${e.toString()}`) ];
   }
+}
+
+/**
+ * Transforms a remote schema from the original schema to namespaced version that is merged
+ * into the other modules
+ *
+ * @param schema
+ * @param namespace
+ */
+function transformRemoteSchema(schema: string, namespace: string | null): string {
+  let transformedSchema = buildSchema(schema);
+  transformedSchema = transformSchema(transformedSchema, [
+    new RenameTypes(
+      (name) => namespace ? `${namespace}_${name}` : name,
+    ),
+    new RenameRootFields(
+      ((operation, name) => namespace ? `${namespace}_${name}` : name),
+    ),
+  ]);
+  const rootTypeNames: string[] = [];
+  if (transformedSchema.getMutationType()) {
+    rootTypeNames.push(transformedSchema.getMutationType()!.name);
+  }
+  if (transformedSchema.getQueryType()) {
+    rootTypeNames.push(transformedSchema.getQueryType()!.name);
+  }
+  // Once subscriptions are supported, do the same here...
+  let transformedSchemaDoc = parse(printSchema(transformedSchema));
+
+  // Add root types as type extensions
+  transformedSchemaDoc = {
+    ...transformedSchemaDoc,
+    definitions: transformedSchemaDoc.definitions.map((definition) => {
+      if (definition.kind === Kind.OBJECT_TYPE_DEFINITION && rootTypeNames.includes(definition.name.value)) {
+        return {
+          ...definition,
+          kind: Kind.OBJECT_TYPE_EXTENSION,
+        };
+      }
+      return definition;
+    }),
+  };
+
+  return print(transformedSchemaDoc);
 }
 
 export default validateSchema;

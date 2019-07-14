@@ -78,7 +78,7 @@ describe('pull', () => {
         }
       }
     }})
-    .api(GET_REPOSITORY_URL_QUERY, {data: {repositoryUrl: 'http://localhost/repository/'}})
+    .api(GET_REPOSITORY_URL_QUERY, {data: {registryUrl: 'http://localhost/repository/'}})
     .workspaceCommand(projectPath('initialized'), ['pull'])
     .it('pulls project sources successfully', ctx => {
       expect(ctx.stdout).to.contain('Local source was successfully updated');
@@ -161,7 +161,7 @@ describe('pull', () => {
        loader => loader.get('/repository/relay.zip').replyWithFile(200, path.join(__dirname, 'fixtures', 'modules', 'relay_0.0.1.zip'))
     )
 
-    .api(GET_REPOSITORY_URL_QUERY, {data: {repositoryUrl: 'http://localhost/repository/'}})
+    .api(GET_REPOSITORY_URL_QUERY, {data: {registryUrl: 'http://localhost/repository/'}})
     .workspaceCommand(projectPath('not-initialized'), ['pull'])
     .it('pulls project sources for not initialized project', ctx => {
       expect(ctx.stdout).to.contain('Local source was successfully updated');
@@ -257,7 +257,7 @@ describe('pull', () => {
         }
       }
     }})
-    .api(GET_REPOSITORY_URL_QUERY, {data: {repositoryUrl: 'http://localhost/repository/'}})
+    .api(GET_REPOSITORY_URL_QUERY, {data: {registryUrl: 'http://localhost/repository/'}})
     .workspaceCommand(projectPath('initialized'), ['pull'])
     .catch(/Update of module "auth" failed: Metadata could not be loaded. Make sure you are online and try again./)
     .it('fails if repository URL cannot be loaded', () => {
@@ -312,7 +312,7 @@ describe('pull', () => {
         }
       }
     }})
-    .api(GET_REPOSITORY_URL_QUERY, {data: {repositoryUrl: 'http://localhost/repository/'}})
+    .api(GET_REPOSITORY_URL_QUERY, {data: {registryUrl: 'http://localhost/repository/'}})
     .workspaceCommand(projectPath('initialized-with-private-module'), ['pull'])
     .it('pulls project sources from public modules only', ctx => {
       expect(ctx.stdout).to.contain('Local source was successfully updated');

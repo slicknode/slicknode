@@ -1,0 +1,18 @@
+type Query {
+  viewer: Viewer
+  someOtherField: String
+}
+
+type Viewer {
+  roles: [String]
+}
+
+type Viewer {
+  test: String
+}
+
+type Post {
+  id: ID!
+  title: String!
+  text: String
+}
