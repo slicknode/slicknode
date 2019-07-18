@@ -35,5 +35,4 @@ a matter of minutes.
 
 [Sign up](https://console.slicknode.com/register) to get your free account (no credit card required).
 
-Follow us on [Twitter](https://twitter.com/slicknode) and [Facebook](https://www.facebook.com/SlicknodeHQ/). 
-
+Follow us on [Twitter](https://twitter.com/slicknode) and [Facebook](https://www.facebook.com/SlicknodeHQ/).
