@@ -211,7 +211,7 @@ export class BaseCommand extends Command {
           `ERROR: Your slicknode CLI version (${currentVersion}) is outdated and ` +
           'incompatible with the current Slicknode API.\n' +
           'To upgrade to the latest version, run: \n\n' +
-          '  npm update -g slicknode\n',
+          '  npm install -g slicknode@latest\n',
         ));
         return true;
       }
@@ -226,7 +226,7 @@ export class BaseCommand extends Command {
         this.error(
           `INFO: There is a new slicknode CLI version (${latestVersion}) available.\n` +
           'To upgrade to the latest version, run: \n\n' +
-          '  npm update -g slicknode\n',
+          '  npm install -g slicknode@latest\n',
         );
       }
     } catch (e) {

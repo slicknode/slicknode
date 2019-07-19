@@ -33,7 +33,6 @@
     "@oclif/plugin-help": "^2",
     "adm-zip": "^0.4.13",
     "babel-runtime": "^6.26.0",
-    "caporal": "^0.10.0",
     "chalk": "^2.4.1",
     "cli-ux": "^5.3.0",
     "es6-promisify": "^6.0.0",
