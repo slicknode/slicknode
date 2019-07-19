@@ -98,7 +98,7 @@ describe('init', () => {
     });
 
   test
-    .stdout({print: true})
+    .stdout()
     .stderr()
     .login()
     .nock(
