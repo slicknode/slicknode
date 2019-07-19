@@ -98,7 +98,7 @@ describe('init', () => {
     });
 
   test
-    .stdout()
+    .stdout({print: true})
     .stderr()
     .login()
     .nock(
@@ -161,6 +161,79 @@ describe('init', () => {
       const coreSchema = parse(
         fs.readFileSync(
           path.join(ctx.workspace!, '.slicknode', 'cache', 'modules', 'core', 'schema.graphql')
+        ).toString(),
+      );
+      expect(coreSchema.kind).to.equal(Kind.DOCUMENT);
+      expect(coreSchema.definitions.length).to.be.above(5);
+
+      expect(ctx.stdout).to.contain('Endpoint: http://testproject');
+      expect(ctx.stdout).to.contain('Name: TestName');
+    });
+
+  test
+    .stdout()
+    .stderr()
+    .login()
+    .nock(
+      'http://localhost',
+       loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+    )
+    .api(LIST_CLUSTER_QUERY, clusterResult)
+    .api(CREATE_PROJECT_MUTATION, {data: {
+      createProject: {
+        node: {
+          id: '234',
+          endpoint: 'http://testproject',
+          name: 'TestName',
+          version: {
+            id: 'someid',
+            bundle: 'http://localhost/fakeversionbundle.zip'
+          }
+        }
+      }
+    }})
+    .workspaceCommand(EMPTY_DIR, ['init', 'test-dir'])
+    .it('initializes project successfully and creates directory', ctx => {
+      expect(ctx.stdout).to.contain('Creating project');
+      // Check slicknoderc contents
+      const slicknodeRc = JSON.parse(
+        fs.readFileSync(path.join(ctx.workspace!, 'test-dir', '.slicknoderc')).toString()
+      );
+      expect(slicknodeRc).to.deep.equal({
+        default: {
+          version: 'someid',
+          id: '234',
+          endpoint: 'http://testproject',
+          name: 'TestName'
+        },
+      });
+
+      // Check slicknode.yml content
+      const slicknodeYml = yaml.safeLoad(
+        fs.readFileSync(path.join(ctx.workspace!, 'test-dir', 'slicknode.yml')).toString()
+      );
+      expect(slicknodeYml).to.deep.equal({
+        dependencies: {
+          '@private/test-app': './modules/test-app',
+          auth: 'latest',
+          core: 'latest',
+          image: 'latest',
+          relay: 'latest',
+        }
+      });
+
+      // Check if core modules were added to cache
+      const coreModuleYml = yaml.safeLoad(
+        fs.readFileSync(
+          path.join(ctx.workspace!, 'test-dir', '.slicknode', 'cache', 'modules', 'core', 'slicknode.yml')
+        ).toString(),
+      );
+      expect(coreModuleYml).to.deep.equal({ module: { id: 'core', label: 'Core' } });
+
+      // Check schema.graphql of core module
+      const coreSchema = parse(
+        fs.readFileSync(
+          path.join(ctx.workspace!, 'test-dir', '.slicknode', 'cache', 'modules', 'core', 'schema.graphql')
         ).toString(),
       );
       expect(coreSchema.kind).to.equal(Kind.DOCUMENT);

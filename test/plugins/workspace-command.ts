@@ -7,7 +7,16 @@ import uuid from 'uuid';
 import rimraf = require('rimraf');
 import _ from 'lodash';
 
-export function workspaceCommand(sourcePath: string, args: string[] | string | ((ctx: any) => string[] | string)) {
+interface IWorkspaceCommandOptions {
+  setWorkspaceAsDir?: boolean,
+}
+
+export function workspaceCommand(
+  sourcePath: string,
+  args: string[] | string | ((ctx: any) => string[] | string),
+  options: IWorkspaceCommandOptions = {}
+) {
+  let cwd: string | null = null;
   return {
     async run(ctx: {workspace?: string, plugins: {[k: string]: FancyTypes.PluginBuilder<any, any>}}) {
       // Copy all files from source to temp folder
@@ -25,7 +34,15 @@ export function workspaceCommand(sourcePath: string, args: string[] | string | (
 
       if (ctx.plugins && ctx.plugins.command) {
         let resolvedArgs = typeof args === 'function' ? args(ctx) : args;
-        const allArgs = (_.isArray(resolvedArgs) ? resolvedArgs : [resolvedArgs]).concat(['--dir', workspace]);
+        let allArgs = (_.isArray(resolvedArgs) ? resolvedArgs : [resolvedArgs]);
+
+        if (options.setWorkspaceAsDir) {
+          allArgs = allArgs.concat(['--dir', workspace]);
+        } else {
+          cwd = process.cwd();
+          process.chdir(workspace);
+        }
+
         const cmdPlugin = (ctx.plugins.command(allArgs) as FancyTypes.Plugin<typeof ctx>);
         if (cmdPlugin && cmdPlugin.run) {
           await cmdPlugin.run(ctx);
@@ -38,6 +55,12 @@ export function workspaceCommand(sourcePath: string, args: string[] | string | (
     // Delete temporary workspace
     async finally(ctx: {workspace?: string}) {
       if (ctx.workspace) {
+        if (cwd) {
+          process.chdir(cwd);
+        } else {
+          cwd = null;
+        }
+
         return await new Promise((resolve) => {
           rimraf(ctx.workspace!, {}, resolve);
         });

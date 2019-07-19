@@ -89,14 +89,24 @@ export default class InitCommand extends BaseCommand {
     }
 
     const input = this.parse(InitCommand);
-    let {name, alias} = input.flags;
-    const {dir} = input.flags;
+    let {alias} = input.flags;
+    let {name} = input.args;
+
+    // Get name from flag if it was not set via arg
+    if (!name) {
+      name = input.flags.name || null;
+    }
+
     const account = input.flags.account || null;
 
     // Create directory if name was provided via args and directory does not exist
-    this.log(dir);
     let targetDir = this.getProjectRoot();
-    if (name && !dir) {
+
+    // // Check if dir was explicitly set
+    const dirExplicitlySet = input.raw.some((token) => {
+      return ['--dir', '-d'].includes(token.input);
+    });
+    if (name && !dirExplicitlySet) {
       try {
         targetDir = path.join(path.resolve(''), name);
         mkdirp.sync(targetDir);

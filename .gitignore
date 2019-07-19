@@ -11,3 +11,15 @@ node_modules
 # We don't need package-lock.json, using yarn
 /package-lock.json
 /yarn-error.log
+# Slicknode cache data
+.slicknode
+
+# Slicknode cache data
+.slicknode
+
+# Slicknode cache data
+.slicknode
+
+# Slicknode cache data
+.slicknode
+
