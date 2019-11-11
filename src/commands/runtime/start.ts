@@ -44,7 +44,8 @@ export class RuntimeStartCommand extends BaseCommand {
     });
 
     // Register modules in runtime
-    const modules = await getModuleList(this.getProjectRoot());
+    const projectRoot = this.getProjectRoot();
+    const modules = await getModuleList(projectRoot);
     modules
       .filter((module) => module.config.runtime)
       .forEach((module) => {
@@ -60,7 +61,10 @@ export class RuntimeStartCommand extends BaseCommand {
       // If we're in watch mode, clear require cache
       if (input.flags.watch) {
         for (const key in require.cache) {
-          delete require.cache[key]; // tslint:disable-line
+          // Only invalidate cache for project files, to not break tests
+          if (key.startsWith(projectRoot)) {
+            delete require.cache[key]; // tslint:disable-line
+          }
         }
       }
 

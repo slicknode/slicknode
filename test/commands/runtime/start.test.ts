@@ -133,7 +133,6 @@ describe('runtime:start', () => {
           context: DUMMY_CONTEXT,
         })
         .expect(200);
-      return;
 
       expect(response.body).to.deep.equal({
         data: 123
