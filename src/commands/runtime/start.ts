@@ -57,6 +57,11 @@ export class RuntimeStartCommand extends BaseCommand {
     app.use(bodyParser.raw({
       type: 'application/json',
     }));
+    app.get('/', (req, res) => {
+      res.json({
+        message: 'Slicknode runtime running, ready to process events'
+      });
+    });
     app.post('/', async (req: any, res) => {
       // If we're in watch mode, clear require cache
       if (input.flags.watch) {
