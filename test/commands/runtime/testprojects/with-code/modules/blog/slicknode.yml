@@ -1,0 +1,8 @@
+module:
+  id: '@private/blog'
+  label: Blog
+  namespace: Blog
+
+runtime:
+  engine: nodejs@8
+

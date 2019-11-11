@@ -7,12 +7,14 @@ import {login} from './plugins/login';
 import {prompt} from './plugins/prompt';
 import {tmpdir} from './plugins/tmpdir';
 import {workspaceCommand} from './plugins/workspace-command';
+import {tmpExpress} from './plugins/tmpExpress';
 
 const test = base
   .register('api', api)
   .register('login', login)
   .register('prompt', prompt)
   .register('tmpdir', tmpdir)
+  .register('tmpExpress', tmpExpress)
   .register('workspaceCommand', workspaceCommand);
 
 export {
