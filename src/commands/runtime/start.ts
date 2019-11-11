@@ -59,7 +59,7 @@ export class RuntimeStartCommand extends BaseCommand {
     }));
     app.get('/', (req, res) => {
       res.json({
-        message: 'Slicknode runtime running, ready to process events'
+        message: 'Slicknode runtime running, ready to process events',
       });
     });
     app.post('/', async (req: any, res) => {
