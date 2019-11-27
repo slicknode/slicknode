@@ -14,6 +14,7 @@ import {ICluster} from '../types';
 import {
   randomName,
 } from '../utils';
+import * as inquirer from 'inquirer';
 
 export const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100) {
@@ -131,7 +132,7 @@ export default class InitCommand extends BaseCommand {
       return;
     }
 
-    this.log(`Creating project ${name}`);
+    cli.action.start(`Deploying project to cluster`);
     const variables = {
       input: {
         name,
@@ -142,9 +143,11 @@ export default class InitCommand extends BaseCommand {
     };
     const client = this.getClient();
     const result = await client.fetch(CREATE_PROJECT_MUTATION, variables);
+    cli.action.stop();
 
     // Load bundle
     try {
+      cli.action.start('Update local files');
       const project = _.get(result, 'data.createProject.node');
       if (!project) {
         const messages = [
@@ -245,7 +248,14 @@ Find more help in the documentation: http://slicknode.com
     const result = await this.getClient().fetch(LIST_CLUSTER_QUERY);
     const edges = _.get(result, 'data.listCluster.edges', []) as Array<{node: ICluster}>;
 
-    const dcTimers = edges.map(async ({node}) => {
+    // We only have one cluster, return immediately
+    if (edges.length === 1) {
+      cli.action.stop();
+      return edges[0].node;
+    }
+
+    // Determine latencies
+    const dcTimers = await Promise.all(edges.map(async ({node}) => {
       const start = Date.now();
       let latency;
       try {
@@ -258,23 +268,22 @@ Find more help in the documentation: http://slicknode.com
         latency,
         cluster: node,
       };
-    });
-
-    let cluster = null;
-    try {
-      const timedDcs = await Promise.all(dcTimers);
-      const availableDcs = timedDcs
-        .filter((d) => d.latency !== null)
-        .sort((a, b) => a.latency! < b.latency! ? 1 : 0);
-
-      if (availableDcs.length) {
-        cluster = availableDcs[0].cluster;
-      }
-    } catch (e) {
-      cluster = null;
-    }
+    }));
     cli.action.stop();
 
-    return cluster;
+    const inputValues = await inquirer.prompt<{cluster: ICluster}>([
+      {
+        name: 'cluster',
+        message: 'Select the cluster for the project:',
+        type: 'list',
+        choices: dcTimers.sort(
+          (a, b) => (a.latency || Infinity) - (b.latency || Infinity)
+        ).map(({cluster, latency}) => ({
+          name: `${cluster.alias}: ${cluster.name} (latency: ${latency}ms)`,
+          value: cluster,
+        })),
+      }
+    ]);
+    return inputValues.cluster;
   }
 }
