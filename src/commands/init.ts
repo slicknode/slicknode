@@ -3,6 +3,7 @@ import AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import cli from 'cli-ux';
 import fs from 'fs-extra';
+import * as inquirer from 'inquirer';
 import _ from 'lodash';
 import mkdirp from 'mkdirp';
 import fetch from 'node-fetch';
@@ -14,7 +15,6 @@ import {ICluster} from '../types';
 import {
   randomName,
 } from '../utils';
-import * as inquirer from 'inquirer';
 
 export const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100) {
@@ -132,7 +132,7 @@ export default class InitCommand extends BaseCommand {
       return;
     }
 
-    cli.action.start(`Deploying project to cluster`);
+    cli.action.start('Deploying project to cluster');
     const variables = {
       input: {
         name,
@@ -277,12 +277,12 @@ Find more help in the documentation: http://slicknode.com
         message: 'Select the cluster for the project:',
         type: 'list',
         choices: dcTimers.sort(
-          (a, b) => (a.latency || Infinity) - (b.latency || Infinity)
+          (a, b) => (a.latency || Infinity) - (b.latency || Infinity),
         ).map(({cluster, latency}) => ({
           name: `${cluster.alias}: ${cluster.name} (latency: ${latency}ms)`,
           value: cluster,
         })),
-      }
+      },
     ]);
     return inputValues.cluster;
   }
