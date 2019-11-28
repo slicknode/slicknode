@@ -252,6 +252,8 @@ Find more help in the documentation: http://slicknode.com
     if (edges.length === 1) {
       cli.action.stop();
       return edges[0].node;
+    } else if (edges.length === 0) {
+      return null;
     }
 
     // Determine latencies

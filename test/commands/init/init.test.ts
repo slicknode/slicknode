@@ -28,12 +28,15 @@ describe('init', () => {
   test
     .stdout()
     .stderr()
+    .cliActions([
+      'Load available clusters',
+    ])
     .login()
     .api(LIST_CLUSTER_QUERY, {data: null, errors: [{message: 'Error'}]})
     .command(['init'])
     .catch('Could not load available clusters. Make sure you have a working internet connection and try again.')
     .it('shows error when cluster could not be loaded', ctx => {
-      expect(ctx.stderr).to.contain('done');
+      // expect(ctx.stderr).to.contain('done');
     });
 
   test
@@ -48,18 +51,27 @@ describe('init', () => {
   test
     .stdout()
     .stderr()
+    .cliActions([
+      'Load available clusters',
+      'Deploying project to cluster',
+      'Update local files',
+    ])
     .login()
     .api(LIST_CLUSTER_QUERY, clusterResult)
     .api(CREATE_PROJECT_MUTATION, {data: null, errors: [{message: 'Error'}]})
     .command(['init', '--dir', EMPTY_DIR])
     .catch('Initialization failed: ERROR: Could not create project. Please try again later.\nError')
     .it('shows error for failed project creation', ctx => {
-      expect(ctx.stdout).to.contain('Creating project');
     });
 
   test
     .stdout()
     .stderr()
+    .cliActions([
+      'Load available clusters',
+      'Deploying project to cluster',
+      'Update local files',
+    ])
     .login()
     .api(LIST_CLUSTER_QUERY, clusterResult)
     .api(CREATE_PROJECT_MUTATION, {data: {
@@ -72,12 +84,17 @@ describe('init', () => {
     .command(['init', '--dir', EMPTY_DIR])
     .catch(/Initialization failed: Project was created but could not be fully initialized/)
     .it('fails for successful creation but incomplete setup', ctx => {
-      expect(ctx.stdout).to.contain('Creating project');
+      // expect(ctx.stdout).to.contain('Creating project');
     });
 
   test
     .stdout()
     .stderr()
+    .cliActions([
+      'Load available clusters',
+      'Deploying project to cluster',
+      'Update local files',
+    ])
     .login()
     .api(LIST_CLUSTER_QUERY, clusterResult)
     .api(CREATE_PROJECT_MUTATION, {data: {
@@ -94,12 +111,17 @@ describe('init', () => {
     .command(['init', '--dir', EMPTY_DIR])
     .catch(/Initialization failed/)
     .it('fails when bundle cannot be loaded', ctx => {
-      expect(ctx.stdout).to.contain('Creating project');
+      // expect(ctx.stdout).to.contain('Creating project');
     });
 
   test
     .stdout()
     .stderr()
+    .cliActions([
+      'Load available clusters',
+      'Deploying project to cluster',
+      'Update local files',
+    ])
     .login()
     .nock(
       'http://localhost',
@@ -121,7 +143,6 @@ describe('init', () => {
     }})
     .workspaceCommand(EMPTY_DIR, ['init'])
     .it('initializes project successfully', ctx => {
-      expect(ctx.stdout).to.contain('Creating project');
       // Check slicknoderc contents
       const slicknodeRc = JSON.parse(
         fs.readFileSync(path.join(ctx.workspace!, '.slicknoderc')).toString()
@@ -173,6 +194,11 @@ describe('init', () => {
   test
     .stdout()
     .stderr()
+    .cliActions([
+      'Load available clusters',
+      'Deploying project to cluster',
+      'Update local files',
+    ])
     .login()
     .nock(
       'http://localhost',
@@ -194,7 +220,6 @@ describe('init', () => {
     }})
     .workspaceCommand(EMPTY_DIR, ['init', 'test-dir'])
     .it('initializes project successfully and creates directory', ctx => {
-      expect(ctx.stdout).to.contain('Creating project');
       // Check slicknoderc contents
       const slicknodeRc = JSON.parse(
         fs.readFileSync(path.join(ctx.workspace!, 'test-dir', '.slicknoderc')).toString()

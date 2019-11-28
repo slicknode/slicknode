@@ -8,9 +8,11 @@ import {prompt} from './plugins/prompt';
 import {tmpdir} from './plugins/tmpdir';
 import {workspaceCommand} from './plugins/workspace-command';
 import {tmpExpress} from './plugins/tmpExpress';
+import {cliActions} from './plugins/cli-actions';
 
 const test = base
   .register('api', api)
+  .register('cliActions', cliActions)
   .register('login', login)
   .register('prompt', prompt)
   .register('tmpdir', tmpdir)
