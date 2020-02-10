@@ -1,8 +1,8 @@
 import cli from 'cli-ux';
-import {ICluster} from '../types';
-import Client from 'slicknode-client';
-import _ from 'lodash';
 import inquirer from 'inquirer';
+import _ from 'lodash';
+import Client from 'slicknode-client';
+import {ICluster} from '../types';
 
 const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100) {
@@ -18,7 +18,7 @@ const LIST_CLUSTER_QUERY = `query {
 }`;
 
 interface IGetClusterParams {
-  client: Client
+  client: Client;
 }
 
 export async function getCluster(params: IGetClusterParams) {

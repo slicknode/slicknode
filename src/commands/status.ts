@@ -6,6 +6,7 @@
 
 import {flags} from '@oclif/command';
 import chalk from 'chalk';
+import cli from 'cli-ux';
 import _ from 'lodash';
 import {Uploadable} from 'slicknode-client';
 import {BaseCommand} from '../base/base-command';
@@ -18,7 +19,6 @@ import {
   packProject,
 } from '../utils';
 import validate from '../validation/validate';
-import cli from 'cli-ux';
 
 export default class StatusCommand extends BaseCommand {
   public static command = 'status';

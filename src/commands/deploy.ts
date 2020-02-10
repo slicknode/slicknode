@@ -15,13 +15,13 @@ import validate from '../validation/validate';
 import StatusCommand from './status';
 
 import {flags} from '@oclif/command';
+import cli from 'cli-ux';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import * as parsers from '../parsers';
+import {getCluster} from '../utils/getCluster';
 import {PROJECT_ALIAS_REGEX} from '../validation';
 import {CREATE_PROJECT_MUTATION, LIST_CLUSTER_QUERY} from './init';
-import cli from 'cli-ux';
-import {getCluster} from '../utils/getCluster';
 
 interface IChangeCounts {
   update: number;

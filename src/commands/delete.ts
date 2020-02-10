@@ -5,8 +5,8 @@ import {
 } from '../types';
 
 import {flags} from '@oclif/command';
-import {BaseCommand} from '../base/base-command';
 import {cli} from 'cli-ux';
+import {BaseCommand} from '../base/base-command';
 
 export default class DeleteCommand extends BaseCommand {
   public static description = 'Delete the current project deployment from the slicknode servers.';
