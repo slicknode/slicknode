@@ -15,6 +15,7 @@ import {ICluster} from '../types';
 import {
   randomName,
 } from '../utils';
+import {getCluster} from '../utils/getCluster';
 
 export const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100) {
@@ -124,7 +125,9 @@ export default class InitCommand extends BaseCommand {
       alias = name.toLowerCase() + '-' + uuid.v4().substr(0, 8);
     }
 
-    const cluster = await this.getCluster();
+    const cluster = await getCluster({
+      client: this.getClient(),
+    });
     if (!cluster) {
       this.error(
         'Could not load available clusters. Make sure you have a working internet connection and try again.',
@@ -237,55 +240,5 @@ Find more help in the documentation: http://slicknode.com
         `Initialization failed: ${e.message}`,
       );
     }
-  }
-
-  /**
-   * Returns the closest data center
-   * @returns {Promise.<void>}
-   */
-  public async getCluster(): Promise<ICluster | null> {
-    cli.action.start('Load available clusters');
-    const result = await this.getClient().fetch(LIST_CLUSTER_QUERY);
-    const edges = _.get(result, 'data.listCluster.edges', []) as Array<{node: ICluster}>;
-
-    // We only have one cluster, return immediately
-    if (edges.length === 1) {
-      cli.action.stop();
-      return edges[0].node;
-    } else if (edges.length === 0) {
-      return null;
-    }
-
-    // Determine latencies
-    const dcTimers = await Promise.all(edges.map(async ({node}) => {
-      const start = Date.now();
-      let latency;
-      try {
-        await fetch(node.pingUrl);
-        latency = Date.now() - start;
-      } catch (e) {
-        latency = null;
-      }
-      return {
-        latency,
-        cluster: node,
-      };
-    }));
-    cli.action.stop();
-
-    const inputValues = await inquirer.prompt<{cluster: ICluster}>([
-      {
-        name: 'cluster',
-        message: 'Select the cluster for the project:',
-        type: 'list',
-        choices: dcTimers.sort(
-          (a, b) => (a.latency || Infinity) - (b.latency || Infinity),
-        ).map(({cluster, latency}) => ({
-          name: `${cluster.alias}: ${cluster.name} (latency: ${latency}ms)`,
-          value: cluster,
-        })),
-      },
-    ]);
-    return inputValues.cluster;
   }
 }

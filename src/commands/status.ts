@@ -18,6 +18,7 @@ import {
   packProject,
 } from '../utils';
 import validate from '../validation/validate';
+import cli from 'cli-ux';
 
 export default class StatusCommand extends BaseCommand {
   public static command = 'status';
@@ -86,9 +87,11 @@ export default class StatusCommand extends BaseCommand {
    */
   public async loadAndPrintStatus(env: IEnvironmentConfig): Promise<boolean> {
     // Run dummy migration
+    cli.action.start('Comparing local changes with cluster state');
     const result = await this.migrateProject(true, env);
+    cli.action.stop();
 
-    if (result.data === null) {
+    if (result.data === null || _.get(result, 'errors[0].message')) {
       this.error(`Error loading state from API: ${_.get(result, 'errors[0].message')}`);
     }
 

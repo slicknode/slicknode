@@ -20,6 +20,8 @@ import fetch from 'node-fetch';
 import * as parsers from '../parsers';
 import {PROJECT_ALIAS_REGEX} from '../validation';
 import {CREATE_PROJECT_MUTATION, LIST_CLUSTER_QUERY} from './init';
+import cli from 'cli-ux';
+import {getCluster} from '../utils/getCluster';
 
 interface IChangeCounts {
   update: number;
@@ -89,7 +91,9 @@ export default class DeployCommand extends StatusCommand {
 
     // Run migration
     const env = await this.getOrCreateEnvironment();
+    cli.action.start('Validating project status');
     const validStatus = await this.loadAndPrintStatus(env);
+    cli.action.stop();
 
     // Check if we have valid status
     if (!validStatus) {
@@ -112,7 +116,9 @@ export default class DeployCommand extends StatusCommand {
       }
     }
 
+    cli.action.start('Deploying changes');
     const result = await this.migrateProject(false, await env);
+    cli.action.stop();
 
     const serverErrors = _.get(result, 'data.migrateProject.errors', []).filter(
       (e: IProjectChangeError) => e,
@@ -136,12 +142,14 @@ export default class DeployCommand extends StatusCommand {
     }
 
     // Load project files from server
+    cli.action.start('Updating local source files');
     try {
       await loadProjectVersion(this.getProjectRoot(), project.version.bundle);
     } catch (e) {
       this.error('Error loading project config from servers');
       return;
     }
+    cli.action.stop();
 
     // Update environment
 
@@ -225,8 +233,9 @@ export default class DeployCommand extends StatusCommand {
     }
 
     // Determine data center
-    // $FlowFixMe: @TODO
-    const cluster = await this.getCluster();
+    const cluster = await getCluster({
+      client: this.getClient(),
+    });
     if (!cluster) {
       this.error(chalk.red(
         'There is currently no cluster with sufficient capacity available. Try again later.',
@@ -243,7 +252,9 @@ export default class DeployCommand extends StatusCommand {
       },
     };
 
+    cli.action.start('Create project in cluster');
     const result = await this.getClient().fetch(CREATE_PROJECT_MUTATION, variables);
+    cli.action.stop();
     const project = _.get(result, 'data.createProject.node');
     if (!project) {
       this.log(chalk.red('ERROR: Could not create project. Please try again later.'));
@@ -268,50 +279,7 @@ export default class DeployCommand extends StatusCommand {
       id: project.id,
     };
     await this.updateEnvironment(name, envConfig);
+
     return envConfig;
-  }
-
-  /**
-   * Returns the closest data center
-   * @returns {Promise.<void>}
-   */
-  public async getCluster(): Promise<ICluster | null> {
-    const result = await this.getClient().fetch(LIST_CLUSTER_QUERY);
-    const edges = _.get(result, 'data.listCluster.edges', []) as Array<{node: ICluster}>;
-    this.log('Load available clusters');
-    if (_.get(result, 'errors[0]')) {
-      this.error(chalk.red(`Error loading clusters: ${_.get(result, 'errors[0].message')}`));
-      return null;
-    }
-
-    const dcTimers = edges.map(async ({node}) => {
-      const start = Date.now();
-      let latency;
-      try {
-        await fetch(node.pingUrl);
-        latency = Date.now() - start;
-      } catch (e) {
-        latency = null;
-      }
-      return {
-        latency,
-        cluster: node,
-      };
-    });
-
-    try {
-      const timedDcs = await Promise.all(dcTimers) as Array<{cluster: ICluster, latency: number}>;
-      const availableDcs = timedDcs
-        .filter((d) => d.latency !== null)
-        .sort((a, b) => a.latency < b.latency ? 1 : 0);
-
-      if (availableDcs.length) {
-        return availableDcs[0].cluster;
-      }
-    } catch (e) {
-      return null;
-    }
-
-    return null;
   }
 }
