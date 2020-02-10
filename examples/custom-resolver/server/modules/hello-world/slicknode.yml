@@ -1,0 +1,4 @@
+module:
+  id: '@private/hello-world'
+  label: Hello World
+  namespace: HelloWorld

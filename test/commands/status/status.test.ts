@@ -166,6 +166,6 @@ describe('status', () => {
     .command(['status', '--dir', projectPath('with-remote-module-duplicate-types')])
     .catch(/Abort/)
     .it('validates remote GraphQL schema', ctx => {
-      expect(ctx.stderr).to.contain('can be only one type named "Viewer"');
+      expect(ctx.stderr).to.contain('only one type named "Viewer"');
     });
 });

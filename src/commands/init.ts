@@ -3,6 +3,7 @@ import AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import cli from 'cli-ux';
 import fs from 'fs-extra';
+import * as inquirer from 'inquirer';
 import _ from 'lodash';
 import mkdirp from 'mkdirp';
 import fetch from 'node-fetch';
@@ -14,6 +15,7 @@ import {ICluster} from '../types';
 import {
   randomName,
 } from '../utils';
+import {getCluster} from '../utils/getCluster';
 
 export const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100) {
@@ -123,7 +125,9 @@ export default class InitCommand extends BaseCommand {
       alias = name.toLowerCase() + '-' + uuid.v4().substr(0, 8);
     }
 
-    const cluster = await this.getCluster();
+    const cluster = await getCluster({
+      client: this.getClient(),
+    });
     if (!cluster) {
       this.error(
         'Could not load available clusters. Make sure you have a working internet connection and try again.',
@@ -131,7 +135,7 @@ export default class InitCommand extends BaseCommand {
       return;
     }
 
-    this.log(`Creating project ${name}`);
+    cli.action.start('Deploying project to cluster');
     const variables = {
       input: {
         name,
@@ -142,9 +146,11 @@ export default class InitCommand extends BaseCommand {
     };
     const client = this.getClient();
     const result = await client.fetch(CREATE_PROJECT_MUTATION, variables);
+    cli.action.stop();
 
     // Load bundle
     try {
+      cli.action.start('Update local files');
       const project = _.get(result, 'data.createProject.node');
       if (!project) {
         const messages = [
@@ -234,47 +240,5 @@ Find more help in the documentation: http://slicknode.com
         `Initialization failed: ${e.message}`,
       );
     }
-  }
-
-  /**
-   * Returns the closest data center
-   * @returns {Promise.<void>}
-   */
-  public async getCluster(): Promise<ICluster | null> {
-    cli.action.start('Load available clusters');
-    const result = await this.getClient().fetch(LIST_CLUSTER_QUERY);
-    const edges = _.get(result, 'data.listCluster.edges', []) as Array<{node: ICluster}>;
-
-    const dcTimers = edges.map(async ({node}) => {
-      const start = Date.now();
-      let latency;
-      try {
-        await fetch(node.pingUrl);
-        latency = Date.now() - start;
-      } catch (e) {
-        latency = null;
-      }
-      return {
-        latency,
-        cluster: node,
-      };
-    });
-
-    let cluster = null;
-    try {
-      const timedDcs = await Promise.all(dcTimers);
-      const availableDcs = timedDcs
-        .filter((d) => d.latency !== null)
-        .sort((a, b) => a.latency! < b.latency! ? 1 : 0);
-
-      if (availableDcs.length) {
-        cluster = availableDcs[0].cluster;
-      }
-    } catch (e) {
-      cluster = null;
-    }
-    cli.action.stop();
-
-    return cluster;
   }
 }

@@ -5,6 +5,7 @@ import {
 } from '../types';
 
 import {flags} from '@oclif/command';
+import {cli} from 'cli-ux';
 import {BaseCommand} from '../base/base-command';
 
 export default class DeleteCommand extends BaseCommand {
@@ -66,7 +67,12 @@ export default class DeleteCommand extends BaseCommand {
 
     // Run delete migration
     try {
-      await this.getClient().fetch(DELETE_PROJECT_MUTATION, {id: env.id});
+      cli.action.start('Deleting project in cluster');
+      const result = await this.getClient().fetch(DELETE_PROJECT_MUTATION, {id: env.id});
+      cli.action.stop();
+      if (result.errors && result.errors.length) {
+        throw new Error(result.errors[0].message);
+      }
     } catch (e) {
       this.error(chalk.red(`Error deleting project: ${e.message}`));
       return;
@@ -91,7 +97,9 @@ export default class DeleteCommand extends BaseCommand {
 
 export const DELETE_PROJECT_MUTATION = `mutation DeleteProjectMutation($id: ID!) {
   deleteProject(input: {id: $id}) {
-    clientMutationId
+    node {
+      id
+    }
   }
 }
 `;
