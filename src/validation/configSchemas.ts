@@ -16,7 +16,7 @@ export const runtime = Joi.object().keys({
   engine: Joi.string().valid(
     'nodejs@8',
     'nodejs@10',
-    'nodejs@12'
+    'nodejs@12',
   ).required(),
 });
 
