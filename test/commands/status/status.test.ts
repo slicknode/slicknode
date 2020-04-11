@@ -103,7 +103,8 @@ describe('status', () => {
     .catch(/Abort/)
     .it('fails for syntax error in GraphQL schema', ctx => {
       expect(ctx.stderr).to.contain('Error parsing schema');
-      expect(ctx.stderr).to.contain('Unexpected Name \n ›   "some"');
+      expect(ctx.stderr).to.contain('Unexpected Name');
+      expect(ctx.stderr).to.contain('"some"');
     });
 
 
