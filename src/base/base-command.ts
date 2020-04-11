@@ -69,6 +69,9 @@ export class BaseCommand extends Command {
     return new Client({
       endpoint: config.endpoint,
       storage: authStorage,
+      headers: {
+        'User-Agent': this.config.userAgent,
+      },
     });
   }
 
