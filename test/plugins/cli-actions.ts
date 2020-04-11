@@ -1,6 +1,7 @@
 import sinon, {SinonStub} from 'sinon';
 import cli from 'cli-ux';
 import {expect} from '@oclif/test';
+import _ from 'lodash';
 
 export function cliActions(expectedActions: string[]) {
   const startedActions: string[] = [];
@@ -17,7 +18,8 @@ export function cliActions(expectedActions: string[]) {
       if (ctx.cliActionStub) {
         ctx.cliActionStub.restore();
         if (expectedActions.length > startedActions.length) {
-          throw new Error('One or more actions not started');
+          const notStartedActions = _.difference(expectedActions, startedActions);
+          throw new Error(`Expected actions not started: ${notStartedActions.join(', ')}`);
         } else if (expectedActions.length < startedActions.length) {
           throw new Error(
             `One or more actions were not stubbed. Started actions were: "${startedActions.join('", \n"')}"`
