@@ -1,6 +1,8 @@
 import cli from 'cli-ux';
+import https from 'https';
 import inquirer from 'inquirer';
 import _ from 'lodash';
+import fetch from 'node-fetch';
 import Client from 'slicknode-client';
 import {ICluster} from '../types';
 
@@ -35,12 +37,32 @@ export async function getCluster(params: IGetClusterParams) {
     return null;
   }
 
+  // Use keepAlive to get more accurate latency without connection setup
+  const agent = new https.Agent({
+    keepAlive: true,
+  });
+
+  // Trigger requests to setup connections
+  await Promise.all(edges.map(async ({node}) => {
+    try {
+      await fetch(node.pingUrl, {
+        timeout: 5000,
+        agent,
+      });
+    } catch (e) {
+      // tslint-ignore
+    }
+  }));
+
   // Determine latencies
   const dcTimers = await Promise.all(edges.map(async ({node}) => {
     const start = Date.now();
     let latency;
     try {
-      await fetch(node.pingUrl);
+      await fetch(node.pingUrl, {
+        timeout: 5000,
+        agent,
+      });
       latency = Date.now() - start;
     } catch (e) {
       latency = null;
