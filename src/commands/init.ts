@@ -2,15 +2,13 @@ import {flags} from '@oclif/command';
 import AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import cli from 'cli-ux';
-import fs, {mkdirpSync} from 'fs-extra';
-import * as inquirer from 'inquirer';
+import fs, {mkdirpSync, readdir} from 'fs-extra';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import os from 'os';
 import path from 'path';
 import uuid from 'uuid';
 import {BaseCommand} from '../base/base-command';
-import {ICluster} from '../types';
 import {
   randomName,
 } from '../utils';
@@ -113,6 +111,16 @@ export default class InitCommand extends BaseCommand {
         mkdirpSync(targetDir);
       } catch (e) {
         this.error(`ERROR: Failed to create project directory ${targetDir}. ${e.message}`);
+      }
+
+      // Ensure directory is empty
+      const content = await readdir(targetDir);
+      if (content.length > 0) {
+        this.error(
+          'The directory already exists and is not empty. ' +
+          `Delete the content or initialize the project in a different directory: ${targetDir}`,
+          {exit: 1},
+        );
       }
     }
 

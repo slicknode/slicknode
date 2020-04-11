@@ -67,6 +67,16 @@ describe('init', () => {
   test
     .stdout()
     .stderr()
+    .login()
+    // @TODO: Set working directory for command test to something in the tests folder
+    .command(['init', 'test',])
+    .catch(/The directory already exists and is not empty/)
+    .it('ensures target directory is empty when initialized with name', ctx => {
+    });
+
+  test
+    .stdout()
+    .stderr()
     .cliActions([
       'Load available clusters',
       'Deploying project to cluster',
