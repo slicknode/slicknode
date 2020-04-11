@@ -3,8 +3,8 @@
  */
 
 import * as fs from 'fs';
+import {mkdirpSync} from 'fs-extra';
 import _ from 'lodash';
-import mkdirp from 'mkdirp';
 import * as path from 'path';
 
 export default class ConfigStorage {
@@ -56,7 +56,7 @@ export default class ConfigStorage {
    */
   public setValues(values: {[key: string]: any}): void {
     try {
-      mkdirp.sync(path.dirname(this.file));
+      mkdirpSync(path.dirname(this.file));
       const data = JSON.stringify(values);
       fs.writeFileSync(this.file, data);
       this.cache = null;

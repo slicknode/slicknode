@@ -5,10 +5,10 @@
 import {flags} from '@oclif/command';
 import chalk from 'chalk';
 import fs from 'fs';
+import {mkdirpSync} from 'fs-extra';
 import inquirer from 'inquirer';
 import yaml from 'js-yaml';
 import _ from 'lodash';
-import mkdirp from 'mkdirp';
 import path from 'path';
 import {BaseCommand} from '../../base/base-command';
 import * as parsers from '../../parsers';
@@ -117,7 +117,7 @@ export default class ModuleCreateCommand extends BaseCommand {
 
       // Create modules dir
       const moduleDir = path.join(this.getDefaultModulesDir(), input.args.name);
-      mkdirp.sync(moduleDir);
+      mkdirpSync(moduleDir);
       this.debug('Created module folder: ' + moduleDir);
 
       // Write slicknode.yml file for new module

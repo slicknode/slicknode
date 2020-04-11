@@ -4,10 +4,9 @@
  * @flow
  */
 import AdmZip from 'adm-zip';
-import fs from 'fs-extra';
+import fs, {mkdirpSync} from 'fs-extra';
 import yaml from 'js-yaml';
 import _ from 'lodash';
-import mkdirp from 'mkdirp';
 import fetch from 'node-fetch';
 import os from 'os';
 import path from 'path';
@@ -69,7 +68,7 @@ async function loadProjectVersion(projectRoot: string, bundle: string): Promise<
       zip.extractEntryTo(entry.entryName, moduleCacheDir, true, true);
     });
 
-  mkdirp.sync(moduleCacheDir);
+  mkdirpSync(moduleCacheDir);
 
   zip.extractAllTo(moduleCacheDir, true);
 

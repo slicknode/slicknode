@@ -2,10 +2,9 @@ import {flags} from '@oclif/command';
 import AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import cli from 'cli-ux';
-import fs from 'fs-extra';
+import fs, {mkdirpSync} from 'fs-extra';
 import * as inquirer from 'inquirer';
 import _ from 'lodash';
-import mkdirp from 'mkdirp';
 import fetch from 'node-fetch';
 import os from 'os';
 import path from 'path';
@@ -111,7 +110,7 @@ export default class InitCommand extends BaseCommand {
     if (name && !dirExplicitlySet) {
       try {
         targetDir = path.join(path.resolve(''), name);
-        mkdirp.sync(targetDir);
+        mkdirpSync(targetDir);
       } catch (e) {
         this.error(`ERROR: Failed to create project directory ${targetDir}. ${e.message}`);
       }
@@ -190,7 +189,7 @@ export default class InitCommand extends BaseCommand {
       // Unzip all module data to slicknode cache dir
       const zip = new AdmZip(tmpFile);
       const moduleCacheDir = path.join(targetDir, '.slicknode', 'cache');
-      mkdirp.sync(moduleCacheDir);
+      mkdirpSync(moduleCacheDir);
       zip.extractAllTo(moduleCacheDir, true);
 
       zip.extractEntryTo('slicknode.yml', targetDir);
