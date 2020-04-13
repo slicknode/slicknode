@@ -9,7 +9,7 @@ import {
   IEnvironmentConfig, IProjectChangeError,
 } from '../types';
 import {
-  loadProjectVersion,
+  loadProjectVersion, randomName,
 } from '../utils';
 import validate from '../validation/validate';
 import StatusCommand from './status';
@@ -18,8 +18,11 @@ import {flags} from '@oclif/command';
 import cli from 'cli-ux';
 import _ from 'lodash';
 import fetch from 'node-fetch';
+import uuid from 'uuid';
 import * as parsers from '../parsers';
 import {getCluster} from '../utils/getCluster';
+import {isDependencyTreeLoaded} from '../utils/isDependencyTreeLoaded';
+import {pullDependencies} from '../utils/pullDependencies';
 import {PROJECT_ALIAS_REGEX} from '../validation';
 import {CREATE_PROJECT_MUTATION, LIST_CLUSTER_QUERY} from './init';
 
@@ -58,6 +61,8 @@ export default class DeployCommand extends StatusCommand {
     // Check if directory is initialized
     const config = await this.getConfig();
     const input = this.parse(DeployCommand);
+    const projectRoot = this.getProjectRoot();
+    const client = this.getClient();
 
     if (!config) {
       this.log(chalk.red('Deployment failed:\n'));
@@ -65,16 +70,6 @@ export default class DeployCommand extends StatusCommand {
         '  The directory is not a slicknode project. \n' +
         `  Run ${chalk.bold('slicknode init')} to initialize a new project.`,
       );
-      return;
-    }
-    const errors = await validate(this.getProjectRoot(), config);
-
-    if (errors.length) {
-      this.log(chalk.red('Project configuration has errors: \n'));
-      errors.forEach((error, index) => {
-        this.error(chalk.red(`  ${index + 1}. ${error.toString()}\n`), {exit: false});
-      });
-      this.error(chalk.red('Deployment aborted'));
       return;
     }
 
@@ -89,11 +84,31 @@ export default class DeployCommand extends StatusCommand {
       return;
     }
 
+    // Pull dependencies if not installed
+    if (!(await isDependencyTreeLoaded({dir: projectRoot, config}))) {
+      await pullDependencies({
+        client,
+        dir: projectRoot,
+        config,
+      });
+    }
+
+    const errors = await validate(projectRoot, config);
+
+    if (errors.length) {
+      this.log(chalk.red('Project configuration has errors: \n'));
+      errors.forEach((error, index) => {
+        this.error(chalk.red(`  ${index + 1}. ${error.toString()}\n`), {exit: false});
+      });
+      this.error(chalk.red('Deployment aborted'));
+      return;
+    }
+
     // Run migration
     const env = await this.getOrCreateEnvironment();
-    cli.action.start('Validating project status');
+    // cli.action.start('Validating project status');
     const validStatus = await this.loadAndPrintStatus(env);
-    cli.action.stop();
+    // cli.action.stop();
 
     // Check if we have valid status
     if (!validStatus) {
@@ -175,12 +190,13 @@ export default class DeployCommand extends StatusCommand {
     if (env) {
       return env;
     }
+    const client = this.getClient();
 
     // We don't have project for this env yet, create one...
     this.log(`Creating project for env "${name}"`);
 
-    let suggestedName;
-    let suggestedAlias;
+    let suggestedName = randomName();
+    let suggestedAlias = suggestedName.toLowerCase() + '-' + uuid.v4().substr(0, 8);
 
     let newName;
     let newAlias;
@@ -234,7 +250,7 @@ export default class DeployCommand extends StatusCommand {
 
     // Determine data center
     const cluster = await getCluster({
-      client: this.getClient(),
+      client,
     });
     if (!cluster) {
       this.error(chalk.red(
@@ -253,7 +269,7 @@ export default class DeployCommand extends StatusCommand {
     };
 
     cli.action.start('Create project in cluster');
-    const result = await this.getClient().fetch(CREATE_PROJECT_MUTATION, variables);
+    const result = await client.fetch(CREATE_PROJECT_MUTATION, variables);
     cli.action.stop();
     const project = _.get(result, 'data.createProject.node');
     if (!project) {
