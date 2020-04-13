@@ -5,8 +5,6 @@
 export interface IEnvironmentConfig {
     version: string;
     endpoint: string;
-    playgroundUrl: string;
-    consoleUrl: string;
     alias: string;
     id: string;
     name: string;

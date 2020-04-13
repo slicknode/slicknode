@@ -289,8 +289,6 @@ export default class DeployCommand extends StatusCommand {
       endpoint: project.endpoint,
       version: project.version.id,
       alias: project.alias,
-      consoleUrl: project.consoleUrl,
-      playgroundUrl: project.playgroundUrl,
       name: project.name,
       id: project.id,
     };
