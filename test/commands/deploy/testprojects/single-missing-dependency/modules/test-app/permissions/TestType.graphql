@@ -1,0 +1,4 @@
+query TestTypePermission1 {
+  scope(role: ADMIN, operations: [READ])
+  node(filter: {booleanField: true})
+}
