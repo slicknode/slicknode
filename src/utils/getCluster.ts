@@ -7,7 +7,7 @@ import Client from 'slicknode-client';
 import {ICluster} from '../types';
 
 const LIST_CLUSTER_QUERY = `query {
-  listCluster(first: 100) {
+  listCluster(first: 100, filter: {node: {openForProjects: true}}) {
     edges {
       node {
         id
