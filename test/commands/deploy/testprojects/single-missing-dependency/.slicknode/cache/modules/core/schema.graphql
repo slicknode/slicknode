@@ -1,0 +1,280 @@
+"""An ISO-8601 encoded UTC date string."""
+scalar DateTime
+
+"""Interface for objects that automatically get timestamped values"""
+interface TimeStampedInterface {
+  """The time when the object was first added"""
+  createdAt: DateTime! @index
+
+  """The time when the object was last updated"""
+  lastUpdatedAt: DateTime @index
+}
+
+"""The root query type of the GraphQL endpoint"""
+type Query {
+  """The current viewer object"""
+  viewer: Viewer!
+}
+
+"""The root mutation type of the GraphQL endpoint"""
+type Mutation {
+  """Dummy field to allow printing / parsing of types without fields"""
+  _dummy: Boolean
+}
+
+"""The current viewer"""
+type Viewer {
+  """Dummy field to allow printing / parsing of types without fields"""
+  _dummy: Boolean
+}
+
+"""The filter for string fields"""
+input IDFilter {
+  """Field is equal to the provided value"""
+  eq: ID
+
+  """Field is not equal to the provided value"""
+  notEq: ID
+
+  """Field value is equal to one of the given values"""
+  in: [ID!]
+
+  """Field value is not equal to any of the given values"""
+  notIn: [ID!]
+
+  """Field is greater than the provided value"""
+  gt: ID
+
+  """Field is greater than or equal ot the provided value"""
+  gte: ID
+
+  """Field is less than the provided value"""
+  lt: ID
+
+  """Field is less than or equal ot the provided value"""
+  lte: ID
+
+  """Field has no value"""
+  isNull: Boolean
+}
+
+"""The filter for string fields"""
+input StringFilter {
+  """Field is equal to the provided value"""
+  eq: String
+
+  """Field is not equal to the provided value"""
+  notEq: String
+
+  """Field value is equal to one of the given values"""
+  in: [String!]
+
+  """Field value is not equal to any of the given values"""
+  notIn: [String!]
+
+  """Field is greater than the provided value"""
+  gt: String
+
+  """Field is greater than or equal ot the provided value"""
+  gte: String
+
+  """Field is less than the provided value"""
+  lt: String
+
+  """Field is less than or equal ot the provided value"""
+  lte: String
+
+  """Field has no value"""
+  isNull: Boolean
+
+  """Field value starts with the provided string"""
+  startsWith: String
+
+  """Field value ends with the provided string"""
+  endsWith: String
+
+  """Field value contains the provided string"""
+  contains: String
+}
+
+"""The filter for string fields"""
+input IntFilter {
+  """Field is equal to the provided value"""
+  eq: Int
+
+  """Field is not equal to the provided value"""
+  notEq: Int
+
+  """Field value is equal to one of the given values"""
+  in: [Int!]
+
+  """Field value is not equal to any of the given values"""
+  notIn: [Int!]
+
+  """Field is greater than the provided value"""
+  gt: Int
+
+  """Field is greater than or equal ot the provided value"""
+  gte: Int
+
+  """Field is less than the provided value"""
+  lt: Int
+
+  """Field is less than or equal ot the provided value"""
+  lte: Int
+
+  """Field has no value"""
+  isNull: Boolean
+}
+
+"""The filter for string fields"""
+input FloatFilter {
+  """Field is equal to the provided value"""
+  eq: Float
+
+  """Field is not equal to the provided value"""
+  notEq: Float
+
+  """Field value is equal to one of the given values"""
+  in: [Float!]
+
+  """Field value is not equal to any of the given values"""
+  notIn: [Float!]
+
+  """Field is greater than the provided value"""
+  gt: Float
+
+  """Field is greater than or equal to the provided value"""
+  gte: Float
+
+  """Field is less than the provided value"""
+  lt: Float
+
+  """Field is less than or equal to the provided value"""
+  lte: Float
+
+  """Field has no value"""
+  isNull: Boolean
+}
+
+"""The filter for string fields"""
+input DateTimeFilter {
+  """Field is equal to the provided value"""
+  eq: DateTime
+
+  """Field is not equal to the provided value"""
+  notEq: DateTime
+
+  """Field value is equal to one of the given values"""
+  in: [DateTime!]
+
+  """Field value is not equal to any of the given values"""
+  notIn: [DateTime!]
+
+  """Field is greater than the provided value"""
+  gt: DateTime
+
+  """Field is greater than or equal ot the provided value"""
+  gte: DateTime
+
+  """Field is less than the provided value"""
+  lt: DateTime
+
+  """Field is less than or equal ot the provided value"""
+  lte: DateTime
+
+  """Field has no value"""
+  isNull: Boolean
+}
+
+"""The sorting order of a set of nodes"""
+enum OrderDirection {
+  """Sorts the nodes in ascending order"""
+  ASC
+
+  """Sorts the nodes in descending order"""
+  DESC
+}
+
+"""A decimal value string"""
+scalar Decimal
+
+"""The filter for string fields"""
+input DecimalFilter {
+  """Field is equal to the provided value"""
+  eq: Decimal
+
+  """Field is not equal to the provided value"""
+  notEq: Decimal
+
+  """Field value is equal to one of the given values"""
+  in: [Decimal!]
+
+  """Field value is not equal to any of the given values"""
+  notIn: [Decimal!]
+
+  """Field is greater than the provided value"""
+  gt: Decimal
+
+  """Field is greater than or equal to the provided value"""
+  gte: Decimal
+
+  """Field is less than the provided value"""
+  lt: Decimal
+
+  """Field is less than or equal to the provided value"""
+  lte: Decimal
+
+  """Field has no value"""
+  isNull: Boolean
+}
+
+"""The input element types"""
+enum InputElementType {
+  TEXT
+  TEXTAREA
+  MARKDOWN
+  PASSWORD
+}
+
+"""Set the default input element for the field"""
+directive @input(
+  """The input element type"""
+  type: InputElementType!
+) on FIELD_DEFINITION
+
+"""Adds an index in the database for the field"""
+directive @index on FIELD_DEFINITION
+
+"""Define a relation between the field and other nodes"""
+directive @relation(
+  """The path between the related objects"""
+  path: String!
+) on FIELD_DEFINITION
+
+"""Adds a unique constraint to the field"""
+directive @unique on FIELD_DEFINITION
+
+"""Adds email validation to a field"""
+directive @validateEmail on FIELD_DEFINITION
+
+"""Adds length validation to a field"""
+directive @validateLength(
+  """The minimum length of the value"""
+  min: Int
+
+  """The maximum length of the value"""
+  max: Int
+) on FIELD_DEFINITION
+
+"""Adds regular expression validation to a field"""
+directive @validateRegex(
+  """Regular expression pattern that the values is matched against"""
+  pattern: String!
+) on FIELD_DEFINITION
+
+"""Adds global ID validation to a field"""
+directive @validateGid on FIELD_DEFINITION
+
+"""Adds url validation to a field"""
+directive @validateUrl on FIELD_DEFINITION

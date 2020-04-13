@@ -246,6 +246,56 @@ describe('deploy', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Updating dependencies',
+      'Comparing local changes with cluster state',
+      'Deploying changes',
+      'Updating local source files',
+    ])
+    // Dry run request
+    .api(MIGRATE_PROJECT_MUTATION, {data: {
+      migrateProject: {
+        changes: []
+      }
+    }})
+    // Actual migration
+    .api(MIGRATE_PROJECT_MUTATION, {data: {
+      migrateProject: {
+        node: {
+          version: {
+            bundle: 'http://localhost/dummybundle.zip'
+          }
+        }
+      }
+    }})
+    .api(GET_REPOSITORY_URL_QUERY, {data: {
+      registryUrl: MOCK_REGISTRY_URL,
+    }})
+    // Mock registry requests for modules
+    .nock(MOCK_REGISTRY_URL, mockRegistryModule('auth'))
+    .nock(MOCK_REGISTRY_URL, mockRegistryArchive('auth'))
+    .nock(MOCK_REGISTRY_URL, mockRegistryModule('core'))
+    .nock(MOCK_REGISTRY_URL, mockRegistryArchive('core'))
+    .nock(MOCK_REGISTRY_URL, mockRegistryModule('image'))
+    .nock(MOCK_REGISTRY_URL, mockRegistryArchive('image'))
+    .nock(MOCK_REGISTRY_URL, mockRegistryModule('relay'))
+    .nock(MOCK_REGISTRY_URL, mockRegistryArchive('relay'))
+    // .api(LIST_CLUSTER_QUERY, listClusterResult)
+    .nock(
+      'http://localhost',
+       loader => loader.get('/dummybundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+    )
+    // .api(CREATE_PROJECT_MUTATION, createProjectResult)
+    .prompt([ true ])
+    .workspaceCommand(projectPath('single-missing-dependency'), ['deploy'])
+    .it('pulls missing dependencies on deployment for single missing dependency', ctx => {
+      expect(ctx.stdout).to.contain('Deployment successful');
+    });
+
+  test
+    .login()
+    .stdout({stripColor: true})
+    .stderr()
     // Dry run request
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
