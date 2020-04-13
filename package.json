@@ -15,7 +15,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint -c tslint.json --fix 'src/**/*.ts'",
     "build": "tsc",
-    "clean": "rimraf dist/*",
+    "clean": "rimraf lib/",
     "watch": "tsc --watch",
     "testonly": "mocha --check-leaks --exit --full-trace --require ts-node/register 'src/**/__tests__/**/*-test.{ts,tsx}'",
     "dist": "npm run clean && tsc && copyfiles -u 2 \"./src/templates/**/*\" ./lib/templates",
