@@ -9,7 +9,7 @@
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p test -t stylish",
-    "prepack": "npm run clean && tsc -b && oclif-dev manifest && oclif-dev readme && copyfiles -u 2 \"./src/templates/**/*\" ./lib/templates",
+    "prepack": "npm run clean && tsc -b && oclif-dev manifest && oclif-dev readme && npm run copyfiles",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
@@ -17,7 +17,9 @@
     "build": "tsc",
     "clean": "rimraf lib/",
     "watch": "tsc --watch",
-    "testonly": "mocha --check-leaks --exit --full-trace --require ts-node/register 'src/**/__tests__/**/*-test.{ts,tsx}'"
+    "copyfiles": "copyfiles -u 2 \"./src/templates/**/*\" ./lib/templates",
+    "testonly": "mocha --check-leaks --exit --full-trace --require ts-node/register 'src/**/__tests__/**/*-test.{ts,tsx}'",
+    "prepare": "npm run clean && npm run build && npm run copyfiles"
   },
   "directories": {
     "lib": "./dist"
