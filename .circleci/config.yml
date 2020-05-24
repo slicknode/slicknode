@@ -36,6 +36,14 @@ jobs:
     <<: *test
     docker:
       - image: node:10
+  node-12:
+    <<: *test
+    docker:
+      - image: node:12
+  node-14:
+    <<: *test
+    docker:
+      - image: node:14
   cache:
     <<: *test
     steps:
@@ -57,6 +65,8 @@ workflows:
       - node-latest
       - node-8
       - node-10
+      - node-12
+      - node-14
       - cache:
           filters:
             tags:
