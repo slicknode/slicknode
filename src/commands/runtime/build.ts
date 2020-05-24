@@ -269,7 +269,8 @@ export class RuntimeBuildCommand extends EnvCommand {
 Deploy the build to the google cloud, for example:
 
   gcloud functions deploy ${functionName} \\
-    --runtime nodejs8 \\
+    --runtime nodejs10 \\
+    --allow-unauthenticated \\
     --trigger-http \\
     --source ${input.args.output} \\
     --region us-east1
