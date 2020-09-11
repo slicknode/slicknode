@@ -87,6 +87,7 @@ export default class ModuleCreateCommand extends BaseCommand {
             }
             return true;
           },
+          filter: (value) => _.trim(value),
         },
       ]) as {namespace: string};
       namespace = values.namespace;
@@ -106,7 +107,7 @@ export default class ModuleCreateCommand extends BaseCommand {
             }
             return `Please enter a valid label for the module (Max ${MODULE_LABEL_MAX_LENGTH} characters)`;
           },
-          filter: _.trim,
+          filter: (value) => _.trim(value),
         },
       ]) as {label: string};
       label = labelValues.label;
