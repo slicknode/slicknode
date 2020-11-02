@@ -28,10 +28,6 @@ jobs:
           command: |
             ./node_modules/.bin/nyc report --reporter text-lcov > coverage.lcov
             curl -s https://codecov.io/bash | bash
-  node-8:
-    <<: *test
-    docker:
-      - image: node:8
   node-10:
     <<: *test
     docker:
@@ -63,7 +59,6 @@ workflows:
   "slicknode":
     jobs:
       - node-latest
-      - node-8
       - node-10
       - node-12
       - node-14
