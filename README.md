@@ -10,6 +10,12 @@ with global CDN and intuitive admin interface in seconds, powered by AWS Serverl
 
 [![Headless GraphQL CMS](./assets/info-graphic.png)](https://slicknode.com/)
 
+**Links:**
+
+-   [Docs](https://slicknode.com/docs/)
+-   [Website](https://slicknode.com)
+-   [Slack Community](https://slicknode.com/slack/)
+
 
 ## Why Slicknode?
 
@@ -40,20 +46,21 @@ Here are some of the problems that Slicknode solves:
 -   Modular architecture
 -   Custom publishing workflows (e.g.: Draft > Review > Translation > Published)
 -   Strong **data consistency** with referential integrity and automatic **database migrations**
+-   Internationalization
 -   [Declarative permission model](https://slicknode.com/docs/auth/authorization/) (for multi tenant SaaS, customer facing apps, enterprise etc.)
--   Powerful [data modeling features](https://slicknode.com/docs/data-modeling/introduction/) with
+-   Powerful [content modeling features](https://slicknode.com/docs/data-modeling/introduction/) with
     **[relations](https://slicknode.com/docs/data-modeling/relations/), 
     [union types](https://slicknode.com/docs/data-modeling/union-types/), 
     [interfaces](https://slicknode.com/docs/data-modeling/interfaces/introduction/), 
     [enum types](https://slicknode.com/docs/data-modeling/enum-types/)** etc.
 -   **Multi-Stage** development workflow
--   Works with your favorite technologies (React, Angular, Vue, Javascript, iOS, Android etc.)
+-   Works with any frontend technology (React, Angular, Vue, Javascript, iOS, Android etc.)
 -   Extend existing GraphQL APIs
 -   [Apollo Federation](https://slicknode.com/docs/extensions/apollo-federation/)
 -   [Extensible](https://slicknode.com/docs/extensions/) with custom code (Javascript, TypeScript, Flow etc.)
 
 
-## Installation
+# Quickstart
 
 This is a quickstart tutorial to create a Slicknode project from scratch. If you would rather start with
 a fullstack application, check out our [NextJS blog starter](https://github.com/slicknode/starter-nextjs-blog)
