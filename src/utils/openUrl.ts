@@ -11,7 +11,7 @@ import {spawn} from 'child_process';
  *
  * @param url
  */
-export default function openUrl(url: string): void {
+export function openUrl(url: string): void {
   let command;
   switch (process.platform) {
     case 'darwin':

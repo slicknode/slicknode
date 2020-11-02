@@ -33,7 +33,7 @@ describe('module:add', () => {
       expect(ctx.stdout).to.contain('Module "image" added - version: latest');
       const config = yaml.safeLoad(
         readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString()
-      );
+      ) as any;
       expect(config.dependencies.image).to.equal('latest');
     });
 
@@ -60,7 +60,7 @@ describe('module:add', () => {
       expect(ctx.stdout).to.contain('Module "file" added - version: latest');
       const config = yaml.safeLoad(
         readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString()
-      );
+      ) as any;
       expect(config.dependencies.image).to.equal('latest');
       expect(config.dependencies.file).to.equal('latest');
     });

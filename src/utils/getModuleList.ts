@@ -1,7 +1,7 @@
 import fs from 'fs';
 import yaml from 'js-yaml';
 import path from 'path';
-import { IModuleConfig } from '../types';
+import {IModuleConfig, IProjectConfig} from '../types';
 import {PRIVATE_MODULE_NAME_REGEX, validateConfig, validateModule} from '../validation';
 
 export interface IModuleListItem {
@@ -18,7 +18,7 @@ export async function getModuleList(dir: string): Promise<IModuleListItem[]> {
       path.join(dir, 'slicknode.yml'),
       'utf8',
     );
-    const config = yaml.safeLoad(rawData) || null;
+    const config = (yaml.safeLoad(rawData) as IProjectConfig) || null;
     const projectConfigErrors = await validateConfig(config);
     if (projectConfigErrors.length) {
       throw projectConfigErrors[0];
@@ -42,7 +42,7 @@ export async function getModuleList(dir: string): Promise<IModuleListItem[]> {
           path.join(moduleRoot, 'slicknode.yml'),
           'utf8',
         );
-        const moduleConfig = yaml.safeLoad(data) || null;
+        const moduleConfig = (yaml.safeLoad(data) as IModuleConfig) || null;
         if (!moduleConfig) {
           throw new Error(`No valid slicknode.yml config for module ${name}`);
         }

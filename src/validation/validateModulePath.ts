@@ -28,7 +28,7 @@ export default async function validateModulePath(moduleDir: string): Promise<Val
       'utf8',
     );
     try {
-      const config = yaml.safeLoad(rawConfig);
+      const config = (yaml.safeLoad(rawConfig) as any);
 
       // Validate config file
       const childErrors = await validateModule(config);

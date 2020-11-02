@@ -8,6 +8,8 @@ import AdmZip from 'adm-zip';
 import {promisify} from 'es6-promisify';
 import fs from 'fs';
 import originalGlob from 'glob';
+import {IModuleConfig} from 'IModuleConfig';
+import {IProjectConfig} from 'IProjectConfig';
 import yaml from 'js-yaml';
 import path from 'path';
 import tar from 'tar';
@@ -31,7 +33,7 @@ async function pack(root: string, options: IPackOptions = {}): Promise<AdmZip> {
       path.join(root, 'slicknode.yml'),
       'utf8',
     );
-    const config = yaml.safeLoad(rawData) || null;
+    const config = (yaml.safeLoad(rawData) as IProjectConfig) || null;
     const projectConfigErrors = await validateConfig(config);
     if (projectConfigErrors.length) {
       throw projectConfigErrors[0];
@@ -65,7 +67,7 @@ async function pack(root: string, options: IPackOptions = {}): Promise<AdmZip> {
           path.join(moduleRoot, 'slicknode.yml'),
           'utf8',
         );
-        const moduleConfig = yaml.safeLoad(data) || null;
+        const moduleConfig = (yaml.safeLoad(data) as IModuleConfig) || null;
         if (!moduleConfig) {
           throw new Error('No valid slicknode.yml config');
         }
