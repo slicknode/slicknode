@@ -88,11 +88,10 @@ your new project and run:
     
     # Change into the newly created project directory
     cd ./quickstart-project
-
-!!! info "Info"
     
-    This will ask for your Slicknode login information when run for the first time. Enter the login
-    information that you used when you [signed up](https://slicknode.com).
+This will ask for your Slicknode login information when run for the first time. Enter the login
+information that you used when you [signed up](https://slicknode.com).
+
 
 ### Adding Modules
 
@@ -222,4 +221,4 @@ you started:
 -   **[Data Modeling](https://slicknode.com/docs/data-modeling/introduction):** Learn how to model the data for your application
 
 
-Follow us on [Twitter](https://twitter.com/slicknode) and [Facebook](https://www.facebook.com/SlicknodeHQ/).
+Follow us on [Twitter](https://twitter.com/intent/user?screen_name=slicknode) and [Facebook](https://www.facebook.com/SlicknodeHQ/).
