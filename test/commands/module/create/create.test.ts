@@ -58,7 +58,7 @@ describe('module:create', () => {
   test
     .stdout()
     .stderr()
-    .prompt(['MyNamespace', 'Testlabel'])
+    .prompt(['  MyNamespace', '  Testlabel'])
     .workspaceCommand(projectPath('base'), ['module:create', 'blog'])
     .it('creates module successfully', (ctx) => {
       const projectConfig = yaml.safeLoad(readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString());
@@ -87,9 +87,40 @@ describe('module:create', () => {
     });
 
   test
+    .stdout({print: true})
+    .stderr({print: true})
+    .prompt([null, null])
+    .workspaceCommand(projectPath('base'), ['module:create', 'page'])
+    .it('creates module with default namespace / label values', (ctx) => {
+      const projectConfig = yaml.safeLoad(readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString());
+      expect(projectConfig).to.deep.equal({
+        dependencies: {
+          '@private/page': './modules/page',
+          auth: 'latest',
+          core: 'latest',
+          relay: 'latest'
+        }
+      });
+      expect(ctx.stdout).to.contain('SUCCESS! Module was created');
+      expect(ctx.stdout).to.contain('Add your type definitions to ./modules/page/schema.graphql');
+
+      const moduleConfig = yaml.safeLoad(
+        readFileSync(path.join(ctx.workspace!, 'modules', 'page', 'slicknode.yml')).toString()
+      );
+
+      expect(moduleConfig).to.deep.equal({
+        module:{
+          id: '@private/page',
+          label: 'Page',
+          namespace: 'Page'
+        }
+      });
+    });
+
+  test
     .stdout()
     .stderr()
-    .prompt(['Testlabel'])
+    .prompt(['Testlabel  '])
     .workspaceCommand(projectPath('base'), ['module:create', 'blog', '--namespace', 'FlagNamespace'])
     .it('uses namespace from flag', (ctx) => {
       const projectConfig = yaml.safeLoad(readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString());
@@ -138,7 +169,6 @@ describe('module:create', () => {
       const moduleConfig = yaml.safeLoad(
         readFileSync(path.join(ctx.workspace!, 'modules', 'blog', 'slicknode.yml')).toString()
       );
-      console.log(moduleConfig);
       expect(moduleConfig).to.deep.equal({
         module:{
           id: '@private/blog',

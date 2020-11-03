@@ -7,6 +7,7 @@ node_modules
 /_src
 /oclif.manifest.json
 /.nyc_output
+/coverage
 
 # We don't need package-lock.json, using yarn
 /package-lock.json

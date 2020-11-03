@@ -1,35 +1,74 @@
 # [Slicknode](https://slicknode.com "GraphQL CMS + Framework") 
 
-[![npm version](https://badge.fury.io/js/slicknode.svg)](https://badge.fury.io/js/slicknode) [![CircleCI](https://circleci.com/gh/slicknode/slicknode.svg?style=shield)](https://circleci.com/gh/slicknode/slicknode)
+[![npm version](https://badge.fury.io/js/slicknode.svg)](https://badge.fury.io/js/slicknode) 
+[![CircleCI](https://circleci.com/gh/slicknode/slicknode.svg?style=shield)](https://circleci.com/gh/slicknode/slicknode) 
+[![Twitter Follow](https://img.shields.io/twitter/follow/slicknode?style=social)](https://twitter.com/intent/user?screen_name=slicknode)
 
-GraphQL based Application Framework and CMS for rapid software development: 
+Slicknode is an extensible, modular [Headless GraphQL CMS](https://slicknode.com) for content management at any scale. 
+Declaratively define your content model using the GraphQL SDL, and Slicknode provisions a highly scalable GraphQL API
+with global CDN and intuitive admin interface in seconds, powered by AWS Serverless: 
 
-Declaratively define your backend using GraphQL SDL and get a production ready Serverless GraphQL API with 
-CMS instantly. Works with existing data sources and GraphQL APIs. 
+[![Headless GraphQL CMS](./assets/info-graphic.png)](https://slicknode.com/)
 
-**Automate the hard parts of GraphQL and build:**
+**Links:**
 
--   Multi-tenant SaaS-Applications
--   CMS for custom demanding websites (for example with customer login)
--   Productivity tools with complex requirements + permissions
--   etc.
+-   [Docs](https://slicknode.com/docs/)
+-   [Website](https://slicknode.com)
+-   [Slack Community](https://slicknode.com/slack/)
+
+
+## Why Slicknode?
+
+While there seem to be an endless number of CMS on the market, a lot of them have some fundamental shortcomings in their
+architecture that prevent them from fully utilizing the latest innovations in cloud computing. Modern development
+workflows are often cumbersome or impossible, that's why we created Slicknode. 
+
+Here are some of the problems that Slicknode solves:
+
+-   **Git-Workflows:** The entire application structure and content model is stored in the local
+    codebase, which can then be managed with version control like git and enable essential workflows like
+    code review, reversing changes, feature branches, cloning etc.
+-   **Modular Architecture:** It is often hard to reuse functionality or data models across projects. 
+    If you are building similar solutions, you often have to recreate the same thing over and over. Slicknode
+    has a modular architecture from the core. This allows you to reuse, share and organize complex projects with copy + paste.
+-   **Flexibility:** With a design around the open source GraphQL standard, you can combine Slicknode with any
+    API, database, or existing IT infrastructure. Merge multiple GraphQL APIs into a unified data graph and bring 
+    it to the global edge network with Slicknode for ultra low latencies.
+-   **Scalability:** Slicknode was designed with a cloud native architecture from the ground up. With serverless computing
+    and a globally distributed CDN, it scales instantly to any traffic spikes without managing infrastructure.
+    It further has no single point of failure and a self-healing infrastructure that seamlessly handles outages of
+    entire availability zones.
+
 
 **Features:**
 
 -   Instant **GraphQL API** on managed cloud infrastructure
--   **Headless CMS**
 -   Modular architecture
--   Automatic **database migrations**
+-   Custom publishing workflows (e.g.: Draft > Review > Translation > Published)
+-   Strong **data consistency** with referential integrity and automatic **database migrations**
+-   Internationalization
 -   [Declarative permission model](https://slicknode.com/docs/auth/authorization/) (for multi tenant SaaS, customer facing apps, enterprise etc.)
--   Use with any API and database
--   Powerful [data modeling features](https://slicknode.com/docs/data-modeling/introduction/) with
+-   Powerful [content modeling features](https://slicknode.com/docs/data-modeling/introduction/) with
     **[relations](https://slicknode.com/docs/data-modeling/relations/), 
+    [union types](https://slicknode.com/docs/data-modeling/union-types/), 
     [interfaces](https://slicknode.com/docs/data-modeling/interfaces/introduction/), 
     [enum types](https://slicknode.com/docs/data-modeling/enum-types/)** etc.
 -   **Multi-Stage** development workflow
--   Works with your favorite technologies (React, Angular, Vue, Javascript, iOS, Android etc.)
+-   Works with any frontend technology (React, Angular, Vue, Javascript, iOS, Android etc.)
 -   Extend existing GraphQL APIs
+-   [Apollo Federation](https://slicknode.com/docs/extensions/apollo-federation/)
 -   [Extensible](https://slicknode.com/docs/extensions/) with custom code (Javascript, TypeScript, Flow etc.)
+
+
+# Quickstart
+
+This is a quickstart tutorial to create a Slicknode project from scratch. If you would rather start with
+a fullstack application, check out our [NextJS blog starter](https://github.com/slicknode/starter-nextjs-blog)
+
+To get started with [Slicknode](https://slicknode.com) create a Slicknode Cloud account: 
+
+[Sign up for free](https://console.slicknode.com/register) *(No credit card required)*
+
 
 ## Installation
 
@@ -45,24 +84,36 @@ The Slicknode CLI can be installed via the terminal using npm. ([How to get npm?
 To create a new Slicknode project, navigate to the folder where you want to create
 your new project and run: 
 
-    slicknode init my-fancy-project
+    slicknode init quickstart-project
     
     # Change into the newly created project directory
-    cd ./my-fancy-project
+    cd ./quickstart-project
+    
+This will ask for your Slicknode login information when run for the first time. Enter the login
+information that you used when you [signed up](https://slicknode.com).
 
-*(This will ask for your Slicknode login information when run for the first time. Enter the login information that you used when you [signed up](https://slicknode.com).)*
 
-### Create a module
+### Adding Modules
 
-[Modules](https://slicknode.com/docs/data-modeling/modules.md) are the top level building blocks that let you organize your project in a modular way. 
-Put each functionality of your project in a separate module. That way they can easily be
-reused in other projects. 
+[Modules](./data-modeling/modules.md) are the top level building blocks that let you organize your project in a modular way. 
+They allow you to reuse functionality across multiple projects or to share them publicly with the community.
 
+Now, add some builtin modules for content management and image handling to your project: 
+
+    slicknode module add image content
+
+Then deploy the changes:
+
+    slicknode deploy
+
+### Creating New Modules
+
+Your own types will be added in your own modules. 
 To create a blog for example, run: 
 
     slicknode module create blog
     
-It will suggest a [namespace](https://slicknode.com/docs/data-modeling/modules.md#namespace) and the label that will be displayed in the data browser.
+It will suggest a [namespace](data-modeling/modules.md#namespace) and the label that will be displayed in the data browser.
 Just hit enter to use the suggested values for now.
 
 This will create the following file structure in your project folder: 
@@ -84,27 +135,45 @@ In your favorite editor, open the file
 """
 A blog article
 """
-type Blog_Article implements Node & TimeStampedInterface {
+type Blog_Article implements Content & Node {
     id: ID!
+
     title: String!
+    image: Image
     slug: String! @unique
-    text: String! @input(type: MARKDOWN)
-    author: User!
+    text: String @input(type: MARKDOWN)
+    category: Blog_Category
     createdAt: DateTime!
     lastUpdatedAt: DateTime
-    comments: [Blog_Comment!] @relation(path: "Blog_Article=article.Blog_Comment")
+    
+    # Content interface fields to enable content management
+    contentNode: ContentNode!
+    locale: Locale!
+    status: ContentStatus!
+    publishedAt: DateTime
+    publishedBy: User
+    createdAt: DateTime!
+    createdBy: User
+    lastUpdatedAt: DateTime
+    lastUpdatedBy: User
 }
 
-"""
-Comments for blog articles
-"""
-type Blog_Comment implements Node & TimeStampedInterface {
+type Blog_Category implements Content & Node {
     id: ID!
-    text: String! @input(type: TEXTAREA)
-    author: User
-    article: Blog_Article!
+
+    name: String
+    slug: String! @unique
+
+    # Content interface fields to enable content management
+    contentNode: ContentNode!
+    locale: Locale!
+    status: ContentStatus!
+    publishedAt: DateTime
+    publishedBy: User
     createdAt: DateTime!
+    createdBy: User
     lastUpdatedAt: DateTime
+    lastUpdatedBy: User
 }
 ```
 
@@ -119,7 +188,7 @@ To deploy the changes to the cloud, simply run:
 
     slicknode deploy
     
-Now you have a production ready GraphQL backend and a fully functional CMS.
+Now you have a production ready content HUB with GraphQL API.
 
 ### Explore
 
@@ -132,7 +201,7 @@ This will open the GraphiQL playground for your API. *(It might ask you for your
 To open the CMS data browser of your project: 
 
     slicknode console
-    
+
 Show the GraphQL endpoint that you can use with your GraphQL clients:
 
     slicknode endpoint
@@ -152,4 +221,4 @@ you started:
 -   **[Data Modeling](https://slicknode.com/docs/data-modeling/introduction):** Learn how to model the data for your application
 
 
-Follow us on [Twitter](https://twitter.com/slicknode) and [Facebook](https://www.facebook.com/SlicknodeHQ/).
+Follow us on [Twitter](https://twitter.com/intent/user?screen_name=slicknode) and [Facebook](https://www.facebook.com/SlicknodeHQ/).

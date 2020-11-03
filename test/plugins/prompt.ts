@@ -14,14 +14,16 @@ export function prompt(values: any[]) {
                 `Not enough values provided for prompt: ${question.message} "${question.name}"`
               );
             }
+
             const value = valueStack.shift();
-            if (question.validate) {
-              const isValid = question.validate(value);
+            const filteredValue = value === null ? null : question.filter ? question.filter(value) : value;
+            if (question.validate && filteredValue !== null) {
+              const isValid = question.validate(filteredValue);
               if (isValid !== true) {
                 throw new Error(isValid);
               }
             }
-            result[question.name] = value;
+            result[question.name] = filteredValue === null ? question.default || filteredValue : filteredValue;
             return result;
           }, {});
         } else {

@@ -258,7 +258,7 @@ export class BaseCommand extends Command {
         'utf8',
       );
       try {
-        const envMap = yaml.safeLoad(data);
+        const envMap = yaml.safeLoad(data) as any;
         if (typeof envMap === 'object' && envMap.hasOwnProperty(name)) {
           // @TODO: Validate
           return envMap[name];
@@ -356,7 +356,7 @@ export class BaseCommand extends Command {
       );
       try {
         // @TODO: Validate
-        return yaml.safeLoad(data) || null;
+        return (yaml.safeLoad(data) as IProjectConfig) || null;
       } catch (e) {
         this.error(chalk.red(
           'Could not parse slicknode.yml file.\n' +
