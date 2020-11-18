@@ -134,9 +134,9 @@ async function pack(root: string, options: IPackOptions = {}): Promise<AdmZip> {
 
         const addFiles = patterns.map(async (pattern) => {
           // Add permission files
-          const matches = await glob(`${moduleRoot}/${pattern}`) as string[];
+          const matches = await glob(`${moduleRoot}${path.sep}${pattern}`) as string[];
           (matches || []).forEach((file) => {
-            const dirs = pattern.split('/');
+            const dirs = pattern.split(path.sep);
             dirs.pop();
             zip.addLocalFile(file, `modules/${name}/${dirs.join('/')}`);
           });

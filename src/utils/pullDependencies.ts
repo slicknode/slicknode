@@ -79,9 +79,9 @@ export async function pullDependencies(params: IPullDependenciesParams) {
           if (entry.isDirectory) {
             await mkdirp(targetEntryPath);
           } else {
-            const targetDir = targetEntryPath.split('/');
+            const targetDir = targetEntryPath.split(path.sep);
             targetDir.pop();
-            zip.extractEntryTo(entry.entryName, targetDir.join('/'), false, true);
+            zip.extractEntryTo(entry.entryName, targetDir.join(path.sep), false, true);
           }
         }
       }
