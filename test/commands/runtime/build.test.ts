@@ -7,6 +7,8 @@ function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);
 }
 
+const npmCommand = /^win/.test(process.platform) ? 'npm.cmd' : 'npm';
+
 describe('runtime:build', () => {
 
   test
@@ -28,7 +30,7 @@ describe('runtime:build', () => {
     .timeout(20000)
     .workspaceCommand(projectPath('initialized'), ctx => ['runtime:build', ctx.tmpdir])
     .do(async (ctx) => {
-      await execute('npm', [ 'install' ], null, {
+      await execute(npmCommand, [ 'install' ], null, {
         cwd: ctx.tmpdir,
       });
     })
