@@ -52,7 +52,7 @@
     "node-fetch": "^2.2.0",
     "rimraf": "^2.6.3",
     "slicknode-auth-email-password": "^0.1.2",
-    "slicknode-client": "^0.2.2",
+    "slicknode-client": "^0.4.1",
     "slicknode-runtime": "^0.2.0",
     "tar": "^4.4.6",
     "tslib": "^1",
