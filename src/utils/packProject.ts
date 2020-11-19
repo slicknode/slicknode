@@ -46,6 +46,9 @@ async function pack(root: string, options: IPackOptions = {}): Promise<AdmZip> {
     // Add config
     zip.addLocalFile(path.join(root, 'slicknode.yml'));
 
+    // Set npm command based on OS
+    const npmCommand = /^win/.test(process.platform) ? 'npm.cmd' : 'npm';
+
     // Add module files
     const promises = Object.keys(config.dependencies)
       // Only add private modules
@@ -89,7 +92,7 @@ async function pack(root: string, options: IPackOptions = {}): Promise<AdmZip> {
               resolve();
             } else {
               // Create npm package
-              execute('npm', [ 'pack' ], null, {
+              execute(npmCommand, [ 'pack' ], null, {
                 cwd: moduleRoot,
               })
                 .then((archive) => {
@@ -134,9 +137,9 @@ async function pack(root: string, options: IPackOptions = {}): Promise<AdmZip> {
 
         const addFiles = patterns.map(async (pattern) => {
           // Add permission files
-          const matches = await glob(`${moduleRoot}/${pattern}`) as string[];
+          const matches = await glob(`${moduleRoot}${path.sep}${pattern}`) as string[];
           (matches || []).forEach((file) => {
-            const dirs = pattern.split('/');
+            const dirs = pattern.split(path.sep);
             dirs.pop();
             zip.addLocalFile(file, `modules/${name}/${dirs.join('/')}`);
           });

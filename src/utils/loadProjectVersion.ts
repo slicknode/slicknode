@@ -57,7 +57,7 @@ async function loadProjectVersion(projectRoot: string, bundle: string): Promise<
           // Strip module and filename from entryTarget
           const targetPathParts = entry.entryName.split('/').slice(1);
           targetPathParts.pop();
-          const entryTarget = path.join(modulePath, targetPathParts.join('/').substr(
+          const entryTarget = path.join(modulePath, targetPathParts.join(path.sep).substr(
             moduleName.length,
           ));
           zip.extractEntryTo(entry.entryName, entryTarget, false, true);

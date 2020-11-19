@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import {EnvCommand} from '../base/env-command';
-import {openUrl} from '../utils';
+import * as utils from '../utils';
 
 export const GET_CONSOLE_URL_QUERY = `
 query Q($alias: String!) {
@@ -51,6 +51,6 @@ export default class ConsoleCommand extends EnvCommand {
       ), {exit: 1});
     }
 
-    openUrl(consoleUrl);
+    utils.openUrl(consoleUrl);
   }
 }

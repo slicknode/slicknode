@@ -314,9 +314,9 @@
     "@types/rx" "*"
     "@types/through" "*"
 
-"@types/isomorphic-fetch@^0.0.34":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/@types/isomorphic-fetch/-/isomorphic-fetch-0.0.34.tgz#3c3483e606c041378438e951464f00e4e60706d6"
+"@types/isomorphic-fetch@^0.0.35":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@types/isomorphic-fetch/-/isomorphic-fetch-0.0.35.tgz#c1c0d402daac324582b6186b91f8905340ea3361"
 
 "@types/joi@^13.4.4":
   version "13.6.3"
@@ -374,6 +374,10 @@
 "@types/node@^10.9.4":
   version "10.17.44"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.44.tgz#3945e6b702cb6403f22b779c8ea9e5c3f44ead40"
+
+"@types/node@^14.14.8":
+  version "14.14.8"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.8.tgz#2127bd81949a95c8b7d3240f3254352d72563aec"
 
 "@types/qs@*":
   version "6.9.5"
@@ -1391,7 +1395,7 @@ form-data@^1.0.0-rc3:
     combined-stream "^1.0.5"
     mime-types "^2.1.11"
 
-form-data@^2.3.1:
+form-data@^2.3.1, form-data@^2.3.2:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.5.1.tgz#f2cbec57b5e59e23716e128fe44d4e5dd23895f4"
   dependencies:
@@ -1859,11 +1863,24 @@ isomorphic-fetch@^2.2.1:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
 
+isomorphic-fetch@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-3.0.0.tgz#0267b005049046d2421207215d45d6a262b8b8b4"
+  dependencies:
+    node-fetch "^2.6.1"
+    whatwg-fetch "^3.4.1"
+
 isomorphic-form-data@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isomorphic-form-data/-/isomorphic-form-data-1.0.0.tgz#0447be7e0f6b86def3d393036cf7664a98919100"
   dependencies:
     form-data "^1.0.0-rc3"
+
+isomorphic-form-data@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/isomorphic-form-data/-/isomorphic-form-data-2.0.0.tgz#9f6adf1c4c61ae3aefd8f110ab60fb9b143d6cec"
+  dependencies:
+    form-data "^2.3.2"
 
 istanbul-lib-coverage@^2.0.5:
   version "2.0.5"
@@ -2297,7 +2314,7 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.2.0:
+node-fetch@^2.2.0, node-fetch@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
 
@@ -2838,6 +2855,14 @@ slicknode-client@^0.2.2:
     isomorphic-fetch "^2.2.1"
     isomorphic-form-data "^1.0.0"
 
+slicknode-client@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/slicknode-client/-/slicknode-client-0.4.1.tgz#6d8b8651c96b9f7630eb0faa728534360ff9e5c3"
+  dependencies:
+    "@types/node" "^14.14.8"
+    isomorphic-fetch "^3.0.0"
+    isomorphic-form-data "^2.0.0"
+
 slicknode-runtime@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/slicknode-runtime/-/slicknode-runtime-0.2.0.tgz#907c262df36015cb4d79222991cf6a4fcd9b1c20"
@@ -3288,6 +3313,10 @@ vary@~1.1.2:
 whatwg-fetch@>=0.10.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.4.1.tgz#e5f871572d6879663fa5674c8f833f15a8425ab3"
+
+whatwg-fetch@^3.4.1:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.5.0.tgz#605a2cd0a7146e5db141e29d1c62ab84c0c4c868"
 
 which-module@^2.0.0:
   version "2.0.0"

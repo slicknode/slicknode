@@ -143,7 +143,7 @@ export default class ModuleCreateCommand extends BaseCommand {
       );
 
       // Add module to slicknode.yml
-      const relModulePath = '.' + moduleDir.substr(this.getProjectRoot().length);
+      const relModulePath = '.' + moduleDir.substr(this.getProjectRoot().length).split(path.sep).join('/');
       const newConfig = {
         ...config,
         dependencies: {

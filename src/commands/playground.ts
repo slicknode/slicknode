@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import {EnvCommand} from '../base/env-command';
-import {openUrl} from '../utils';
+import * as utils from '../utils';
 
 export const GET_PLAYGROUND_URL_QUERY = `
 query Q($alias: String!) {
@@ -50,6 +50,6 @@ export default class PlaygroundCommand extends EnvCommand {
       ), {exit: 1});
     }
 
-    openUrl(playgroundUrl);
+    utils.openUrl(playgroundUrl);
   }
 }

@@ -29,7 +29,7 @@ export function workspaceCommand(
           path.join(sourcePath, '**', '*'),
           path.join(sourcePath, '.*'),
           workspace,
-        ], {up: sourcePath.split('/').length}, resolve);
+        ], {up: sourcePath.split(path.sep).length}, resolve);
       });
 
       if (ctx.plugins && ctx.plugins.command) {

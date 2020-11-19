@@ -1,0 +1,30 @@
+name: Node.js CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: yarn
+    - run: ./bin/run --version
+    - run: ./bin/run --help
+    - run: yarn test
+      env:
+        CI: true
+    - name: Submitting code coverage to codecov
+      run: |
+        ./node_modules/.bin/nyc report --reporter text-lcov > coverage.lcov
+        curl -s https://codecov.io/bash | bash
