@@ -65,6 +65,9 @@ export class RuntimeBuildCommand extends EnvCommand {
     // Create build dir
     mkdirpSync(buildDir);
 
+    // Set npm command based on OS
+    const npmCommand = /^win/.test(process.platform) ? 'npm.cmd' : 'npm';
+
     const tasks = new Listr([
       {
         title: 'Load and validate modules',
@@ -85,7 +88,7 @@ export class RuntimeBuildCommand extends EnvCommand {
                     {
                       title: 'Install dependencies',
                       task: async () => {
-                        await execute('npm', [ 'install' ], null, {
+                        await execute(npmCommand, [ 'install' ], null, {
                           cwd: item.path,
                         });
                       },
@@ -100,7 +103,7 @@ export class RuntimeBuildCommand extends EnvCommand {
                               reject(err);
                             } else {
                               // Create npm package
-                              execute('npm', [ 'pack' ], null, {
+                              execute(npmCommand, [ 'pack' ], null, {
                                 cwd: item.path,
                               })
                                 .then((archive) => {
@@ -153,9 +156,9 @@ export class RuntimeBuildCommand extends EnvCommand {
                               });
                               entry.on('end', () => {
                                 // Remove package/ prefix
-                                const entryPath = entry.path.split('/').slice(1).join('/');
+                                const entryPath = entry.path.split(path.sep).slice(1).join(path.sep);
                                 outputFileSync(
-                                  path.join(buildDir, `modules/${item.config.module.id}/${entryPath}`),
+                                  path.join(buildDir, 'modules', item.config.module.id, entryPath),
                                   buffer,
                                 );
                                 // zip.addFile(`modules/${item.config.module.id}/${entryPath}`, buffer, '', 0o644);
