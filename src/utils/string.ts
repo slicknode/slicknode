@@ -73,3 +73,22 @@ export function semverCompare(a: string, b: string): number {
   }
   return 0;
 }
+
+/**
+ * Escape shell command arguments
+ * @param values
+ */
+export function shellEscape(...values: string[]): string {
+  const parts: string[] = [];
+
+  values.forEach((s) => {
+    if (/[^A-Za-z0-9_\/:=-]/.test(s)) {
+      s = "'" + s.replace(/'/g, "'\\''") + "'";
+      s = s.replace(/^(?:'')+/g, '')
+        .replace(/\\'''/g, "\\'" );
+    }
+    parts.push(s);
+  });
+
+  return parts.join(' ');
+}
