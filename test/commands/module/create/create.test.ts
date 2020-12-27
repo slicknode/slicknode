@@ -87,8 +87,8 @@ describe('module:create', () => {
     });
 
   test
-    .stdout({print: true})
-    .stderr({print: true})
+    .stdout()
+    .stderr()
     .prompt([null, null])
     .workspaceCommand(projectPath('base'), ['module:create', 'page'])
     .it('creates module with default namespace / label values', (ctx) => {

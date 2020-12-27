@@ -1,5 +1,6 @@
 import {expect, test} from '../../test';
 import * as auth from 'slicknode-auth-email-password';
+import path from 'path';
 
 
 const LOGIN_MUTATION = `mutation LoginMutation(
@@ -24,6 +25,10 @@ describe('login', () => {
       refreshToken: 'sef',
       refreshTokenLifetime: 345,
     }))
+    .nock(
+      'http://localhost',
+       loader => loader.post('/').reply(403)
+    )
     .prompt([ 'test@slicknode.com', 'somepassword34' ])
     .command(['login'])
     .it('logs user in successfully', ctx => {

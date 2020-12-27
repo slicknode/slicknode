@@ -45,7 +45,7 @@ export async function importGitRepository(params: IImportGitRepositoryParams) {
     const gitCloneCmd = shellEscape('git', 'clone', ...(!reference ? ['--depth', '1'] : []), repository, dir);
     const result = execSync(gitCloneCmd, {
       encoding: 'utf8',
-      stdio: 'ignore',
+      stdio: 'pipe',
     });
   } catch (e) {
     throw new Error(`Error cloning repository "${params.repository}", please provide a valid repository URL: ${e.message}`);
@@ -58,7 +58,7 @@ export async function importGitRepository(params: IImportGitRepositoryParams) {
       execSync(gitCheckoutCmd, {
         cwd: dir,
         encoding: 'utf8',
-        stdio: 'ignore',
+        stdio: 'pipe',
       });
     } catch (e) {
       throw new Error(`Error checking out git reference "${reference}", make sure you are specifying a valid branch or commit hash: ${e.message}`);
