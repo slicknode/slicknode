@@ -19,7 +19,7 @@
     "clean": "rimraf lib/",
     "watch": "tsc --watch",
     "copyfiles": "copyfiles -u 2 \"./src/templates/**/*\" ./lib/templates",
-    "testonly": "mocha --exit --full-trace --require ts-node/register 'src/**/__tests__/**/*-test.{ts,tsx}' 'test/**/*.test.ts'",
+    "testonly": "mocha --exit --full-trace --require ts-node/register \"src/**/__tests__/**/*-test.{ts,tsx}\" \"test/**/*.test.ts\"",
     "prepare": "npm run clean && npm run build && npm run copyfiles"
   },
   "directories": {
