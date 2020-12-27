@@ -339,7 +339,7 @@ describe('init', () => {
         }
       }
     }})
-    .timeout(60000)
+    .timeout(180000)
     .workspaceCommand(EMPTY_DIR, ['init', 'test-dir', 'https://github.com/slicknode/starter-nextjs-blog.git'])
     .it('initializes project successfully from template URL', ctx => {
       // Check slicknoderc contents
@@ -439,7 +439,7 @@ describe('init', () => {
         }
       }
     }})
-    .timeout(60000)
+    .timeout(180000)
     .workspaceCommand(EMPTY_DIR, [
       'init',
       'test-dir',

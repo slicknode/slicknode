@@ -1,8 +1,7 @@
-import {execFile, execSync} from 'child_process';
+import {execFile} from 'child_process';
 import {emptyDir, ensureDir, readdir, remove} from 'fs-extra';
 import path from 'path';
 import {promisify} from 'util';
-import {shellEscape} from './string';
 
 const exec = promisify(execFile);
 
@@ -45,32 +44,19 @@ export async function importGitRepository(params: IImportGitRepositoryParams) {
 
   // Clone repository
   try {
-    const gitCloneCmd = shellEscape('git', 'clone', ...(!reference ? ['--depth', '1'] : []), repository, dir);
     const result = await exec('git', ['clone', ...(!reference ? ['--depth', '1'] : []), repository, dir]);
-    /*
-    const result = execSync(gitCloneCmd, {
-      encoding: 'utf8',
-      stdio: 'pipe',
-    });
-     */
   } catch (e) {
     throw new Error(`Error cloning repository "${params.repository}", please provide a valid repository URL: ${e.message}`);
   }
 
   // Checkout specific git reference if provided
+  let gitCheckoutResult;
   if (reference) {
     try {
-      const gitCheckoutCmd = await exec('git', ['checkout', reference], {
+      gitCheckoutResult = await exec('git', ['checkout', reference], {
         cwd: dir,
         encoding: 'utf8',
       });
-      /*
-      execSync(gitCheckoutCmd, {
-        cwd: dir,
-        encoding: 'utf8',
-        stdio: 'pipe',
-      });
-       */
     } catch (e) {
       throw new Error(`Error checking out git reference "${reference}", make sure you are specifying a valid branch or commit hash: ${e.message}`);
     }
