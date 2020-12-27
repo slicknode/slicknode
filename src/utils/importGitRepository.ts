@@ -1,8 +1,8 @@
-import {execSync, execFile} from 'child_process';
+import {execFile, execSync} from 'child_process';
 import {emptyDir, ensureDir, readdir, remove} from 'fs-extra';
 import path from 'path';
-import {shellEscape} from './string';
 import {promisify} from 'util';
+import {shellEscape} from './string';
 
 const exec = promisify(execFile);
 
