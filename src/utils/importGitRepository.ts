@@ -1,7 +1,10 @@
-import {execSync} from 'child_process';
+import {execSync, execFile} from 'child_process';
 import {emptyDir, ensureDir, readdir, remove} from 'fs-extra';
 import path from 'path';
 import {shellEscape} from './string';
+import {promisify} from 'util';
+
+const exec = promisify(execFile);
 
 interface IImportGitRepositoryParams {
   // Repository, optionally with a git reference
@@ -43,10 +46,13 @@ export async function importGitRepository(params: IImportGitRepositoryParams) {
   // Clone repository
   try {
     const gitCloneCmd = shellEscape('git', 'clone', ...(!reference ? ['--depth', '1'] : []), repository, dir);
+    const result = await exec('git', ['clone', ...(!reference ? ['--depth', '1'] : []), repository, dir]);
+    /*
     const result = execSync(gitCloneCmd, {
       encoding: 'utf8',
       stdio: 'pipe',
     });
+     */
   } catch (e) {
     throw new Error(`Error cloning repository "${params.repository}", please provide a valid repository URL: ${e.message}`);
   }
@@ -54,12 +60,17 @@ export async function importGitRepository(params: IImportGitRepositoryParams) {
   // Checkout specific git reference if provided
   if (reference) {
     try {
-      const gitCheckoutCmd = shellEscape('git', 'checkout', reference);
+      const gitCheckoutCmd = await exec('git', ['checkout', reference], {
+        cwd: dir,
+        encoding: 'utf8',
+      });
+      /*
       execSync(gitCheckoutCmd, {
         cwd: dir,
         encoding: 'utf8',
         stdio: 'pipe',
       });
+       */
     } catch (e) {
       throw new Error(`Error checking out git reference "${reference}", make sure you are specifying a valid branch or commit hash: ${e.message}`);
     }
