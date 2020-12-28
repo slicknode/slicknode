@@ -342,10 +342,6 @@
   version "0.0.35"
   resolved "https://registry.yarnpkg.com/@types/isomorphic-fetch/-/isomorphic-fetch-0.0.35.tgz#c1c0d402daac324582b6186b91f8905340ea3361"
 
-"@types/joi@^13.4.4":
-  version "13.6.3"
-  resolved "https://registry.yarnpkg.com/@types/joi/-/joi-13.6.3.tgz#79364839a9cc2c6d4d915ef8822e1f703e28648f"
-
 "@types/js-yaml@^3.11.2":
   version "3.12.5"
   resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.12.5.tgz#136d5e6a57a931e1cce6f9d8126aa98a9c92a6bb"
