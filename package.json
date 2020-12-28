@@ -42,7 +42,6 @@
     "graphql-tools": "^4.0.5",
     "indent-string": "^4.0.0",
     "inquirer": "^6.2.0",
-    "isomorphic-fetch": "^3.0.0",
     "joi": "^13.6.0",
     "js-yaml": "^3.12.0",
     "listr": "^0.14.3",
