@@ -1,7 +1,7 @@
 import path from 'path';
 import {expect} from '@oclif/test';
 import os from 'os';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import copyfiles from 'copyfiles';
 import {mkdirpSync, readFileSync} from 'fs-extra';
 import {test} from '../../../test';

@@ -1,7 +1,7 @@
 import path from "path";
 import {mkdirpSync} from 'fs-extra';
 import os from "os";
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import rimraf = require('rimraf');
 
 export function tmpdir() {
