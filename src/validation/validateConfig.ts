@@ -20,9 +20,9 @@ import {
 async function validate(config: {[key: string]: any} | null): Promise<ValidationError[]> {
   const errors = [];
   try {
-    const result = Joi.validate(config, schema, {
+    const result = schema.validate(config, {
       abortEarly: false,
-    }) as ValidationResult<IProjectConfig>;
+    });
     if (result.error) {
       const childErrors = (result.error.details || []).map((detail) => {
         return new ValidationError(`Invalid value at path "${detail.path}": ${detail.message}`);

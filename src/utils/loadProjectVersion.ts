@@ -10,7 +10,7 @@ import _ from 'lodash';
 import fetch from 'node-fetch';
 import os from 'os';
 import path from 'path';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
 /**
  * Loads the project version + files from the server and writes them to local project dir

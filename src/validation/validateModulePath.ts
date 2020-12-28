@@ -1,13 +1,13 @@
 /**
  * Created by Ivo Meißner on 11.08.17.
  */
-import {promisify} from 'es6-promisify';
 import fs, {PathLike} from 'fs';
 import {
   parse,
 } from 'graphql';
 import yaml from 'js-yaml';
 import path from 'path';
+import {promisify} from 'util';
 import validateModule from './validateModule';
 import ValidationError from './ValidationError';
 

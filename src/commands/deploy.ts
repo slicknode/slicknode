@@ -18,7 +18,7 @@ import {flags} from '@oclif/command';
 import cli from 'cli-ux';
 import _ from 'lodash';
 import fetch from 'node-fetch';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import * as parsers from '../parsers';
 import {getCluster} from '../utils/getCluster';
 import {isDependencyTreeLoaded} from '../utils/isDependencyTreeLoaded';

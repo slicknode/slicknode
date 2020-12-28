@@ -4,10 +4,10 @@
  * @flow
  */
 
-import {promisify} from 'es6-promisify';
 import fs from 'fs';
 import yaml from 'js-yaml';
 import path from 'path';
+import {promisify} from 'util';
 import {
   IProjectConfig,
 } from '../types';
