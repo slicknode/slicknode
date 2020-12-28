@@ -1,11 +1,11 @@
 #
-# Example schema definition for the module ${MODULE_NAME}
+# Example schema definition for the module {{ MODULE_ID }}
 # Change to model the content and data for the module.
 #
 # Learn more about modeling your content in the docs: https://slicknode.com/docs/
 #
 
-type ${MODULE_NAMESPACE}_Post implements Node & Content {
+type {{ MODULE_NAMESPACE }}_Post implements Node & Content {
   id: ID!
 
   title: String!
@@ -25,13 +25,13 @@ type ${MODULE_NAMESPACE}_Post implements Node & Content {
   lastUpdatedBy: User
 }
 
-type ${MODULE_NAMESPACE}_Category implements Node & Content {
+type {{ MODULE_NAMESPACE }}_Category implements Node & Content {
   id: ID!
 
   name: String!
   slug: String! @unique
 
-  # Fields of Content interface to advanced enable CMS functionality (i18n, publishing workflow, etc.):
+  # Fields of Content interface to enable CMS functionality (i18n, publishing workflow, etc.):
 
   contentNode: ContentNode!
   locale: Locale!
@@ -43,3 +43,9 @@ type ${MODULE_NAMESPACE}_Category implements Node & Content {
   lastUpdatedAt: DateTime
   lastUpdatedBy: User
 }
+
+# Example custom resolver
+#
+# extend type Query {
+#   {{ MODULE_NAMESPACE }}_hello(name: String): String
+# }

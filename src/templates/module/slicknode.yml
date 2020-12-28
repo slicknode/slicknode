@@ -1,0 +1,43 @@
+# Module base configuration
+module:
+  # Unique module ID within the project
+  id: '{{ MODULE_ID }}'
+
+  # Label of the module as display in the console
+  label: '{{ MODULE_LABEL }}'
+
+  # The namespace for type prefixes of the module
+  namespace: '{{ MODULE_NAMESPACE }}'
+
+## Uncomment this to enable the runtime for custom extensions:
+#
+#runtime:
+#  engine: nodejs@12
+#
+## Configure custom resolvers here. The GraphQL types have to be configured in the schema.graphql
+## file of the module:
+#
+# resolvers:
+#    # The type to add the fields to. `Query` is always the root query type
+#    Query:
+#      # The field name (prepended with the module namespace to avoid name collisions)
+#      {{ MODULE_NAMESPACE }}_hello:
+#        # Path to the JS source file where the custom resolver logic is implemented (within module)
+#        handler: src/resolvers/Query.hello
+
+
+## Event listeners for custom business logic:
+#listeners:
+#  - event: mutation.createUser.AFTER
+#    handler: src/listeners/afterCreateUser
+#    # Additional configuration for this specific listener:
+#    config:
+#      # Query of the mutation payload to be sent to the handler
+#      query: |
+#        {
+#          node {
+#            email
+#            firstName
+#            lastName
+#          }
+#        }

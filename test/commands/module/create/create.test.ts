@@ -76,7 +76,6 @@ describe('module:create', () => {
       const moduleConfig = yaml.safeLoad(
         readFileSync(path.join(ctx.workspace!, 'modules', 'blog', 'slicknode.yml')).toString()
       );
-      console.log(moduleConfig);
       expect(moduleConfig).to.deep.equal({
         module:{
           id: '@private/blog',
@@ -87,8 +86,8 @@ describe('module:create', () => {
     });
 
   test
-    .stdout({print: true})
-    .stderr({print: true})
+    .stdout()
+    .stderr()
     .prompt([null, null])
     .workspaceCommand(projectPath('base'), ['module:create', 'page'])
     .it('creates module with default namespace / label values', (ctx) => {
@@ -138,7 +137,6 @@ describe('module:create', () => {
       const moduleConfig = yaml.safeLoad(
         readFileSync(path.join(ctx.workspace!, 'modules', 'blog', 'slicknode.yml')).toString()
       );
-      console.log(moduleConfig);
       expect(moduleConfig).to.deep.equal({
         module:{
           id: '@private/blog',
@@ -166,9 +164,8 @@ describe('module:create', () => {
       expect(ctx.stdout).to.contain('SUCCESS! Module was created');
       expect(ctx.stdout).to.contain('Add your type definitions to ./modules/blog/schema.graphql');
 
-      const moduleConfig = yaml.safeLoad(
-        readFileSync(path.join(ctx.workspace!, 'modules', 'blog', 'slicknode.yml')).toString()
-      );
+      const rawModuleConfig = readFileSync(path.join(ctx.workspace!, 'modules', 'blog', 'slicknode.yml')).toString();
+      const moduleConfig = yaml.safeLoad(rawModuleConfig);
       expect(moduleConfig).to.deep.equal({
         module:{
           id: '@private/blog',

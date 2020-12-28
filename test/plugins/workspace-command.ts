@@ -41,6 +41,7 @@ export function workspaceCommand(
         } else {
           cwd = process.cwd();
           process.chdir(workspace);
+          ctx.workspace = process.cwd();
         }
 
         const cmdPlugin = (ctx.plugins.command(allArgs) as FancyTypes.Plugin<typeof ctx>);
@@ -63,6 +64,7 @@ export function workspaceCommand(
 
         return await new Promise((resolve) => {
           rimraf(ctx.workspace!, {}, resolve);
+          resolve();
         });
       }
     }
