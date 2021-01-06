@@ -1,1 +1,1 @@
-# Test ${value} here
+# Test {{ value }} here

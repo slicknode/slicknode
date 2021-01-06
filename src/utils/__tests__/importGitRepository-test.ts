@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import {ensureDir, readdir, readFile, remove, writeFile} from 'fs-extra';
 import os from 'os';
 import path from 'path';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import {importGitRepository} from '../importGitRepository';
 
 chai.use(chaiAsPromised);
