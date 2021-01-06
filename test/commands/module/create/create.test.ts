@@ -1,7 +1,7 @@
 import path from 'path';
 import {expect} from '@oclif/test';
 import os from 'os';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import copyfiles from 'copyfiles';
 import {mkdirpSync, readFileSync} from 'fs-extra';
 import {test} from '../../../test';
@@ -76,7 +76,6 @@ describe('module:create', () => {
       const moduleConfig = yaml.safeLoad(
         readFileSync(path.join(ctx.workspace!, 'modules', 'blog', 'slicknode.yml')).toString()
       );
-      console.log(moduleConfig);
       expect(moduleConfig).to.deep.equal({
         module:{
           id: '@private/blog',
@@ -138,7 +137,6 @@ describe('module:create', () => {
       const moduleConfig = yaml.safeLoad(
         readFileSync(path.join(ctx.workspace!, 'modules', 'blog', 'slicknode.yml')).toString()
       );
-      console.log(moduleConfig);
       expect(moduleConfig).to.deep.equal({
         module:{
           id: '@private/blog',
@@ -166,9 +164,8 @@ describe('module:create', () => {
       expect(ctx.stdout).to.contain('SUCCESS! Module was created');
       expect(ctx.stdout).to.contain('Add your type definitions to ./modules/blog/schema.graphql');
 
-      const moduleConfig = yaml.safeLoad(
-        readFileSync(path.join(ctx.workspace!, 'modules', 'blog', 'slicknode.yml')).toString()
-      );
+      const rawModuleConfig = readFileSync(path.join(ctx.workspace!, 'modules', 'blog', 'slicknode.yml')).toString();
+      const moduleConfig = yaml.safeLoad(rawModuleConfig);
       expect(moduleConfig).to.deep.equal({
         module:{
           id: '@private/blog',

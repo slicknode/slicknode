@@ -3,7 +3,7 @@ import path from "path";
 import {mkdirpSync} from 'fs-extra';
 import copyfiles from 'copyfiles';
 import os from "os";
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import rimraf = require('rimraf');
 import _ from 'lodash';
 
@@ -41,6 +41,7 @@ export function workspaceCommand(
         } else {
           cwd = process.cwd();
           process.chdir(workspace);
+          ctx.workspace = process.cwd();
         }
 
         const cmdPlugin = (ctx.plugins.command(allArgs) as FancyTypes.Plugin<typeof ctx>);

@@ -8,7 +8,7 @@ import fetch from 'node-fetch';
 import os from 'os';
 import path from 'path';
 import {Uploadable} from 'slicknode-client';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import validator from 'validator';
 import {BaseCommand} from '../base/base-command';
 
