@@ -15,7 +15,8 @@ export function prompt(values: any[]) {
               );
             }
 
-            const value = valueStack.shift();
+            let value = valueStack.shift();
+
             const filteredValue = value === null ? null : question.filter ? question.filter(value) : value;
             if (question.validate && filteredValue !== null) {
               const isValid = question.validate(filteredValue);

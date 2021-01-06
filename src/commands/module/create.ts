@@ -15,6 +15,7 @@ import * as parsers from '../../parsers';
 import {
   sortKeys,
 } from '../../utils';
+import {copyTemplate} from '../../utils/copyTemplate';
 import {
   MODULE_LABEL_MAX_LENGTH,
   NAMESPACE_REGEX,
@@ -119,8 +120,23 @@ export default class ModuleCreateCommand extends BaseCommand {
       // Create modules dir
       const moduleDir = path.join(this.getDefaultModulesDir(), input.args.name);
       mkdirpSync(moduleDir);
-      this.debug('Created module folder: ' + moduleDir);
 
+      // Write template files
+      const moduleVariables = {
+        MODULE_ID: moduleId,
+        MODULE_NAMESPACE: namespace,
+        MODULE_LABEL: label,
+      };
+      await copyTemplate(
+        path.join(__dirname, '../', '../', 'templates', 'module'),
+        moduleDir,
+        {
+          MODULE_ID: moduleId,
+          MODULE_NAMESPACE: namespace,
+          MODULE_LABEL: label,
+        },
+      );
+      /*
       // Write slicknode.yml file for new module
       const moduleConfig = {
         module: {
@@ -141,6 +157,7 @@ export default class ModuleCreateCommand extends BaseCommand {
         path.join(moduleDir, 'schema.graphql'),
         '',
       );
+       */
 
       // Add module to slicknode.yml
       const relModulePath = '.' + moduleDir.substr(this.getProjectRoot().length).split(path.sep).join('/');
@@ -148,7 +165,7 @@ export default class ModuleCreateCommand extends BaseCommand {
         ...config,
         dependencies: {
           ...config.dependencies,
-          [moduleConfig.module.id]: relModulePath,
+          [moduleVariables.MODULE_ID]: relModulePath,
         },
       };
       fs.writeFileSync(

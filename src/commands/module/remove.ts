@@ -61,7 +61,7 @@ export default class ModuleRemoveCommand extends BaseCommand {
           default: false,
         },
       ]) as {confirm: boolean};
-      if (values.confirm && String(values.confirm).toLowerCase() === 'y') {
+      if (values.confirm) {
         const promises = removedDirs.map((dir) => new Promise((resolve, reject) => {
           rimraf(path.join(projectRoot, dir), (err) => {
             if (err) {

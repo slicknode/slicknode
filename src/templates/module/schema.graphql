@@ -1,0 +1,65 @@
+#
+# Example schema definition for the module {{ MODULE_ID }}
+# Define the data model and API schema for the module here.
+#
+# Learn more about modeling your content in the docs: https://slicknode.com/docs/
+
+# Example: Basic type without advanced content management functionality (no `Content` interface)
+type {{ MODULE_NAMESPACE }}_Page implements Node {
+  id: ID!
+  title: String!
+  slug: String @unique
+  text: String @input(type: MARKDOWN)
+}
+
+# ------
+# Example with content management functionality enabled:
+#
+# Note: If you are using the `Content` interface, make sure you have the `content`
+# module installed: `slicknode module add content`
+#
+#type {{ MODULE_NAMESPACE }}_Post implements Node & Content {
+#  id: ID!
+#
+#  title: String!
+#  slug: String @unique
+#  text: String @input(type: MARKDOWN)
+#
+#  # Fields of Content interface to advanced enable CMS functionality (i18n, publishing workflow, etc.):
+#
+#  contentNode: ContentNode!
+#  locale: Locale!
+#  status: ContentStatus!
+#  publishedAt: DateTime
+#  publishedBy: User
+#  createdAt: DateTime!
+#  createdBy: User
+#  lastUpdatedAt: DateTime
+#  lastUpdatedBy: User
+#}
+#
+#type {{ MODULE_NAMESPACE }}_Category implements Node & Content {
+#  id: ID!
+#
+#  name: String!
+#  slug: String! @unique
+#
+#  # Fields of Content interface to enable CMS functionality (i18n, publishing workflow, etc.):
+#
+#  contentNode: ContentNode!
+#  locale: Locale!
+#  status: ContentStatus!
+#  publishedAt: DateTime
+#  publishedBy: User
+#  createdAt: DateTime!
+#  createdBy: User
+#  lastUpdatedAt: DateTime
+#  lastUpdatedBy: User
+#}
+#
+# -----
+# Example custom resolver
+#
+# extend type Query {
+#   {{ MODULE_NAMESPACE }}_hello(name: String): String
+# }

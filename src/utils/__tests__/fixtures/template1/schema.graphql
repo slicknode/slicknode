@@ -1,0 +1,4 @@
+type ${value}Type implements Node {
+  # Comment ${value}
+  id: ID!
+}
