@@ -64,7 +64,6 @@ export function workspaceCommand(
 
         return await new Promise((resolve) => {
           rimraf(ctx.workspace!, {}, resolve);
-          resolve();
         });
       }
     }
