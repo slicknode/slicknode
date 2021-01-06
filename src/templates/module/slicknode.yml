@@ -14,7 +14,7 @@ module:
 #runtime:
 #  engine: nodejs@12
 #
-## Configure custom resolvers here. The GraphQL types have to be configured in the schema.graphql
+## Configure custom resolvers here after you have added the type definitions to the schema.graphql
 ## file of the module:
 #
 # resolvers:
