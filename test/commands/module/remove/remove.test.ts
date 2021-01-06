@@ -51,7 +51,7 @@ describe('module:remove', () => {
   test
     .stdout()
     .stderr()
-    .prompt(['y'])
+    .prompt([ true ])
     .workspaceCommand(projectPath('with-module'), ['module:remove', '@private/test-app'])
     .it('removes private module and files successfully', (ctx) => {
       const projectConfig = yaml.safeLoad(readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString());
@@ -71,7 +71,7 @@ describe('module:remove', () => {
   test
     .stdout()
     .stderr()
-    .prompt(['n'])
+    .prompt([ false ])
     .workspaceCommand(projectPath('with-module'), ['module:remove', '@private/test-app'])
     .it('removes private module but keeps files', (ctx) => {
       const projectConfig = yaml.safeLoad(readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString());

@@ -17,11 +17,6 @@ export function prompt(values: any[]) {
 
             let value = valueStack.shift();
 
-            // Convert confirm value to boolean
-            if (question.type === 'confirm') {
-              value = typeof value === 'string' ? value === 'y' : false;
-            }
-
             const filteredValue = value === null ? null : question.filter ? question.filter(value) : value;
             if (question.validate && filteredValue !== null) {
               const isValid = question.validate(filteredValue);
