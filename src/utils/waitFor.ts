@@ -1,12 +1,12 @@
 export interface IWaitForParams {
   // Handler to test. If returns true, the function is resolved
-  handler: () => Promise<boolean>,
+  handler: () => Promise<boolean>;
 
   // Interval with which to invoke the handler in ms
-  interval: number,
+  interval: number;
 
   // Timeout in ms after which the waiting is aborted and an exception is raised
-  timeout: number,
+  timeout: number;
 }
 
 /**
@@ -14,7 +14,7 @@ export interface IWaitForParams {
  * @param params
  */
 export async function waitFor(params: IWaitForParams) {
-  let start = new Date().getTime();
+  const start = new Date().getTime();
 
   return await new Promise(async (resolve, reject) => {
     if (await params.handler()) {
