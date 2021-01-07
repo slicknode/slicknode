@@ -2,17 +2,23 @@ import {flags} from '@oclif/command';
 import AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import cli from 'cli-ux';
-import fs, {mkdirpSync, readdir} from 'fs-extra';
+import fs, {mkdirpSync, pathExists, readdir} from 'fs-extra';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import os from 'os';
 import path from 'path';
+import {Uploadable} from 'slicknode-client';
 import * as uuid from 'uuid';
+import validator from 'validator';
 import {BaseCommand} from '../base/base-command';
+
+import {execSync} from 'child_process';
 import {
+  packProject,
   randomName,
 } from '../utils';
 import {getCluster} from '../utils/getCluster';
+import {importGitRepository} from '../utils/importGitRepository';
 
 export const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100, filter: {node: {openForProjects: true}}) {
@@ -48,6 +54,20 @@ export default class InitCommand extends BaseCommand {
     {
       name: 'name',
       description: 'The name of the project',
+    },
+    {
+      name: 'template',
+      description: 'Git repository URL to be used as template',
+      parse: (value: string) => {
+        if (!validator.isURL(value, {
+          protocols: ['http', 'https', 'ssh', 'git'],
+        })) {
+          throw new Error(
+            `The template URL is invalid or has an unsupported format: "${value}". Please provide a public Git URL`,
+          );
+        }
+        return value;
+      },
     },
   ];
 
@@ -88,6 +108,7 @@ export default class InitCommand extends BaseCommand {
     const input = this.parse(InitCommand);
     let {alias} = input.flags;
     let {name} = input.args;
+    const {template} = input.args;
 
     // Get name from flag if it was not set via arg
     if (!name) {
@@ -130,6 +151,46 @@ export default class InitCommand extends BaseCommand {
       alias = name.toLowerCase() + '-' + uuid.v4().substr(0, 8);
     }
 
+    // Load template for new project
+    let file: Uploadable | null = null;
+    if (template) {
+      try {
+        cli.action.start(`Loading project template "${template}"`);
+        await importGitRepository({
+          repository: template,
+          targetDir,
+        });
+
+        // Run validation and get status
+        const zip = await packProject(targetDir);
+
+        // Convert zip to buffer
+        file = await new Promise((resolve, reject) => {
+          zip.toBuffer(resolve, reject);
+        }) as Uploadable;
+        cli.action.stop();
+
+        // Install node modules if we have package.json
+        if (await pathExists(path.join(targetDir, 'package.json'))) {
+          cli.action.start('Installing node dependencies');
+          const npmInstallResult = execSync('npm install', {
+            cwd: targetDir,
+            encoding: 'utf8',
+            stdio: 'inherit',
+          });
+          cli.action.stop();
+          if (npmInstallResult) {
+            this.log(npmInstallResult);
+          }
+        }
+      } catch (e) {
+        this.error(
+          `Error loading project template: ${e.message}`,
+        );
+        return;
+      }
+    }
+
     const cluster = await getCluster({
       client: this.getClient(),
     });
@@ -150,7 +211,12 @@ export default class InitCommand extends BaseCommand {
       },
     };
     const client = this.getClient();
-    const result = await client.fetch(CREATE_PROJECT_MUTATION, variables);
+    const result = await client.fetch(
+      CREATE_PROJECT_MUTATION,
+      variables,
+      null,
+      file ? {file} : undefined,
+    );
     cli.action.stop();
 
     // Load bundle
@@ -198,7 +264,10 @@ export default class InitCommand extends BaseCommand {
       mkdirpSync(moduleCacheDir);
       zip.extractAllTo(moduleCacheDir, true);
 
-      zip.extractEntryTo('slicknode.yml', targetDir);
+      // Create slicknode.yml if not installed from template
+      if (!template) {
+        zip.extractEntryTo('slicknode.yml', targetDir);
+      }
 
       // Update environment
       await this.updateEnvironment('default', {

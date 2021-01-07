@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {mkdirp, readFile, remove} from 'fs-extra';
 import * as os from 'os';
 import path from 'path';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import {copyTemplate} from '../copyTemplate';
 
 describe('copyTemplate', () => {

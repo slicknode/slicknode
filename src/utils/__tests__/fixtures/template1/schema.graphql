@@ -1,4 +1,4 @@
-type ${value}Type implements Node {
-  # Comment ${value}
+type {{ value }}Type implements Node {
+  # Comment {{ value }}
   id: ID!
 }
