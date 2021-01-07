@@ -36,7 +36,7 @@ export async function copyTemplate(
       const content = (await readFile(file)).toString('utf-8');
       const compiledContent = _.template(content, {
         interpolate: /{{([\s\S]+?)}}/g,
-      })(variables);
+      })(variables).split('\r\n').join('\n'); // Remove added carriage returns for windows
       await writeFile(targetPath, compiledContent);
     }
   }));

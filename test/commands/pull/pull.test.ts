@@ -33,6 +33,9 @@ describe('pull', () => {
   test
     .stdout()
     .stderr()
+    .cliActions([
+      'Updating dependencies',
+    ])
     .login()
     .nock(
       'http://localhost',
@@ -132,6 +135,9 @@ describe('pull', () => {
     .stdout()
     .stderr()
     .login()
+    .cliActions([
+      'Updating dependencies',
+    ])
 
     // Mock repository detail requests for modules
     .nock(
@@ -212,6 +218,9 @@ describe('pull', () => {
   test
     .stdout()
     .stderr()
+    .cliActions([
+      'Updating dependencies',
+    ])
     .login()
     .api(LOAD_PROJECT_BUNDLE_QUERY, {data: {
       project: {
@@ -235,6 +244,9 @@ describe('pull', () => {
     .stdout()
     .stderr()
     .login()
+    .cliActions([
+      'Updating dependencies',
+    ])
     .nock(
       'http://localhost',
        loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
@@ -267,6 +279,9 @@ describe('pull', () => {
   test
     .stdout()
     .stderr()
+    .cliActions([
+      'Updating dependencies',
+    ])
     .login()
     .nock(
       'http://localhost',

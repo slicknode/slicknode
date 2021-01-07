@@ -31,6 +31,9 @@ describe('delete', () => {
     .login()
     .stdout({stripColor: true})
     .stderr({stripColor: true})
+    .cliActions([
+      'Deleting project in cluster',
+    ])
     .api(DELETE_PROJECT_MUTATION, {data: null})
     .prompt([ 'test-ad2f5a5e' ])
     .workspaceCommand(projectPath('initialized'), ['delete'])
@@ -44,6 +47,9 @@ describe('delete', () => {
     .login()
     .stdout({stripColor: true})
     .stderr({stripColor: true})
+    .cliActions([
+      'Deleting project in cluster',
+    ])
     .api(DELETE_PROJECT_MUTATION, {data: null})
     .workspaceCommand(projectPath('initialized'), ['delete', '--force'])
     .it('skips confirmation with --force', ctx => {

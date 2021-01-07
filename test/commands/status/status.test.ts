@@ -20,6 +20,9 @@ describe('status', () => {
 
   test
     .login()
+    .cliActions([
+      'Comparing local changes with cluster state',
+    ])
     .stdout({stripColor: true})
     .stderr()
     .api(MIGRATE_PROJECT_MUTATION, {data: null, errors: [{message: 'No access'}]})
@@ -33,6 +36,9 @@ describe('status', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Comparing local changes with cluster state',
+    ])
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
         changes: [
@@ -57,6 +63,9 @@ describe('status', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Comparing local changes with cluster state',
+    ])
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
         changes: [
@@ -122,6 +131,9 @@ describe('status', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Comparing local changes with cluster state',
+    ])
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
         changes: [

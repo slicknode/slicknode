@@ -28,6 +28,9 @@ describe('deploy', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Comparing local changes with cluster state',
+    ])
     .api(MIGRATE_PROJECT_MUTATION, {data: null, errors: [{message: 'No access'}]})
     .command(['deploy', '--dir', projectPath('initialized')])
     .catch(/Error loading state from API: No access/)
@@ -39,6 +42,9 @@ describe('deploy', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Comparing local changes with cluster state',
+    ])
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
         changes: [
@@ -64,6 +70,9 @@ describe('deploy', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Comparing local changes with cluster state',
+    ])
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
         changes: [
@@ -107,6 +116,11 @@ describe('deploy', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Comparing local changes with cluster state',
+      'Deploying changes',
+      'Updating local source files',
+    ])
     // Dry run request
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
@@ -134,6 +148,11 @@ describe('deploy', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Comparing local changes with cluster state',
+      'Deploying changes',
+      'Updating local source files',
+    ])
     // Dry run request
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
@@ -164,6 +183,13 @@ describe('deploy', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Load available clusters',
+      'Create project in cluster',
+      'Comparing local changes with cluster state',
+      'Deploying changes',
+      'Updating local source files',
+    ])
     // Dry run request
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
@@ -296,6 +322,11 @@ describe('deploy', () => {
     .login()
     .stdout({stripColor: true})
     .stderr()
+    .cliActions([
+      'Load available clusters',
+      'Create project in cluster',
+      'Comparing local changes with cluster state',
+    ])
     // Dry run request
     .api(MIGRATE_PROJECT_MUTATION, {data: {
       migrateProject: {
