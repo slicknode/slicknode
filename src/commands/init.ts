@@ -176,10 +176,12 @@ export default class InitCommand extends BaseCommand {
           const npmInstallResult = execSync('npm install', {
             cwd: targetDir,
             encoding: 'utf8',
-            stdio: 'ignore',
+            stdio: 'inherit',
           });
           cli.action.stop();
-          this.log(npmInstallResult);
+          if (npmInstallResult) {
+            this.log(npmInstallResult);
+          }
         }
       } catch (e) {
         this.error(
