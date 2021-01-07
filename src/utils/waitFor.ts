@@ -24,13 +24,18 @@ export async function waitFor(params: IWaitForParams) {
 
     const interval = setInterval(async () => {
       // Check if resolves successfully
-      if (await params.handler()) {
-        clearInterval(interval);
-        resolve();
+      try {
+        if (await params.handler()) {
+          clearInterval(interval);
+          resolve();
+        }
+        /* tslint:disable:no-empty */
+      } catch (e) {
+
       }
 
       // Check for timeout
-      if (start < (new Date().getTime()) - params.timeout) {
+      if (start < (new Date().getTime() - params.timeout)) {
         clearInterval(interval);
         reject(new Error('Wait timeout exceeded'));
       }

@@ -66,6 +66,93 @@ describe('init', () => {
     });
 
   test
+    .stdout({
+      print: true,
+    })
+    .stderr({
+      print: true,
+    })
+    .cliActions([
+      'Load available clusters',
+      'Deploying project to cluster',
+      'Update local files',
+      'Waiting for API to launch',
+    ])
+    .login()
+    .nock(
+      'http://localhost',
+       loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+    )
+    .nock(
+      'http://testproject',
+      api => api.post('/').reply(403, {data: {__typename: 'Query'}})
+    )
+    .timeout(62000) // Testing API timeout
+    .api(LIST_CLUSTER_QUERY, clusterResult)
+    .api(CREATE_PROJECT_MUTATION, {data: {
+      createProject: {
+        node: {
+          id: '234',
+          endpoint: 'http://testproject',
+          name: 'TestName',
+          version: {
+            id: 'someid',
+            bundle: 'http://localhost/fakeversionbundle.zip'
+          }
+        }
+      }
+    }})
+    .workspaceCommand(EMPTY_DIR, ['init'])
+    .it('displays warning for unavailable project API', ctx => {
+      // Check slicknoderc contents
+      const slicknodeRc = JSON.parse(
+        fs.readFileSync(path.join(ctx.workspace!, '.slicknoderc')).toString()
+      );
+      expect(slicknodeRc).to.deep.equal({
+        default: {
+          version: 'someid',
+          id: '234',
+          endpoint: 'http://testproject',
+          name: 'TestName'
+        },
+      });
+
+      // Check slicknode.yml content
+      const slicknodeYml = yaml.safeLoad(
+        fs.readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString()
+      );
+      expect(slicknodeYml).to.deep.equal({
+        dependencies: {
+          '@private/test-app': './modules/test-app',
+          auth: 'latest',
+          core: 'latest',
+          image: 'latest',
+          relay: 'latest',
+        }
+      });
+
+      // Check if core modules were added to cache
+      const coreModuleYml = yaml.safeLoad(
+        fs.readFileSync(
+          path.join(ctx.workspace!, '.slicknode', 'cache', 'modules', 'core', 'slicknode.yml')
+        ).toString(),
+      );
+      expect(coreModuleYml).to.deep.equal({ module: { id: 'core', label: 'Core' } });
+
+      // Check schema.graphql of core module
+      const coreSchema = parse(
+        fs.readFileSync(
+          path.join(ctx.workspace!, '.slicknode', 'cache', 'modules', 'core', 'schema.graphql')
+        ).toString(),
+      );
+      expect(coreSchema.kind).to.equal(Kind.DOCUMENT);
+      expect(coreSchema.definitions.length).to.be.above(5);
+
+      expect(ctx.stdout).to.contain('Endpoint: http://testproject');
+      expect(ctx.stdout).to.contain('Name: TestName');
+    });
+
+  test
     .stdout()
     .stderr()
     .login()
@@ -132,11 +219,16 @@ describe('init', () => {
       'Load available clusters',
       'Deploying project to cluster',
       'Update local files',
+      'Waiting for API to launch',
     ])
     .login()
     .nock(
       'http://localhost',
        loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+    )
+    .nock(
+      'http://testproject',
+      api => api.post('/').reply(200, {data: {__typename: 'Query'}})
     )
     .api(LIST_CLUSTER_QUERY, clusterResult)
     .api(CREATE_PROJECT_MUTATION, {data: {
@@ -209,11 +301,16 @@ describe('init', () => {
       'Load available clusters',
       'Deploying project to cluster',
       'Update local files',
+      'Waiting for API to launch',
     ])
     .login()
     .nock(
       'http://localhost',
        loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+    )
+    .nock(
+      'http://testproject',
+      api => api.post('/').reply(200, {data: {__typename: 'Query'}})
     )
     .api(LIST_CLUSTER_QUERY, clusterResult)
     .api(CREATE_PROJECT_MUTATION, {data: {
@@ -319,11 +416,16 @@ describe('init', () => {
       'Load available clusters',
       'Deploying project to cluster',
       'Update local files',
+      'Waiting for API to launch',
     ])
     .login()
     .nock(
       'http://localhost1',
        loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip')),
+    )
+    .nock(
+      'http://testproject',
+      api => api.post('/').reply(200, {data: {__typename: 'Query'}})
     )
     .api(LIST_CLUSTER_QUERY, clusterResult)
     .api(CREATE_PROJECT_MUTATION, {data: {
@@ -419,11 +521,16 @@ describe('init', () => {
       'Load available clusters',
       'Deploying project to cluster',
       'Update local files',
+      'Waiting for API to launch',
     ])
     .login()
     .nock(
       'http://localhost',
        loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+    )
+    .nock(
+      'http://testproject',
+      api => api.post('/').reply(200, {data: {__typename: 'Query'}})
     )
     .api(LIST_CLUSTER_QUERY, clusterResult)
     .api(CREATE_PROJECT_MUTATION, {data: {

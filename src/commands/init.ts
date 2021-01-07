@@ -19,6 +19,7 @@ import {
 } from '../utils';
 import {getCluster} from '../utils/getCluster';
 import {importGitRepository} from '../utils/importGitRepository';
+import {waitFor} from '../utils/waitFor';
 
 export const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100, filter: {node: {openForProjects: true}}) {
@@ -294,6 +295,33 @@ export default class InitCommand extends BaseCommand {
         path.join(moduleCacheDir, 'slicknode.yml'),
         path.join(targetDir, 'slicknode.yml'),
       );
+
+      // Wait for API to become available
+      try {
+        cli.action.start('Waiting for API to launch');
+        await waitFor({
+          async handler() {
+            const res = await fetch(project.endpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+              },
+              body: JSON.stringify({query: '{__typename}'}),
+            });
+            return res.status === 200;
+          },
+          interval: 1500,
+          timeout: 60000,
+        });
+        cli.action.stop();
+      } catch (e) {
+        cli.action.stop('failed');
+        this.warn(
+          'The project was created but the API is not reachable from your machine yet. ' +
+          'Check your internet connection and open the project in the console in a few minutes.',
+        );
+      }
 
       this.log(chalk.green(
         '\n\nYour GraphQL Server is ready: \n\n' +
