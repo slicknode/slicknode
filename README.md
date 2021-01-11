@@ -5,8 +5,9 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/slicknode?style=social)](https://twitter.com/intent/user?screen_name=slicknode)
 
 Slicknode is an extensible, modular [Headless GraphQL CMS](https://slicknode.com) for content management at any scale. 
-Declaratively define your content model using the GraphQL SDL, and Slicknode provisions a highly scalable GraphQL API
-with global CDN and intuitive admin interface in seconds, powered by AWS Serverless: 
+Declaratively define your content model using the GraphQL SDL, add any 3rd party APIs (eCommerce etc.)
+and Slicknode provisions a highly scalable GraphQL API with global CDN and intuitive admin interface in seconds,
+powered by AWS Serverless: 
 
 [![Headless GraphQL CMS](./assets/info-graphic.png)](https://slicknode.com/)
 
@@ -19,9 +20,15 @@ with global CDN and intuitive admin interface in seconds, powered by AWS Serverl
 
 ## Why Slicknode?
 
-While there seem to be an endless number of CMS on the market, a lot of them have some fundamental shortcomings in their
-architecture that prevent them from fully utilizing the latest innovations in cloud computing. Modern development
-workflows are often cumbersome or impossible, that's why we created Slicknode. 
+Slicknode is designed to automate the backend work for building rich user interfaces. 
+Quickly create scalable content infrastructure that can power any frontend with a GraphQL API, from
+small web sites to large publishing solutions and multi-tenant SaaS products with lots of business logic. 
+The application structure lives in your local code base and can be managed with Git. The infrastructure
+is automatically provisioned, managed and scaled which reduces the backend development effort to a minimum. 
+
+Add your own GraphQL, REST or 3rd party APIs to the data graph with minimal to no integration effort
+and get a unified data graph that combines all the functionality and data you need in a highly scalable,
+global GraphQL API with virtually unlimited flexibility. 
 
 Here are some of the problems that Slicknode solves:
 
