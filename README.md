@@ -72,10 +72,12 @@ Here are some of the problems that Slicknode solves:
 This is a quickstart tutorial to create a Slicknode project from scratch. If you would rather start with
 a fullstack application, check out our [NextJS blog starter](https://github.com/slicknode/starter-nextjs-blog)
 
-To get started with [Slicknode](https://slicknode.com) create a Slicknode Cloud account: 
+To get started with [Slicknode](https://slicknode.com), you need a Slicknode Cloud account. 
+You can [sign up for free here](https://console.slicknode.com/register) *(No credit card required)*
 
-[Sign up for free](https://console.slicknode.com/register) *(No credit card required)*
+Check out this 10-minute tutorial which walks you through everything you need to get started:
 
+[![Slicknode Getting Started](https://img.youtube.com/vi/VGpm6J-0dKg/0.jpg)](https://www.youtube.com/watch?v=VGpm6J-0dKg)
 
 ## Installation
 
