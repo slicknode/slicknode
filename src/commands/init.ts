@@ -19,7 +19,7 @@ import {
 } from '../utils';
 import {getCluster} from '../utils/getCluster';
 import {importGitRepository} from '../utils/importGitRepository';
-import {waitFor} from '../utils/waitFor';
+import {waitForEndpoint} from '../utils/waitForEndpoint';
 
 export const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100, filter: {node: {openForProjects: true}}) {
@@ -299,21 +299,7 @@ export default class InitCommand extends BaseCommand {
       // Wait for API to become available
       try {
         cli.action.start('Waiting for API to launch');
-        await waitFor({
-          async handler() {
-            const res = await fetch(project.endpoint, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-              },
-              body: JSON.stringify({query: '{__typename}'}),
-            });
-            return res.status === 200;
-          },
-          interval: 1500,
-          timeout: 60000,
-        });
+        await waitForEndpoint(project.endpoint);
         cli.action.stop();
       } catch (e) {
         cli.action.stop('failed');
