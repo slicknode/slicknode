@@ -23,6 +23,7 @@ import * as parsers from '../parsers';
 import {getCluster} from '../utils/getCluster';
 import {isDependencyTreeLoaded} from '../utils/isDependencyTreeLoaded';
 import {pullDependencies} from '../utils/pullDependencies';
+import {waitForEndpoint} from '../utils/waitForEndpoint';
 import {PROJECT_ALIAS_REGEX} from '../validation';
 import {CREATE_PROJECT_MUTATION, LIST_CLUSTER_QUERY} from './init';
 
@@ -293,6 +294,19 @@ export default class DeployCommand extends StatusCommand {
       id: project.id,
     };
     await this.updateEnvironment(name, envConfig);
+
+    // Wait for API to become available
+    try {
+      cli.action.start('Waiting for API to launch');
+      await waitForEndpoint(project.endpoint);
+      cli.action.stop();
+    } catch (e) {
+      cli.action.stop('failed');
+      this.warn(
+        'The project was created but the API is not reachable from your machine yet. ' +
+        'Check your internet connection and open the project in the console in a few minutes.',
+      );
+    }
 
     return envConfig;
   }

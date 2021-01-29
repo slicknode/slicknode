@@ -3,6 +3,9 @@
     "createProject": {
       "node": {
         "id": "234",
+        "alias": "somealias",
+        "name": "testproject",
+        "endpoint": "http://testproject",
         "version": {
           "id": "someid",
           "bundle": "http://localhost/fakeversionbundle.zip"
