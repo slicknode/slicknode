@@ -53,6 +53,11 @@ export default class ModuleCreateCommand extends BaseCommand {
       description: 'The label as displayed in the admin interface',
       required: false,
     }),
+    endpoint: flags.string({
+      char: 'e',
+      description: 'The GraphQL API endpoint to create a remote module',
+      required: false,
+    }),
   };
 
   public async run() {
