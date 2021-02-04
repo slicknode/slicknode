@@ -6,6 +6,7 @@ import {flags} from '@oclif/command';
 import chalk from 'chalk';
 import fs from 'fs';
 import {mkdirpSync} from 'fs-extra';
+import {printSchema} from 'graphql';
 import inquirer from 'inquirer';
 import yaml from 'js-yaml';
 import _ from 'lodash';
@@ -13,6 +14,7 @@ import path from 'path';
 import {BaseCommand} from '../../base/base-command';
 import * as parsers from '../../parsers';
 import {
+  getRemoteSchema,
   sortKeys,
 } from '../../utils';
 import {copyTemplate} from '../../utils/copyTemplate';
@@ -57,6 +59,21 @@ export default class ModuleCreateCommand extends BaseCommand {
       char: 'e',
       description: 'The GraphQL API endpoint to create a remote module',
       required: false,
+      parse: parsers.url({
+        protocols: ['http', 'https'],
+      }),
+    }),
+    header: flags.string({
+      char: 'h',
+      description: 'HTTP headers to be sent to the remote GraphQL API endpoint',
+      required: false,
+      multiple: true,
+      parse: ((value) => {
+        if (!value.match(/^([\w-]+):(.*)$/g)) {
+          throw new Error('Please enter a valid header name in the format "Name: Value"');
+        }
+        return value;
+      }),
     }),
   };
 
@@ -119,50 +136,79 @@ export default class ModuleCreateCommand extends BaseCommand {
       label = labelValues.label;
     }
 
+    // Variables for module templates
+    const moduleVariables = {
+      MODULE_ID: moduleId,
+      MODULE_NAMESPACE: namespace,
+      MODULE_LABEL: label,
+    };
+
+    // Create module dir
+    const moduleDir = path.join(this.getDefaultModulesDir(), input.args.name);
     try {
-      // @TODO: Check of unique namespace
-
-      // Create modules dir
-      const moduleDir = path.join(this.getDefaultModulesDir(), input.args.name);
       mkdirpSync(moduleDir);
+    } catch (e) {
+      return this.error(chalk.red('Could not create module directory: ' + e.message));
+    }
 
-      // Write template files
-      const moduleVariables = {
-        MODULE_ID: moduleId,
-        MODULE_NAMESPACE: namespace,
-        MODULE_LABEL: label,
-      };
-      await copyTemplate(
-        path.join(__dirname, '../', '../', 'templates', 'module'),
-        moduleDir,
-        {
-          MODULE_ID: moduleId,
-          MODULE_NAMESPACE: namespace,
-          MODULE_LABEL: label,
-        },
-      );
-      /*
-      // Write slicknode.yml file for new module
-      const moduleConfig = {
-        module: {
-          id: moduleId,
-          namespace,
-          label,
-        },
-      };
-      fs.writeFileSync(
-        path.join(moduleDir, 'slicknode.yml'),
-        yaml.safeDump(sortKeys(moduleConfig), {
-          indent: 2,
-        }),
-      );
+    try {
+      // Introspect GraphQL API and create remote module
+      const endpoint = input.flags.endpoint;
+      if (endpoint) {
+        // We have remote module, build config via introspection
+        const headers = ((input.flags.header || []) as string[]).reduce(
+          (h: {[name: string]: string}, value) => {
+            const parts: string[] = value.split(':');
+            if (parts.length <= 1) {
+              return h;
+            }
+            const name = parts.shift()!;
+            h[name] = parts.join(':').trim();
+            return h;
+          }, {});
+        const schema = await getRemoteSchema({
+          endpoint,
+          headers,
+        });
 
-      // Create empty schema.graphql
-      fs.writeFileSync(
-        path.join(moduleDir, 'schema.graphql'),
-        '',
-      );
-       */
+        // Write slicknode.yml file for remote module
+        const moduleConfig = {
+          module: {
+            id: moduleId,
+            namespace,
+            label,
+            remote: {
+              endpoint,
+              ...(Object.keys(headers).length ? {headers} : {}),
+            },
+          },
+        };
+        fs.writeFileSync(
+          path.join(moduleDir, 'slicknode.yml'),
+          yaml.safeDump(sortKeys(moduleConfig), {
+            indent: 2,
+          }),
+        );
+
+        // Write introspection schema to schema.graphql
+        fs.writeFileSync(
+          path.join(moduleDir, 'schema.graphql'),
+          printSchema(schema),
+        );
+      } else {
+        // Create module from template
+        await copyTemplate(
+          path.join(__dirname, '../', '../', 'templates', 'module'),
+          moduleDir,
+          {
+            MODULE_ID: moduleId,
+            MODULE_NAMESPACE: namespace,
+            MODULE_LABEL: label,
+          },
+        );
+      }
+
+      // @TODO: Check of unique namespace
 
       // Add module to slicknode.yml
       const relModulePath = '.' + moduleDir.substr(this.getProjectRoot().length).split(path.sep).join('/');

@@ -28,3 +28,5 @@ export {
 export {
   getModuleList,
 } from './getModuleList';
+
+export * from './getRemoteSchema';

@@ -1,5 +1,5 @@
-import {url} from '../url';
 import {expect} from 'chai';
+import {url} from '../url';
 
 describe('url input parser', () => {
   it('parses valid URL with default params', () => {
