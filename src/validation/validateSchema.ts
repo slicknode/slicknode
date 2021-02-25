@@ -103,27 +103,41 @@ function transformRemoteSchema(schema: string, namespace: string | null): string
     ),
   ]);
   const rootTypeNames: string[] = [];
-  if (transformedSchema.getMutationType()) {
-    rootTypeNames.push(transformedSchema.getMutationType()!.name);
+  const mutationType = transformedSchema.getMutationType();
+  if (mutationType) {
+    rootTypeNames.push(mutationType.name);
   }
-  if (transformedSchema.getQueryType()) {
-    rootTypeNames.push(transformedSchema.getQueryType()!.name);
+  const queryType = transformedSchema.getQueryType();
+  if (queryType) {
+    rootTypeNames.push(queryType.name);
   }
   // Once subscriptions are supported, do the same here...
   let transformedSchemaDoc = parse(printSchema(transformedSchema));
 
-  // Add root types as type extensions
+  // Add root types as type extensions to Mutation + Query type
   transformedSchemaDoc = {
     ...transformedSchemaDoc,
-    definitions: transformedSchemaDoc.definitions.map((definition) => {
-      if (definition.kind === Kind.OBJECT_TYPE_DEFINITION && rootTypeNames.includes(definition.name.value)) {
-        return {
-          ...definition,
-          kind: Kind.OBJECT_TYPE_EXTENSION,
-        };
-      }
-      return definition;
-    }),
+    definitions: transformedSchemaDoc.definitions
+      // Remove schema definition
+      .filter((definition) => ![
+        Kind.SCHEMA_DEFINITION,
+        Kind.SCHEMA_EXTENSION,
+      ].includes(definition.kind as any))
+      .map((definition) => {
+        if (definition.kind === Kind.OBJECT_TYPE_DEFINITION && rootTypeNames.includes(definition.name.value)) {
+          const typeName = definition.name.value === queryType?.name ?
+            'Query' : 'Mutation';
+          return {
+            ...definition,
+            name: {
+              ...definition.name,
+              value: typeName,
+            },
+            kind: Kind.OBJECT_TYPE_EXTENSION,
+          };
+        }
+        return definition;
+      }),
   };
 
   return print(transformedSchemaDoc);

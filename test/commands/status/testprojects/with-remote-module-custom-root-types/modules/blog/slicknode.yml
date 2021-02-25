@@ -1,0 +1,6 @@
+module:
+  id: "@private/blog"
+  label: Blog
+  namespace: Blog
+  remote:
+    endpoint: "http://localhost/graphql"

@@ -1,0 +1,23 @@
+schema {
+  query: QueryRoot
+  mutation: MutationRoot
+}
+
+type QueryRoot {
+  viewer: Viewer
+  someOtherField: String
+}
+
+type MutationRoot {
+  hello: String
+}
+
+type Viewer {
+  roles: [String]
+}
+
+type Post {
+  id: ID!
+  title: String!
+  text: String
+}
