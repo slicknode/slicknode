@@ -111,7 +111,7 @@ export class BaseCommand extends Command {
     });
     const { authUrl, node } = authRequestResult?.data?.createApiAuthRequest || {};
     if (!authUrl || !node?.token) {
-      this.error(`Error creating auth request: ${authRequestResult?.errors?.[0]?.message}`, {
+      this.error(`Error creating auth request: ${authRequestResult?.errors?.[0]?.message || 'Please try again'}`, {
         exit: 1,
       });
     }

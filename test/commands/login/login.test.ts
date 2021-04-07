@@ -56,4 +56,31 @@ describe('login', () => {
       expect(ctx.stdout).to.contain('Login successful!');
       expect(ctx.stub!.calledWith(DUMMY_AUTH_URL)).to.be.true;
     });
+
+  test
+    .stdout({ stripColor: true })
+    .stderr({ stripColor: true })
+    .nock(
+      'http://localhost',
+      loader => loader.post('/').reply(403)
+    )
+    .api(CREATE_API_AUTH_REQUEST_MUTATION, {
+      data: {
+        createApiAuthRequest: {
+          node: {
+            token: null,
+          },
+          authUrl: DUMMY_AUTH_URL,
+        },
+      },
+    })
+    .do((ctx: { stub?: SinonStub }) => {
+      ctx.stub = sinon.stub(utils, 'openUrl');
+    })
+    .command(['login'])
+    .catch(/Error creating auth request: Please try again/g)
+    .finally(ctx => {
+      ctx.stub!.restore();
+    })
+    .it('throws error if API auth request cannot be created', () => { });
 });
