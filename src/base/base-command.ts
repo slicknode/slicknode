@@ -1,4 +1,4 @@
-import Command, {flags} from '@oclif/command';
+import Command, { flags } from '@oclif/command';
 import chalk from 'chalk';
 import cli from 'cli-ux';
 import fs from 'fs';
@@ -10,16 +10,18 @@ import os from 'os';
 import path from 'path';
 import loginAuthenticator from 'slicknode-auth-email-password';
 import Client from 'slicknode-client';
+import * as uuid from 'uuid';
 import validator from 'validator';
 import ConfigStorage from '../api/config-storage';
-import {DEFAULT_API_ENDPOINT} from '../config';
-import {directory} from '../parsers';
+import { DEFAULT_API_ENDPOINT } from '../config';
+import { directory } from '../parsers';
 import {
   IEnvironmentConfig,
   IEnvironmentConfigMap,
   IProjectConfig,
 } from '../types';
 import {
+  openUrl,
   semverCompare,
 } from '../utils';
 
@@ -91,6 +93,8 @@ export class BaseCommand extends Command {
     // Refresh access token
     if (client.hasRefreshToken()) {
       cli.action.start('Authenticating');
+
+      // We just fetch viewer which will trigger token refresh in client
       const userResult = await client.fetch('query {viewer {user {id}}}');
       cli.action.stop();
       if (_.get(userResult, 'data.viewer.user.id')) {
@@ -98,49 +102,65 @@ export class BaseCommand extends Command {
       }
     }
 
-    // Ask for username password
-    this.log('\n' + chalk.bold('Login:'));
-    this.log('Enter email address and password of your slicknode account');
-    this.log(`
-  You don't have an account yet?
-  Get your FREE account at: ${chalk.bold('slicknode.com')}
-  `);
+    // @TODO: Add support for permanent auth tokens via env vars, args
 
-    let loginCount = 0;
-
-    while (loginCount < 3) {
-      const input = await inquirer.prompt([
-        {
-          name: 'email',
-          message: 'Email:',
-          validate(value) {
-            return validator.isEmail(value) || 'Please enter a valid email address';
-          },
-        },
-        {
-          name: 'password',
-          message: 'Password:',
-          type: 'password',
-          validate(value) {
-            return value.length >= 8 || 'Please enter a valid password';
-          },
-        },
-      ]) as {email: string, password: string};
-
-      try {
-        await client.authenticate(loginAuthenticator(input.email, input.password));
-
-        this.log('\n', chalk.green.bold('Login successful!'), '\n');
-
-        return true;
-      } catch (e) {
-        this.error(chalk.red('Login failed, please try again. Message:', e.message), {exit: false});
+    // Get auth request token
+    const state = uuid.v4(); // Generate state
+    cli.action.start('Creating auth request');
+    const authRequestResult = await client.fetch(`mutation AuthRequestMutation(
+      $input: createApiAuthRequestInput!
+    ) {
+      createApiAuthRequest(input: $input) {
+        node {
+          token
+        }
+        authUrl
       }
-      loginCount++;
+    }
+    `, {
+      input: {
+        state,
+      },
+    });
+    const { authUrl, node } = authRequestResult?.data?.createApiAuthRequest || {};
+    if (!authUrl || !node?.token) {
+      this.error(`Error creating auth request: ${authRequestResult?.errors?.[0]?.message}`, {
+        exit: 1,
+      });
     }
 
-    this.error(chalk.red('Authentication failed. Please try again.'));
-    return false;
+    // Redirect user to 
+    cli.action.stop();
+
+    this.log(`Visit this URL to authenticate your device: ${authUrl}\n`);
+    this.log('Opening URL in browser...');
+    openUrl(authUrl);
+
+    cli.action.start('Waiting for authorization');
+    const timeout = new Date().getTime() + 5 * 60 * 1000;
+    while (timeout > new Date().getTime()) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await client.fetch(`mutation LoginAuthRequestMutation($input: loginApiAuthRequestInput!) {
+        loginApiAuthRequest(input: $input) {
+          accessToken
+          accessTokenLifetime
+          refreshToken
+          refreshTokenLifetime
+        }
+      }`, {
+        input: { token: node.token, state },
+      });
+      if (result?.data?.loginApiAuthRequest) {
+        client.setAuthTokenSet(result?.data?.loginApiAuthRequest);
+        cli.action.stop();
+        this.log('\n', chalk.green.bold('Login successful!'), '\n');
+        return true;
+      }
+    }
+    cli.action.stop();
+    this.error('Authentication request timed out, please restart the process.', {
+      exit: 1,
+    });
   }
 
   /**
