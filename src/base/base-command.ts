@@ -104,17 +104,7 @@ export class BaseCommand extends Command {
     // Get auth request token
     const state = uuid.v4(); // Generate state
     cli.action.start('Creating auth request');
-    const authRequestResult = await client.fetch(`mutation AuthRequestMutation(
-      $input: createApiAuthRequestInput!
-    ) {
-      createApiAuthRequest(input: $input) {
-        node {
-          token
-        }
-        authUrl
-      }
-    }
-    `, {
+    const authRequestResult = await client.fetch(CREATE_API_AUTH_REQUEST_MUTATION, {
       input: {
         state,
       },
@@ -126,7 +116,7 @@ export class BaseCommand extends Command {
       });
     }
 
-    // Redirect user to 
+    // Redirect user to
     cli.action.stop();
 
     this.log(`Visit this URL to authenticate your device: ${authUrl}\n`);
@@ -136,15 +126,8 @@ export class BaseCommand extends Command {
     cli.action.start('Waiting for authorization');
     const timeout = new Date().getTime() + 5 * 60 * 1000;
     while (timeout > new Date().getTime()) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const result = await client.fetch(`mutation LoginAuthRequestMutation($input: loginApiAuthRequestInput!) {
-        loginApiAuthRequest(input: $input) {
-          accessToken
-          accessTokenLifetime
-          refreshToken
-          refreshTokenLifetime
-        }
-      }`, {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result = await client.fetch(LOGIN_API_AUTH_REQUEST_MUTATION, {
         input: { token: node.token, state },
       });
       if (result?.data?.loginApiAuthRequest) {
@@ -407,3 +390,24 @@ export class BaseCommand extends Command {
     return path.join(this.getProjectRoot(), 'modules');
   }
 }
+
+export const CREATE_API_AUTH_REQUEST_MUTATION = `mutation AuthRequestMutation(
+  $input: createApiAuthRequestInput!
+) {
+  createApiAuthRequest(input: $input) {
+    node {
+      token
+    }
+    authUrl
+  }
+}
+`;
+
+export const LOGIN_API_AUTH_REQUEST_MUTATION = `mutation LoginAuthRequestMutation($input: loginApiAuthRequestInput!) {
+  loginApiAuthRequest(input: $input) {
+    accessToken
+    accessTokenLifetime
+    refreshToken
+    refreshTokenLifetime
+  }
+}`;
