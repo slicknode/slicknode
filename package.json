@@ -50,7 +50,6 @@
     "lodash": "^4.17.20",
     "node-fetch": "^2.6.1",
     "rimraf": "^3.0.2",
-    "slicknode-auth-email-password": "^0.1.2",
     "slicknode-client": "^0.4.1",
     "slicknode-runtime": "^0.3.0",
     "tar": "^6.0.5",
