@@ -3,28 +3,13 @@ import sinon, { SinonStub } from 'sinon';
 import * as utils from '../../../src/utils';
 import { CREATE_API_AUTH_REQUEST_MUTATION, LOGIN_API_AUTH_REQUEST_MUTATION } from '../../../src/base/base-command';
 
-
-const LOGIN_MUTATION = `mutation LoginMutation(
-  $email: String!,
-  $password: String!
-) {
-  tokenSet: loginEmailPassword(input: {email: $email, password: $password}) {
-    accessToken
-    refreshToken
-    accessTokenLifetime
-    refreshTokenLifetime
-  }
-}`;
 const DUMMY_AUTH_URL = 'http://some-auth-url';
 
 describe('login', () => {
   test
     .stdout({ stripColor: true })
     .stderr({ stripColor: true })
-    .nock(
-      'http://localhost',
-      loader => loader.post('/').reply(403)
-    )
+    .login() // We login to stub client
     .api(CREATE_API_AUTH_REQUEST_MUTATION, {
       data: {
         createApiAuthRequest: {
@@ -60,10 +45,7 @@ describe('login', () => {
   test
     .stdout({ stripColor: true })
     .stderr({ stripColor: true })
-    .nock(
-      'http://localhost',
-      loader => loader.post('/').reply(403)
-    )
+    .login() // We login to stub client
     .api(CREATE_API_AUTH_REQUEST_MUTATION, {
       data: {
         createApiAuthRequest: {

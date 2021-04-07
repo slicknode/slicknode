@@ -1,9 +1,9 @@
-import {expect, test} from '../../test';
-import {LIST_CLUSTER_QUERY, CREATE_PROJECT_MUTATION} from '../../../src/commands/init';
+import { expect, test } from '../../test';
+import { LIST_CLUSTER_QUERY, CREATE_PROJECT_MUTATION } from '../../../src/commands/init';
 import path from 'path';
 import fs from 'fs';
 import yaml from 'js-yaml';
-import {DefinitionNode, DocumentNode, Kind, ObjectTypeDefinitionNode, parse} from 'graphql';
+import { DefinitionNode, DocumentNode, Kind, ObjectTypeDefinitionNode, parse } from 'graphql';
 import nock = require('nock');
 
 const clusterResult = {
@@ -33,7 +33,7 @@ describe('init', () => {
       'Load available clusters',
     ])
     .login()
-    .api(LIST_CLUSTER_QUERY, {data: null, errors: [{message: 'Error'}]})
+    .api(LIST_CLUSTER_QUERY, { data: null, errors: [{ message: 'Error' }] })
     .command(['init'])
     .catch('Could not load available clusters. Make sure you have a working internet connection and try again.')
     .it('shows error when cluster could not be loaded', ctx => {
@@ -59,7 +59,7 @@ describe('init', () => {
     ])
     .login()
     .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {data: null, errors: [{message: 'Error'}]})
+    .api(CREATE_PROJECT_MUTATION, { data: null, errors: [{ message: 'Error' }] })
     .command(['init', '--dir', EMPTY_DIR])
     .catch('Initialization failed: ERROR: Could not create project. Please try again later.\nError')
     .it('shows error for failed project creation', ctx => {
@@ -81,27 +81,29 @@ describe('init', () => {
     .login()
     .nock(
       'http://localhost',
-       loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+      loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
     )
     .nock(
       'http://testproject',
-      api => api.post('/').reply(403, {data: {__typename: 'Query'}})
+      api => api.post('/').reply(403, { data: { __typename: 'Query' } })
     )
     .timeout(62000) // Testing API timeout
     .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {data: {
-      createProject: {
-        node: {
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-          version: {
-            id: 'someid',
-            bundle: 'http://localhost/fakeversionbundle.zip'
+    .api(CREATE_PROJECT_MUTATION, {
+      data: {
+        createProject: {
+          node: {
+            id: '234',
+            endpoint: 'http://testproject',
+            name: 'TestName',
+            version: {
+              id: 'someid',
+              bundle: 'http://localhost/fakeversionbundle.zip'
+            }
           }
         }
       }
-    }})
+    })
     .workspaceCommand(EMPTY_DIR, ['init'])
     .it('displays warning for unavailable project API', ctx => {
       // Check slicknoderc contents
@@ -172,13 +174,15 @@ describe('init', () => {
     ])
     .login()
     .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {data: {
-      createProject: {
-        node: {
-          id: '234',
+    .api(CREATE_PROJECT_MUTATION, {
+      data: {
+        createProject: {
+          node: {
+            id: '234',
+          }
         }
       }
-    }})
+    })
     .command(['init', '--dir', EMPTY_DIR])
     .catch(/Initialization failed: Project was created but could not be fully initialized/)
     .it('fails for successful creation but incomplete setup', ctx => {
@@ -195,17 +199,19 @@ describe('init', () => {
     ])
     .login()
     .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {data: {
-      createProject: {
-        node: {
-          id: '234',
-          version: {
-            id: 'someid',
-            bundle: 'http://localhost/fakeversionbundle.zip'
+    .api(CREATE_PROJECT_MUTATION, {
+      data: {
+        createProject: {
+          node: {
+            id: '234',
+            version: {
+              id: 'someid',
+              bundle: 'http://localhost/fakeversionbundle.zip'
+            }
           }
         }
       }
-    }})
+    })
     .command(['init', '--dir', EMPTY_DIR])
     .catch(/Initialization failed/)
     .it('fails when bundle cannot be loaded', ctx => {
@@ -224,26 +230,28 @@ describe('init', () => {
     .login()
     .nock(
       'http://localhost',
-       loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+      loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
     )
     .nock(
       'http://testproject',
-      api => api.post('/').reply(200, {data: {__typename: 'Query'}})
+      api => api.post('/').reply(200, { data: { __typename: 'Query' } })
     )
     .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {data: {
-      createProject: {
-        node: {
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-          version: {
-            id: 'someid',
-            bundle: 'http://localhost/fakeversionbundle.zip'
+    .api(CREATE_PROJECT_MUTATION, {
+      data: {
+        createProject: {
+          node: {
+            id: '234',
+            endpoint: 'http://testproject',
+            name: 'TestName',
+            version: {
+              id: 'someid',
+              bundle: 'http://localhost/fakeversionbundle.zip'
+            }
           }
         }
       }
-    }})
+    })
     .workspaceCommand(EMPTY_DIR, ['init'])
     .it('initializes project successfully', ctx => {
       // Check slicknoderc contents
@@ -306,26 +314,28 @@ describe('init', () => {
     .login()
     .nock(
       'http://localhost',
-       loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+      loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
     )
     .nock(
       'http://testproject',
-      api => api.post('/').reply(200, {data: {__typename: 'Query'}})
+      api => api.post('/').reply(200, { data: { __typename: 'Query' } })
     )
     .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {data: {
-      createProject: {
-        node: {
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-          version: {
-            id: 'someid',
-            bundle: 'http://localhost/fakeversionbundle.zip'
+    .api(CREATE_PROJECT_MUTATION, {
+      data: {
+        createProject: {
+          node: {
+            id: '234',
+            endpoint: 'http://testproject',
+            name: 'TestName',
+            version: {
+              id: 'someid',
+              bundle: 'http://localhost/fakeversionbundle.zip'
+            }
           }
         }
       }
-    }})
+    })
     .workspaceCommand(EMPTY_DIR, ['init', 'test-dir'])
     .it('initializes project successfully and creates directory', ctx => {
       // Check slicknoderc contents
@@ -394,7 +404,7 @@ describe('init', () => {
     .login()
     .workspaceCommand(EMPTY_DIR, ['init', 'test-dir', 'http://0.0.0.0/some.git'])
     .catch(/Error loading project template: Error cloning repository/)
-    .it('fails for valid but unreachable template URL', ctx => {});
+    .it('fails for valid but unreachable template URL', ctx => { });
 
   test
     .stdout()
@@ -405,7 +415,7 @@ describe('init', () => {
     .login()
     .workspaceCommand(EMPTY_DIR, ['init', 'test-dir', 'https://github.com/slicknode/starter-nextjs-blog.git#invalidreference'])
     .catch(/Error checking out git reference "invalidreference"/)
-    .it('fails for invalid git reference', ctx => {});
+    .it('fails for invalid git reference', ctx => { });
 
   test
     .stdout()
@@ -421,26 +431,28 @@ describe('init', () => {
     .login()
     .nock(
       'http://localhost1',
-       loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip')),
+      loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip')),
     )
     .nock(
       'http://testproject',
-      api => api.post('/').reply(200, {data: {__typename: 'Query'}})
+      api => api.post('/').reply(200, { data: { __typename: 'Query' } })
     )
     .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {data: {
-      createProject: {
-        node: {
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-          version: {
-            id: 'someid',
-            bundle: 'http://localhost1/fakeversionbundle.zip'
+    .api(CREATE_PROJECT_MUTATION, {
+      data: {
+        createProject: {
+          node: {
+            id: '234',
+            endpoint: 'http://testproject',
+            name: 'TestName',
+            version: {
+              id: 'someid',
+              bundle: 'http://localhost1/fakeversionbundle.zip'
+            }
           }
         }
       }
-    }})
+    })
     .timeout(180000)
     .workspaceCommand(EMPTY_DIR, ['init', 'test-dir', 'https://github.com/slicknode/starter-nextjs-blog.git'])
     .it('initializes project successfully from template URL', ctx => {
@@ -526,26 +538,28 @@ describe('init', () => {
     .login()
     .nock(
       'http://localhost',
-       loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
+      loader => loader.get('/fakeversionbundle.zip').replyWithFile(200, path.join(__dirname, 'testprojects', 'testbundle.zip'))
     )
     .nock(
       'http://testproject',
-      api => api.post('/').reply(200, {data: {__typename: 'Query'}})
+      api => api.post('/').reply(200, { data: { __typename: 'Query' } })
     )
     .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {data: {
-      createProject: {
-        node: {
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-          version: {
-            id: 'someid',
-            bundle: 'http://localhost/fakeversionbundle.zip'
+    .api(CREATE_PROJECT_MUTATION, {
+      data: {
+        createProject: {
+          node: {
+            id: '234',
+            endpoint: 'http://testproject',
+            name: 'TestName',
+            version: {
+              id: 'someid',
+              bundle: 'http://localhost/fakeversionbundle.zip'
+            }
           }
         }
       }
-    }})
+    })
     .timeout(180000)
     .workspaceCommand(EMPTY_DIR, [
       'init',

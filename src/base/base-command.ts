@@ -111,9 +111,8 @@ export class BaseCommand extends Command {
     });
     const { authUrl, node } = authRequestResult?.data?.createApiAuthRequest || {};
     if (!authUrl || !node?.token) {
-      this.error(`Error creating auth request: ${authRequestResult?.errors?.[0]?.message || 'Please try again'}`, {
-        exit: 1,
-      });
+      this.error(`Error creating auth request: ${authRequestResult?.errors?.[0]?.message || 'Please try again'}`);
+      return false;
     }
 
     // Redirect user to
@@ -138,9 +137,8 @@ export class BaseCommand extends Command {
       }
     }
     cli.action.stop();
-    this.error('Authentication request timed out, please restart the process.', {
-      exit: 1,
-    });
+    this.error('Authentication request timed out, please restart the process.');
+    return false;
   }
 
   /**
