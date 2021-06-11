@@ -10,7 +10,7 @@
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p test -t stylish",
     "prepack": "npm run clean && tsc -b && oclif-dev manifest && oclif-dev readme && npm run copyfiles",
-    "test": "npm run testonly && npm run lint",
+    "test": "npm run testonly",
     "test:coverage": "nyc --extension .ts mocha --forbid-only 'test/**/*.test.ts' 'src/**/__tests__/**/*-test.{ts,tsx}'",
     "version": "oclif-dev readme && git add README.md",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
