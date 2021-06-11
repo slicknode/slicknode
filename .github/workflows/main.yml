@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn
-      - run: ./bin/run --version
-      - run: ./bin/run --help
+      - run: ./packages/cli/bin/run --version
+      - run: ./packages/cli/bin/run --help
       - run: yarn workspace slicknode test
         env:
           CI: true
