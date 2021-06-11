@@ -233,6 +233,7 @@ describe('status', () => {
     ])
     .catch(/Abort/)
     .it('validates remote GraphQL schema', (ctx) => {
-      expect(ctx.stderr).to.contain('only one type named "Viewer"');
+      expect(ctx.stderr).to.contain('There can be only one');
+      expect(ctx.stderr).to.contain('type named "Viewer"');
     });
 });
