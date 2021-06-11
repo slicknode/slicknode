@@ -1,6 +1,6 @@
 import chalk from 'chalk';
-import {EnvCommand} from '../base/env-command';
-import {range} from '../flags';
+import { EnvCommand } from '../base/env-command';
+import { range } from '../flags';
 
 interface IScaleInput {
   active: boolean;
@@ -18,18 +18,16 @@ export default class ScaleCommand extends EnvCommand {
   public static flags = {
     ...EnvCommand.flags,
     api: range({
-      description: (
+      description:
         'The number of API instances to run in the cloud, expressed ' +
         'as a range (2-5) for automatically scaled elastic deployments or a simple number (5)' +
-        'for fixed deployments.'
-      ),
+        'for fixed deployments.',
     }),
     runtime: range({
-      description: (
+      description:
         'The number of runtime instances to run in the cloud, expressed ' +
         'as a range (2-5) for automatically scaled elastic deployments or a simple number (5)' +
-        'for fixed deployments.'
-      ),
+        'for fixed deployments.',
     }),
   };
 
@@ -46,7 +44,7 @@ export default class ScaleCommand extends EnvCommand {
     if (!env) {
       this.error(
         'The project is not yet deployed to the servers for the environment. ' +
-        `To deploy the project, run ${chalk.bold('slicknode deploy')}`,
+          `To deploy the project, run ${chalk.bold('slicknode deploy')}`
       );
       return;
     }
@@ -80,22 +78,22 @@ export default class ScaleCommand extends EnvCommand {
       queryInput.runtimeMax = input.flags.runtime[1];
     }
 
-    const {
-      errors,
-    } = await this.getClient().fetch(
+    const { errors } = (await this.getClient().fetch(
       UPDATE_DEPLOYMENT_MUTATION,
-      {input: queryInput},
-    ) as {errors?: Array<{message: string}>};
+      { input: queryInput }
+    )) as { errors?: Array<{ message: string }> };
 
     if (errors && errors.length) {
-      this.error('Error scaling project in slicknode cluster:', {exit: false});
+      this.error('Error scaling project in slicknode cluster:', {
+        exit: false,
+      });
       errors.forEach((error) => {
-        this.error(`  ${error.message}`, {exit: false});
+        this.error(`  ${error.message}`, { exit: false });
       });
     } else {
       this.log(
         chalk.green('Deployment successfully scaled! \n') +
-        'The cluster will adjust the deployments in a few moments.',
+          'The cluster will adjust the deployments in a few moments.'
       );
     }
   }

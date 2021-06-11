@@ -3,5 +3,5 @@
  */
 
 export interface IProjectConfig {
-  dependencies: {[name: string]: string};
+  dependencies: { [name: string]: string };
 }

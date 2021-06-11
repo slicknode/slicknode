@@ -3,13 +3,9 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import _ from 'lodash';
 import path from 'path';
-import {BaseCommand} from '../../base/base-command';
-import {
-  sortKeys,
-} from '../../utils';
-import {
-  PUBLIC_MODULE_NAME_REGEX,
-} from '../../validation';
+import { BaseCommand } from '../../base/base-command';
+import { sortKeys } from '../../utils';
+import { PUBLIC_MODULE_NAME_REGEX } from '../../validation';
 
 export default class ModuleAddCommand extends BaseCommand {
   public static description = 'Add modules as a dependency to the project';
@@ -42,25 +38,30 @@ export default class ModuleAddCommand extends BaseCommand {
     });
 
     // Ignore already installed modules
-    const newModules = names
-      .filter((name) => {
-        const exists = config.dependencies.hasOwnProperty(name);
-        if (exists) {
-          this.log(chalk.yellow(`Module "${name}" is already installed`));
-        }
-        return !exists;
-      });
+    const newModules = names.filter((name) => {
+      const exists = config.dependencies.hasOwnProperty(name);
+      if (exists) {
+        this.log(chalk.yellow(`Module "${name}" is already installed`));
+      }
+      return !exists;
+    });
 
     // Check if modules are available
-    const result = await this.getClient().fetch(LIST_MODULES_QUERY, {modules: newModules});
-    const availableModules = _.get(result, 'data.listRegistryModule.edges', []).map(
-      ({node}: {node: {name: string}}) => node.name,
-    );
+    const result = await this.getClient().fetch(LIST_MODULES_QUERY, {
+      modules: newModules,
+    });
+    const availableModules = _.get(
+      result,
+      'data.listRegistryModule.edges',
+      []
+    ).map(({ node }: { node: { name: string } }) => node.name);
 
     const unavailableModules = _.difference(newModules, availableModules);
     if (unavailableModules.length) {
       throw new Error(
-        `Module${unavailableModules.length > 1 ? 's' : ''} "${unavailableModules.join('", "')}" not found in registry`,
+        `Module${
+          unavailableModules.length > 1 ? 's' : ''
+        } "${unavailableModules.join('", "')}" not found in registry`
       );
     }
 
@@ -68,23 +69,25 @@ export default class ModuleAddCommand extends BaseCommand {
       ...config,
       dependencies: {
         ...config.dependencies,
-        ...newModules.reduce((deps: {[key: string]: string}, name) => {
+        ...newModules.reduce((deps: { [key: string]: string }, name) => {
           deps[name] = 'latest';
           return deps;
-        }, {} as {[key: string]: string}),
+        }, {} as { [key: string]: string }),
       },
     };
     fs.writeFileSync(
       path.join(this.getProjectRoot(), 'slicknode.yml'),
       yaml.safeDump(sortKeys(newConfig), {
         indent: 2,
-      }),
+      })
     );
     newModules.forEach((name) => {
       this.log(chalk.green(`+ Module "${name}" added - version: latest`));
     });
     if (newModules.length) {
-      this.log('\nRun `slicknode deploy` to deploy the changes to the server.\n');
+      this.log(
+        '\nRun `slicknode deploy` to deploy the changes to the server.\n'
+      );
     }
   }
 }

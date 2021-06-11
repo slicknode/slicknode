@@ -1,4 +1,4 @@
-import {expect, test} from '../../test';
+import { expect, test } from '../../test';
 import path from 'path';
 import execute from '../../../src/utils/execute';
 import sinon from 'sinon';
@@ -10,35 +10,38 @@ function projectPath(name: string) {
 const npmCommand = /^win/.test(process.platform) ? 'npm.cmd' : 'npm';
 
 describe('runtime:build', () => {
-
   test
-    .stdout({stripColor: true})
-    .stderr({stripColor: true})
+    .stdout({ stripColor: true })
+    .stderr({ stripColor: true })
     .tmpdir()
-    .prompt([ true ])
-    .workspaceCommand(projectPath('empty'), ctx => ['runtime:build', ctx.tmpdir])
+    .prompt([true])
+    .workspaceCommand(projectPath('empty'), (ctx) => [
+      'runtime:build',
+      ctx.tmpdir,
+    ])
     .catch(/Error loading module configs/)
-    .it('fails for folder without slicknode.yml', ctx => {
-
-    });
+    .it('fails for folder without slicknode.yml', (ctx) => {});
 
   test
-    .stdout({stripColor: true})
-    .stderr({stripColor: true})
+    .stdout({ stripColor: true })
+    .stderr({ stripColor: true })
     .tmpdir()
-    .prompt([ true ])
+    .prompt([true])
     .timeout(20000)
-    .workspaceCommand(projectPath('initialized'), ctx => ['runtime:build', ctx.tmpdir])
+    .workspaceCommand(projectPath('initialized'), (ctx) => [
+      'runtime:build',
+      ctx.tmpdir,
+    ])
     .do(async (ctx) => {
-      await execute(npmCommand, [ 'install' ], null, {
+      await execute(npmCommand, ['install'], null, {
         cwd: ctx.tmpdir,
       });
     })
-    .it('creates build successfully', async ctx => {
+    .it('creates build successfully', async (ctx) => {
       const runtime = require(ctx.tmpdir!);
       const req = {
         body: '{}',
-        headers: {}
+        headers: {},
       };
       const res = {
         json: sinon.stub(),

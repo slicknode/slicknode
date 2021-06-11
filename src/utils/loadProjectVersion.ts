@@ -4,7 +4,7 @@
  * @flow
  */
 import AdmZip from 'adm-zip';
-import fs, {mkdirpSync} from 'fs-extra';
+import fs, { mkdirpSync } from 'fs-extra';
 import yaml from 'js-yaml';
 import _ from 'lodash';
 import fetch from 'node-fetch';
@@ -15,7 +15,10 @@ import * as uuid from 'uuid';
 /**
  * Loads the project version + files from the server and writes them to local project dir
  */
-async function loadProjectVersion(projectRoot: string, bundle: string): Promise<void> {
+async function loadProjectVersion(
+  projectRoot: string,
+  bundle: string
+): Promise<void> {
   if (!bundle) {
     throw new Error('No bundle URL provided');
   }
@@ -25,9 +28,7 @@ async function loadProjectVersion(projectRoot: string, bundle: string): Promise<
   try {
     fs.writeFileSync(tmpFile, await response.buffer());
   } catch (e) {
-    throw new Error(
-      'Could not write bundle to disk: ' + e.message,
-    );
+    throw new Error('Could not write bundle to disk: ' + e.message);
   }
 
   // Unzip all module data to slicknode cache dir
@@ -39,34 +40,36 @@ async function loadProjectVersion(projectRoot: string, bundle: string): Promise<
   const config = yaml.safeLoad(rawConfig);
 
   zip.extractEntryTo('slicknode.yml', projectRoot, false, true);
-  zip.getEntries()
-    .forEach((entry) => {
-      // If we have private module, unzip to target folder, otherwise unpack
-      // to project cache folder
-      if (entry.entryName.startsWith('modules/@private')) {
-        const moduleName = entry.entryName.split('/').slice(1, 3).join('/');
+  zip.getEntries().forEach((entry) => {
+    // If we have private module, unzip to target folder, otherwise unpack
+    // to project cache folder
+    if (entry.entryName.startsWith('modules/@private')) {
+      const moduleName = entry.entryName.split('/').slice(1, 3).join('/');
 
-        // @TODO: Memoize resolved module path
-        const version = _.get(config, `dependencies["${moduleName}"]`, '');
-        if (version.startsWith('./')) {
-          const modulePath = path.resolve(projectRoot, version);
-          if (!modulePath) {
-            throw new Error(`The target directory for module ${moduleName} does not exist: ${modulePath}`);
-          }
-
-          // Strip module and filename from entryTarget
-          const targetPathParts = entry.entryName.split('/').slice(1);
-          targetPathParts.pop();
-          const entryTarget = path.join(modulePath, targetPathParts.join(path.sep).substr(
-            moduleName.length,
-          ));
-          zip.extractEntryTo(entry.entryName, entryTarget, false, true);
-          return;
+      // @TODO: Memoize resolved module path
+      const version = _.get(config, `dependencies["${moduleName}"]`, '');
+      if (version.startsWith('./')) {
+        const modulePath = path.resolve(projectRoot, version);
+        if (!modulePath) {
+          throw new Error(
+            `The target directory for module ${moduleName} does not exist: ${modulePath}`
+          );
         }
-      }
 
-      zip.extractEntryTo(entry.entryName, moduleCacheDir, true, true);
-    });
+        // Strip module and filename from entryTarget
+        const targetPathParts = entry.entryName.split('/').slice(1);
+        targetPathParts.pop();
+        const entryTarget = path.join(
+          modulePath,
+          targetPathParts.join(path.sep).substr(moduleName.length)
+        );
+        zip.extractEntryTo(entry.entryName, entryTarget, false, true);
+        return;
+      }
+    }
+
+    zip.extractEntryTo(entry.entryName, moduleCacheDir, true, true);
+  });
 
   mkdirpSync(moduleCacheDir);
 
@@ -82,7 +85,7 @@ async function loadProjectVersion(projectRoot: string, bundle: string): Promise<
   // Copy config
   await fs.copy(
     path.join(moduleCacheDir, 'slicknode.yml'),
-    path.join(projectRoot, 'slicknode.yml'),
+    path.join(projectRoot, 'slicknode.yml')
   );
 }
 

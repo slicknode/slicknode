@@ -1,10 +1,10 @@
-import chai, {expect} from 'chai';
+import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {ensureDir, readdir, readFile, remove, writeFile} from 'fs-extra';
+import { ensureDir, readdir, readFile, remove, writeFile } from 'fs-extra';
 import os from 'os';
 import path from 'path';
 import * as uuid from 'uuid';
-import {importGitRepository} from '../importGitRepository';
+import { importGitRepository } from '../importGitRepository';
 
 chai.use(chaiAsPromised);
 
@@ -35,7 +35,7 @@ describe('importGitRepository', () => {
     expect(files).to.not.include('.git');
 
     const result = JSON.parse(
-      (await readFile(path.join(dir, 'package.json'))).toString('utf-8'),
+      (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
     expect(result.name).to.equal('slicknode');
   });
@@ -54,14 +54,15 @@ describe('importGitRepository', () => {
     expect(files).to.include('.git');
 
     const result = JSON.parse(
-      (await readFile(path.join(dir, 'package.json'))).toString('utf-8'),
+      (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
     expect(result.name).to.equal('slicknode');
   });
 
   it('can checkout specific commit hash', async () => {
     await importGitRepository({
-      repository: 'https://github.com/slicknode/slicknode.git#5e2fd55e355244fc819d7b29aa86d11dbcae34d6',
+      repository:
+        'https://github.com/slicknode/slicknode.git#5e2fd55e355244fc819d7b29aa86d11dbcae34d6',
       targetDir: dir,
     });
 
@@ -72,7 +73,7 @@ describe('importGitRepository', () => {
     expect(files).to.not.include('.git');
 
     const result = JSON.parse(
-      (await readFile(path.join(dir, 'package.json'))).toString('utf-8'),
+      (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
     expect(result.name).to.equal('slicknode');
     expect(result.version).to.equal('0.7.0');
@@ -82,10 +83,12 @@ describe('importGitRepository', () => {
     // Create a file in dir
     await writeFile(path.join(dir, 'testfile.txt'), 'test');
 
-    return expect(importGitRepository({
-      repository: 'https://github.com/slicknode/slicknode.git',
-      targetDir: dir,
-    })).to.eventually.rejectedWith('The directory is not empty');
+    return expect(
+      importGitRepository({
+        repository: 'https://github.com/slicknode/slicknode.git',
+        targetDir: dir,
+      })
+    ).to.eventually.rejectedWith('The directory is not empty');
   });
 
   it('clears files from dir if is not empty with force option', async () => {
@@ -109,22 +112,29 @@ describe('importGitRepository', () => {
     expect(files).to.not.include(existingFileName);
 
     const result = JSON.parse(
-      (await readFile(path.join(dir, 'package.json'))).toString('utf-8'),
+      (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
     expect(result.name).to.equal('slicknode');
   });
 
   it('throws error for invalid git repo', async () => {
-    return expect(importGitRepository({
-      repository: 'https://example.com/doesnotexist',
-      targetDir: dir,
-    })).to.eventually.rejectedWith('Error cloning repository');
+    return expect(
+      importGitRepository({
+        repository: 'https://example.com/doesnotexist',
+        targetDir: dir,
+      })
+    ).to.eventually.rejectedWith('Error cloning repository');
   });
 
   it('throws error for invalid git reference', async () => {
-    return expect(importGitRepository({
-      repository: 'https://github.com/slicknode/slicknode.git#invalidreference',
-      targetDir: dir,
-    })).to.eventually.rejectedWith('Error checking out git reference "invalidreference"');
+    return expect(
+      importGitRepository({
+        repository:
+          'https://github.com/slicknode/slicknode.git#invalidreference',
+        targetDir: dir,
+      })
+    ).to.eventually.rejectedWith(
+      'Error checking out git reference "invalidreference"'
+    );
   });
 });

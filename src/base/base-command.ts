@@ -17,10 +17,7 @@ import {
   IEnvironmentConfigMap,
   IProjectConfig,
 } from '../types';
-import {
-  openUrl,
-  semverCompare,
-} from '../utils';
+import { openUrl, semverCompare } from '../utils';
 
 /**
  * Interval in seconds in which to check for
@@ -53,7 +50,9 @@ export class BaseCommand extends Command {
    * Returns an instance of the client to the Slicknode API
    */
   public getClient(): Client {
-    const authStorage = new ConfigStorage(path.join(os.homedir(), '.slicknode', 'auth.json'));
+    const authStorage = new ConfigStorage(
+      path.join(os.homedir(), '.slicknode', 'auth.json')
+    );
     const configStorage = this.getConfigStorage();
 
     // Build config
@@ -75,7 +74,9 @@ export class BaseCommand extends Command {
   }
 
   protected getConfigStorage(): ConfigStorage {
-    return new ConfigStorage(path.join(os.homedir(), '.slicknode', 'config.json'));
+    return new ConfigStorage(
+      path.join(os.homedir(), '.slicknode', 'config.json')
+    );
   }
 
   /**
@@ -104,14 +105,22 @@ export class BaseCommand extends Command {
     // Get auth request token
     const state = uuid.v4(); // Generate state
     cli.action.start('Creating auth request');
-    const authRequestResult = await client.fetch(CREATE_API_AUTH_REQUEST_MUTATION, {
-      input: {
-        state,
-      },
-    });
-    const { authUrl, node } = authRequestResult?.data?.createApiAuthRequest || {};
+    const authRequestResult = await client.fetch(
+      CREATE_API_AUTH_REQUEST_MUTATION,
+      {
+        input: {
+          state,
+        },
+      }
+    );
+    const { authUrl, node } =
+      authRequestResult?.data?.createApiAuthRequest || {};
     if (!authUrl || !node?.token) {
-      this.error(`Error creating auth request: ${authRequestResult?.errors?.[0]?.message || 'Please try again'}`);
+      this.error(
+        `Error creating auth request: ${
+          authRequestResult?.errors?.[0]?.message || 'Please try again'
+        }`
+      );
       return false;
     }
 
@@ -148,14 +157,20 @@ export class BaseCommand extends Command {
    */
   protected async updateRequired(useCache: boolean = true): Promise<boolean> {
     const configStorage = this.getConfigStorage();
-    const lastVersionCheck = parseInt(configStorage.getItem(LAST_VERSION_CHECK_CACHE_KEY) || '0', 10);
+    const lastVersionCheck = parseInt(
+      configStorage.getItem(LAST_VERSION_CHECK_CACHE_KEY) || '0',
+      10
+    );
     let minVersion = configStorage.getItem(MIN_VERSION_CACHE_KEY);
     let latestVersion = configStorage.getItem(LATEST_VERSION_CACHE_KEY);
     let currentVersion;
 
     // Get current version
     try {
-      const data = fs.readFileSync(path.resolve(__dirname, '../../package.json'), 'utf8');
+      const data = fs.readFileSync(
+        path.resolve(__dirname, '../../package.json'),
+        'utf8'
+      );
       currentVersion = JSON.parse(data).version;
       if (!currentVersion) {
         throw new Error('No version found');
@@ -164,8 +179,9 @@ export class BaseCommand extends Command {
       throw new Error('Could not read version from package.json: ' + e.message);
     }
 
-    const currentTimestamp = Math.floor((new Date()).getTime() / 1000);
-    const cacheExpired = (currentTimestamp - VERSION_CHECK_INTERVAL > lastVersionCheck);
+    const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+    const cacheExpired =
+      currentTimestamp - VERSION_CHECK_INTERVAL > lastVersionCheck;
 
     if (!useCache || cacheExpired) {
       // Load latest version number from npm
@@ -179,11 +195,16 @@ export class BaseCommand extends Command {
           configStorage.setItem(LATEST_VERSION_CACHE_KEY, latestVersion);
         }
         if (semverCompare(currentVersion, latestVersion || '') === 0) {
-          configStorage.setItem(LAST_VERSION_CHECK_CACHE_KEY, String(currentTimestamp));
+          configStorage.setItem(
+            LAST_VERSION_CHECK_CACHE_KEY,
+            String(currentTimestamp)
+          );
           return false;
         }
       } catch (e) {
-        this.log('Error checking for updates. Make sure you have an active internet connection.');
+        this.log(
+          'Error checking for updates. Make sure you have an active internet connection.'
+        );
       }
     }
 
@@ -196,11 +217,16 @@ export class BaseCommand extends Command {
         const resultMinVersion = _.get(apiResult, 'data.minCliVersion');
         if (resultMinVersion) {
           configStorage.setItem(MIN_VERSION_CACHE_KEY, resultMinVersion);
-          configStorage.setItem(LAST_VERSION_CHECK_CACHE_KEY, String(currentTimestamp));
+          configStorage.setItem(
+            LAST_VERSION_CHECK_CACHE_KEY,
+            String(currentTimestamp)
+          );
           minVersion = String(resultMinVersion);
         }
       } catch (e) {
-        this.log('Error checking for updates. Make sure you have an active internet connection.');
+        this.log(
+          'Error checking for updates. Make sure you have an active internet connection.'
+        );
         return false;
       }
     }
@@ -208,26 +234,33 @@ export class BaseCommand extends Command {
     // Compare current with min version
     try {
       if (semverCompare(currentVersion, String(minVersion)) < 0) {
-        this.error(chalk.red(
-          `ERROR: Your slicknode CLI version (${currentVersion}) is outdated and ` +
-          'incompatible with the current Slicknode API.\n' +
-          'To upgrade to the latest version, run: \n\n' +
-          '  npm install -g slicknode@latest\n',
-        ));
+        this.error(
+          chalk.red(
+            `ERROR: Your slicknode CLI version (${currentVersion}) is outdated and ` +
+              'incompatible with the current Slicknode API.\n' +
+              'To upgrade to the latest version, run: \n\n' +
+              '  npm install -g slicknode@latest\n'
+          )
+        );
         return true;
       }
     } catch (e) {
-      this.log('Error checking for updates. Make sure you have an active internet connection.');
+      this.log(
+        'Error checking for updates. Make sure you have an active internet connection.'
+      );
       return false;
     }
 
     // Compare current with latest version
     try {
-      if (latestVersion && semverCompare(currentVersion, String(latestVersion)) < 0) {
+      if (
+        latestVersion &&
+        semverCompare(currentVersion, String(latestVersion)) < 0
+      ) {
         this.error(
           `INFO: There is a new slicknode CLI version (${latestVersion}) available.\n` +
-          'To upgrade to the latest version, run: \n\n' +
-          '  npm install -g slicknode@latest\n',
+            'To upgrade to the latest version, run: \n\n' +
+            '  npm install -g slicknode@latest\n'
         );
       }
     } catch (e) {
@@ -247,14 +280,11 @@ export class BaseCommand extends Command {
    */
   protected async getEnvironment(
     name: string = 'default',
-    silent: boolean = false,
+    silent: boolean = false
   ): Promise<IEnvironmentConfig | null> {
     try {
       const dir = this.getProjectRoot();
-      const data = fs.readFileSync(
-        path.join(dir, '.slicknoderc'),
-        'utf8',
-      );
+      const data = fs.readFileSync(path.join(dir, '.slicknoderc'), 'utf8');
       try {
         const envMap = yaml.safeLoad(data) as any;
         if (typeof envMap === 'object' && envMap.hasOwnProperty(name)) {
@@ -264,18 +294,19 @@ export class BaseCommand extends Command {
 
         return null;
       } catch (e) {
-        this.error(chalk.red(
-          'Could not parse .slicknoderc file.\n' +
-          e.message,
-        ));
+        this.error(
+          chalk.red('Could not parse .slicknoderc file.\n' + e.message)
+        );
         return null;
       }
     } catch (e) {
       if (!silent) {
         this.log(
           'There are no environments created yet. \n' +
-          'To create a new environment, run:\n\n' +
-          '  ' + chalk.bold('slicknode init') + '\n',
+            'To create a new environment, run:\n\n' +
+            '  ' +
+            chalk.bold('slicknode init') +
+            '\n'
         );
       }
       return null;
@@ -292,8 +323,9 @@ export class BaseCommand extends Command {
   protected async updateEnvironment(
     name: string,
     config: IEnvironmentConfig | null,
-    targetDir: string | null = null,
-  ): Promise<null> { // eslint-disable-line no-unused-vars
+    targetDir: string | null = null
+  ): Promise<null> {
+    // eslint-disable-line no-unused-vars
     // Read existing config
     let envMap: IEnvironmentConfigMap = {};
     try {
@@ -303,7 +335,9 @@ export class BaseCommand extends Command {
       try {
         data = fs.readFileSync(configFile, 'utf8');
       } catch (e) {
-        this.log('No .slicknoderc file found. Creating new environment config.');
+        this.log(
+          'No .slicknoderc file found. Creating new environment config.'
+        );
       }
 
       try {
@@ -312,10 +346,9 @@ export class BaseCommand extends Command {
           throw new Error('.slicknoderc file has an invalid format');
         }
       } catch (e) {
-        this.error(chalk.red(
-          'Could not parse .slicknoderc file.\n' +
-          e.message,
-        ));
+        this.error(
+          chalk.red('Could not parse .slicknoderc file.\n' + e.message)
+        );
         return null;
       }
 
@@ -335,8 +368,10 @@ export class BaseCommand extends Command {
     } catch (e) {
       this.log(
         'There are no environments created yet. \n' +
-        'To create a new environment, run:\n\n' +
-        '  ' + chalk.bold('slicknode init') + '\n',
+          'To create a new environment, run:\n\n' +
+          '  ' +
+          chalk.bold('slicknode init') +
+          '\n'
       );
       return null;
     }
@@ -350,23 +385,24 @@ export class BaseCommand extends Command {
     try {
       const data = fs.readFileSync(
         path.join(this.getProjectRoot(), 'slicknode.yml'),
-        'utf8',
+        'utf8'
       );
       try {
         // @TODO: Validate
         return (yaml.safeLoad(data) as IProjectConfig) || null;
       } catch (e) {
-        this.error(chalk.red(
-          'Could not parse slicknode.yml file.\n' +
-          e.message,
-        ));
+        this.error(
+          chalk.red('Could not parse slicknode.yml file.\n' + e.message)
+        );
       }
     } catch (e) {
       this.error(
         'This directory does not have a valid slicknode.yml file. \n' +
-        'Are you running it in the right directory (project root)? \n' +
-        'To initialize a new project, run:\n\n' +
-        '  ' + chalk.bold('slicknode init') + '\n',
+          'Are you running it in the right directory (project root)? \n' +
+          'To initialize a new project, run:\n\n' +
+          '  ' +
+          chalk.bold('slicknode init') +
+          '\n'
       );
     }
 

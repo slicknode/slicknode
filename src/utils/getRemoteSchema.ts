@@ -1,4 +1,8 @@
-import {buildClientSchema, getIntrospectionQuery, GraphQLSchema} from 'graphql';
+import {
+  buildClientSchema,
+  getIntrospectionQuery,
+  GraphQLSchema,
+} from 'graphql';
 import fetch from 'node-fetch';
 
 /**
@@ -6,15 +10,15 @@ import fetch from 'node-fetch';
  * @param params
  */
 export async function getRemoteSchema(params: {
-  endpoint: string,
-  headers?: {[name: string]: string},
+  endpoint: string;
+  headers?: { [name: string]: string };
 }): Promise<GraphQLSchema> {
-  const {endpoint} = params;
+  const { endpoint } = params;
 
   const query = getIntrospectionQuery({
     descriptions: true,
   });
-  const headers: {[name: string]: string} = {
+  const headers: { [name: string]: string } = {
     ...(params.headers || {}),
     'Content-Type': 'application/json',
   };
@@ -27,7 +31,9 @@ export async function getRemoteSchema(params: {
       }),
     });
     if (response.status !== 200) {
-      throw new Error(`Response code ${response.status}, ${response.statusText}`);
+      throw new Error(
+        `Response code ${response.status}, ${response.statusText}`
+      );
     }
     const data = await response.json();
     return buildClientSchema(data.data);

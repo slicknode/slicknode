@@ -3,11 +3,13 @@
  */
 
 export interface IEnvironmentConfig {
-    version: string;
-    endpoint: string;
-    alias: string;
-    id: string;
-    name: string;
+  version: string;
+  endpoint: string;
+  alias: string;
+  id: string;
+  name: string;
 }
 
-export interface IEnvironmentConfigMap {[key: string]: IEnvironmentConfig; }
+export interface IEnvironmentConfigMap {
+  [key: string]: IEnvironmentConfig;
+}

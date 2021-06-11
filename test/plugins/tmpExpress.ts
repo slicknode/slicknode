@@ -6,18 +6,20 @@
  *
  * @param expressLib
  */
-import {Application} from 'express';
+import { Application } from 'express';
 
 export function tmpExpress(expressLib: any) {
   const originalDefault = expressLib.default;
   return {
-    async run(ctx: {expressListeners?: any[], expressApp?: Application}) {
+    async run(ctx: { expressListeners?: any[]; expressApp?: Application }) {
       expressLib.default = () => {
         const server = originalDefault.apply(null, arguments);
         const originalListen = server.listen;
 
         if (ctx.expressApp) {
-          throw new Error('There is already in express app registered in the context');
+          throw new Error(
+            'There is already in express app registered in the context'
+          );
         }
         ctx.expressApp = server;
 
@@ -25,21 +27,18 @@ export function tmpExpress(expressLib: any) {
         server.listen = () => {
           const listener = originalListen.apply(arguments);
 
-          ctx.expressListeners = [
-            ...(ctx.expressListeners || []),
-            listener,
-          ];
+          ctx.expressListeners = [...(ctx.expressListeners || []), listener];
           return listener;
         };
 
         return server;
-      }
+      };
     },
 
     // Delete temporary workspace
-    async finally(ctx: {expressListeners?: any[], expressApp?: Application}) {
+    async finally(ctx: { expressListeners?: any[]; expressApp?: Application }) {
       if (ctx.expressListeners && ctx.expressListeners.length) {
-        ctx.expressListeners.forEach(listener => {
+        ctx.expressListeners.forEach((listener) => {
           // Close connection
           listener.close();
         });
@@ -47,6 +46,6 @@ export function tmpExpress(expressLib: any) {
 
       // Restore default export
       expressLib.default = originalDefault;
-    }
-  }
+    },
+  };
 }

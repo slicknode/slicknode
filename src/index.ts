@@ -1,21 +1,28 @@
 /**
  * Mostly copied from https://github.com/oclif/command but adds support for space separated commands
  */
-import {Command} from '@oclif/command';
+import { Command } from '@oclif/command';
 import * as Config from '@oclif/config';
-import {SlicknodeHelp} from './help';
+import { SlicknodeHelp } from './help';
 
 export class Main extends Command {
-  public static run(argv = process.argv.slice(2), options?: Config.LoadOptions) {
+  public static run(
+    argv = process.argv.slice(2),
+    options?: Config.LoadOptions
+  ) {
     return super.run(
       argv,
-      options || module.parent && module.parent.parent && module.parent.parent.filename || __dirname,
+      options ||
+        (module.parent &&
+          module.parent.parent &&
+          module.parent.parent.filename) ||
+        __dirname
     );
   }
 
   public async init() {
     const [id, ...argv] = this.argv;
-    await this.config.runHook('init', {id, argv});
+    await this.config.runHook('init', { id, argv });
     return super.init();
   }
 
@@ -23,8 +30,11 @@ export class Main extends Command {
     // Find first flag
     const flagIndex = this.argv.findIndex((arg) => arg.startsWith('-'));
 
-    const potentialArgs = this.argv.slice(0, flagIndex !== -1 ? flagIndex : this.argv.length);
-    this.parse({'strict': false, '--': false, ...this.ctor as any});
+    const potentialArgs = this.argv.slice(
+      0,
+      flagIndex !== -1 ? flagIndex : this.argv.length
+    );
+    this.parse({ strict: false, '--': false, ...(this.ctor as any) });
 
     for (let idx = potentialArgs.length; idx > 0; idx--) {
       const id = potentialArgs.slice(0, idx).join(':');
@@ -37,16 +47,29 @@ export class Main extends Command {
       }
     }
 
-    await this.config.runCommand(potentialArgs.join(' '), this.argv.slice(potentialArgs.length));
+    await this.config.runCommand(
+      potentialArgs.join(' '),
+      this.argv.slice(potentialArgs.length)
+    );
   }
 
   protected _helpOverride(): boolean {
-    if (['-v', '--version', 'version'].includes(this.argv[0])) { return this._version() as any; }
-    if (['-h', 'help'].includes(this.argv[0])) { return true; }
-    if (this.argv.length === 0) { return true; }
+    if (['-v', '--version', 'version'].includes(this.argv[0])) {
+      return this._version() as any;
+    }
+    if (['-h', 'help'].includes(this.argv[0])) {
+      return true;
+    }
+    if (this.argv.length === 0) {
+      return true;
+    }
     for (const arg of this.argv) {
-      if (arg === '--help') { return true; }
-      if (arg === '--') { return false; }
+      if (arg === '--help') {
+        return true;
+      }
+      if (arg === '--') {
+        return false;
+      }
     }
     return false;
   }
@@ -58,6 +81,9 @@ export class Main extends Command {
   }
 }
 
-export function run(argv = process.argv.slice(2), options?: Config.LoadOptions) {
+export function run(
+  argv = process.argv.slice(2),
+  options?: Config.LoadOptions
+) {
   return Main.run(argv, options);
 }

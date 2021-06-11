@@ -1,7 +1,7 @@
-import chai, {expect} from 'chai';
+import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import {waitFor} from '../waitFor';
+import { waitFor } from '../waitFor';
 chai.use(chaiAsPromised);
 
 describe('waitFor util', () => {
@@ -33,11 +33,13 @@ describe('waitFor util', () => {
     handler.onCall(0).resolves(false);
     handler.onCall(1).resolves(false);
     handler.onCall(2).resolves(false);
-    await expect(waitFor({
-      handler,
-      timeout: 1,
-      interval: 2,
-    })).to.eventually.rejectedWith('Wait timeout exceeded');
+    await expect(
+      waitFor({
+        handler,
+        timeout: 1,
+        interval: 2,
+      })
+    ).to.eventually.rejectedWith('Wait timeout exceeded');
     expect(handler.callCount).to.equal(2);
   });
 });

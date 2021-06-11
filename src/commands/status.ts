@@ -4,25 +4,24 @@
  * @flow
  */
 
-import {flags} from '@oclif/command';
+import { flags } from '@oclif/command';
 import chalk from 'chalk';
 import cli from 'cli-ux';
 import _ from 'lodash';
-import {Uploadable} from 'slicknode-client';
-import {BaseCommand} from '../base/base-command';
+import { Uploadable } from 'slicknode-client';
+import { BaseCommand } from '../base/base-command';
 import {
   IEnvironmentConfig,
   IProjectChange,
   IProjectChangeError,
 } from '../types';
-import {
-  packProject,
-} from '../utils';
+import { packProject } from '../utils';
 import validate from '../validation/validate';
 
 export default class StatusCommand extends BaseCommand {
   public static command = 'status';
-  public static description = 'Show information about the current project status (changes, warnings etc.)';
+  public static description =
+    'Show information about the current project status (changes, warnings etc.)';
 
   public static flags = {
     ...BaseCommand.flags,
@@ -42,9 +41,13 @@ export default class StatusCommand extends BaseCommand {
     const errors = await validate(this.getProjectRoot(), config);
 
     if (errors.length) {
-      this.error(chalk.red('Project configuration has errors: \n'), {exit: false});
+      this.error(chalk.red('Project configuration has errors: \n'), {
+        exit: false,
+      });
       errors.forEach((error, index) => {
-        this.error(chalk.red(`  ${index + 1}. ${error.toString()}\n`), {exit: false});
+        this.error(chalk.red(`  ${index + 1}. ${error.toString()}\n`), {
+          exit: false,
+        });
       });
       this.error('Abort');
     }
@@ -54,7 +57,7 @@ export default class StatusCommand extends BaseCommand {
     if (!env) {
       this.log(
         'No errors found but project is not deployed in this environment. ' +
-        `To deploy the project, run ${chalk.bold('slicknode deploy')}`,
+          `To deploy the project, run ${chalk.bold('slicknode deploy')}`
       );
       return;
     }
@@ -75,7 +78,11 @@ export default class StatusCommand extends BaseCommand {
       return;
     }
 
-    this.log(`  Run ${chalk.bold('slicknode deploy')} to deploy the changes to the server\n`);
+    this.log(
+      `  Run ${chalk.bold(
+        'slicknode deploy'
+      )} to deploy the changes to the server\n`
+    );
   }
 
   /**
@@ -92,26 +99,36 @@ export default class StatusCommand extends BaseCommand {
     cli.action.stop();
 
     if (result.data === null || _.get(result, 'errors[0].message')) {
-      this.error(`Error loading state from API: ${_.get(result, 'errors[0].message')}`);
+      this.error(
+        `Error loading state from API: ${_.get(result, 'errors[0].message')}`
+      );
     }
 
     const serverErrors = _.get(result, 'data.migrateProject.errors', []).filter(
-      (e: IProjectChangeError | null) => e,
+      (e: IProjectChangeError | null) => e
     );
     if (serverErrors.length) {
       this.printErrors(serverErrors);
       return false;
     }
 
-    this.printChanges(_.get(result, 'data.migrateProject.changes', []).filter(
-      (e: IProjectChangeError | null) => e,
-    ));
+    this.printChanges(
+      _.get(result, 'data.migrateProject.changes', []).filter(
+        (e: IProjectChangeError | null) => e
+      )
+    );
     return true;
   }
 
   public printErrors(errors: IProjectChangeError[]) {
     if (errors.length) {
-      this.log(chalk.red(`\nThe project has ${errors.length} error${errors.length === 1 ? '' : 's'}:`));
+      this.log(
+        chalk.red(
+          `\nThe project has ${errors.length} error${
+            errors.length === 1 ? '' : 's'
+          }:`
+        )
+      );
       errors.forEach((error, index) => {
         this.log('  ' + chalk.red(`${index + 1}. ${error.description}`));
       });
@@ -121,9 +138,14 @@ export default class StatusCommand extends BaseCommand {
 
   public printChanges(changes: IProjectChange[]) {
     if (changes.length) {
-      const sortedChanges = _.sortBy(changes, (change) => change.type + ':' + (change.path || []).join('.'));
+      const sortedChanges = _.sortBy(
+        changes,
+        (change) => change.type + ':' + (change.path || []).join('.')
+      );
 
-      this.log(`${changes.length} pending change${changes.length === 1 ? '' : 's'}:`);
+      this.log(
+        `${changes.length} pending change${changes.length === 1 ? '' : 's'}:`
+      );
       sortedChanges.forEach((change, index) => {
         switch (change.type) {
           case 'ADD': {
@@ -149,18 +171,21 @@ export default class StatusCommand extends BaseCommand {
     }
   }
 
-  public async migrateProject(dryRun: boolean, env: IEnvironmentConfig): Promise<any> {
-
+  public async migrateProject(
+    dryRun: boolean,
+    env: IEnvironmentConfig
+  ): Promise<any> {
     // Run server side validation and get status
     const zip = await packProject(this.getProjectRoot());
 
     // Convert zip to buffer
-    const file = await new Promise((resolve, reject) => {
+    const file = (await new Promise((resolve, reject) => {
       zip.toBuffer(resolve, reject);
-    }) as Uploadable;
+    })) as Uploadable;
 
     // zip.writeZip(target);
-    return await this.getClient().fetch(MIGRATE_PROJECT_MUTATION,
+    return await this.getClient().fetch(
+      MIGRATE_PROJECT_MUTATION,
       {
         input: {
           id: env.id,
@@ -170,7 +195,7 @@ export default class StatusCommand extends BaseCommand {
       null,
       {
         file,
-      },
+      }
     );
   }
 }

@@ -30,12 +30,10 @@ export async function waitFor(params: IWaitForParams) {
           resolve();
         }
         /* tslint:disable:no-empty */
-      } catch (e) {
-
-      }
+      } catch (e) {}
 
       // Check for timeout
-      if (start < (new Date().getTime() - params.timeout)) {
+      if (start < new Date().getTime() - params.timeout) {
         clearInterval(interval);
         reject(new Error('Wait timeout exceeded'));
       }

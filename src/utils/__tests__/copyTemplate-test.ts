@@ -1,9 +1,9 @@
-import {expect} from 'chai';
-import {mkdirp, readFile, remove} from 'fs-extra';
+import { expect } from 'chai';
+import { mkdirp, readFile, remove } from 'fs-extra';
 import * as os from 'os';
 import path from 'path';
 import * as uuid from 'uuid';
-import {copyTemplate} from '../copyTemplate';
+import { copyTemplate } from '../copyTemplate';
 
 describe('copyTemplate', () => {
   let targetDir: string;
@@ -22,17 +22,22 @@ describe('copyTemplate', () => {
       targetDir,
       {
         value: 'Blog',
-      },
+      }
     );
 
     // Read copied files
-    const schema = (await readFile(path.join(targetDir, 'schema.graphql'))).toString();
-    expect(schema).to.equal('type BlogType implements Node {\n' +
-      '  # Comment Blog\n' +
-      '  id: ID!\n' +
-      '}',
+    const schema = (
+      await readFile(path.join(targetDir, 'schema.graphql'))
+    ).toString();
+    expect(schema).to.equal(
+      'type BlogType implements Node {\n' +
+        '  # Comment Blog\n' +
+        '  id: ID!\n' +
+        '}'
     );
-    const slicknode = (await readFile(path.join(targetDir, 'slicknode.yml'))).toString();
+    const slicknode = (
+      await readFile(path.join(targetDir, 'slicknode.yml'))
+    ).toString();
     expect(slicknode).to.equal('# Test Blog here\n');
   });
 });

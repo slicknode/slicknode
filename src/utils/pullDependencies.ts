@@ -1,13 +1,13 @@
 import AdmZip from 'adm-zip';
 import cli from 'cli-ux';
-import {mkdirp, remove} from 'fs-extra';
+import { mkdirp, remove } from 'fs-extra';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import path from 'path';
 import rimraf from 'rimraf';
 import Client from 'slicknode-client';
-import {IProjectConfig} from '../types';
-import {PRIVATE_MODULE_NAME_REGEX} from '../validation';
+import { IProjectConfig } from '../types';
+import { PRIVATE_MODULE_NAME_REGEX } from '../validation';
 
 interface IPullDependenciesParams {
   config: IProjectConfig;
@@ -23,7 +23,7 @@ export const GET_REPOSITORY_URL_QUERY = '{registryUrl}';
  * @param params
  */
 export async function pullDependencies(params: IPullDependenciesParams) {
-  const {config, dir, client} = params;
+  const { config, dir, client } = params;
   cli.action.start('Updating dependencies');
 
   // Get repository URL
@@ -33,13 +33,16 @@ export async function pullDependencies(params: IPullDependenciesParams) {
 
     repositoryUrl = _.get(result, 'data.registryUrl');
     if (!repositoryUrl) {
-      throw new Error('Failed to load repository URL from API. Are you offline? Please try again');
+      throw new Error(
+        'Failed to load repository URL from API. Are you offline? Please try again'
+      );
     }
   }
 
   // Only update the dependencies that are in registry
-  const publicDependencies = Object.keys(config.dependencies)
-    .filter((id) => !id.match(PRIVATE_MODULE_NAME_REGEX));
+  const publicDependencies = Object.keys(config.dependencies).filter(
+    (id) => !id.match(PRIVATE_MODULE_NAME_REGEX)
+  );
 
   for (const id of publicDependencies) {
     try {
@@ -47,7 +50,9 @@ export async function pullDependencies(params: IPullDependenciesParams) {
       const detailUrl = `${repositoryUrl}${id}`;
       const result = await fetch(detailUrl);
       if (result.status !== 200) {
-        throw new Error('Metadata could not be loaded. Make sure you are online and try again.');
+        throw new Error(
+          'Metadata could not be loaded. Make sure you are online and try again.'
+        );
       }
       const data = await result.json();
 
@@ -75,13 +80,21 @@ export async function pullDependencies(params: IPullDependenciesParams) {
       for (const entry of zip.getEntries()) {
         if (entry.entryName.startsWith('module/')) {
           // Remove /module from path
-          const targetEntryPath = path.join(moduleDir, entry.entryName.substring(7));
+          const targetEntryPath = path.join(
+            moduleDir,
+            entry.entryName.substring(7)
+          );
           if (entry.isDirectory) {
             await mkdirp(targetEntryPath);
           } else {
             const targetDir = targetEntryPath.split(path.sep);
             targetDir.pop();
-            zip.extractEntryTo(entry.entryName, targetDir.join(path.sep), false, true);
+            zip.extractEntryTo(
+              entry.entryName,
+              targetDir.join(path.sep),
+              false,
+              true
+            );
           }
         }
       }

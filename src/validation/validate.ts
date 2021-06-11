@@ -3,19 +3,20 @@
  */
 
 import path from 'path';
-import {IProjectConfig} from '../types';
-import {
-  PRIVATE_MODULE_NAME_REGEX,
-} from './constants';
+import { IProjectConfig } from '../types';
+import { PRIVATE_MODULE_NAME_REGEX } from './constants';
 import validateConfig from './validateConfig';
 import validateModulePath from './validateModulePath';
 import validateSchema from './validateSchema';
 import ValidationError from './ValidationError';
 
 // $FlowFixMe: Does not recognize the filtering of NULL values
-async function validate(projectDir: string, config: {[key: string]: any}): Promise<ValidationError[]> {
+async function validate(
+  projectDir: string,
+  config: { [key: string]: any }
+): Promise<ValidationError[]> {
   if (!config) {
-    return [ new ValidationError('The directory is not a slicknode project') ];
+    return [new ValidationError('The directory is not a slicknode project')];
   }
 
   const configErrors = await validateConfig(config);
@@ -25,19 +26,22 @@ async function validate(projectDir: string, config: {[key: string]: any}): Promi
   const validatedConfig = config as IProjectConfig;
 
   // Get paths of private modules
-  const localModules = Object.keys(validatedConfig.dependencies)
-    .filter((name) => name.match(PRIVATE_MODULE_NAME_REGEX));
+  const localModules = Object.keys(validatedConfig.dependencies).filter(
+    (name) => name.match(PRIVATE_MODULE_NAME_REGEX)
+  );
 
   // Run module validations asynchronously in parallel
   let moduleErrors = await Promise.all(
     localModules.map(async (name) => {
-      const childErrors = await validateModulePath(path.join(projectDir, validatedConfig.dependencies[name]));
+      const childErrors = await validateModulePath(
+        path.join(projectDir, validatedConfig.dependencies[name])
+      );
       if (childErrors.length) {
         return new ValidationError(`Errors in module "${name}":`, {
           childErrors,
         });
       }
-    }),
+    })
   );
   // Ignore empty errors
   moduleErrors = moduleErrors.filter((err) => err);
@@ -48,10 +52,7 @@ async function validate(projectDir: string, config: {[key: string]: any}): Promi
     schemaErrors = await validateSchema(projectDir, validatedConfig);
   }
 
-  return [
-    ...schemaErrors,
-    ...moduleErrors,
-  ];
+  return [...schemaErrors, ...moduleErrors];
 }
 
 export default validate;

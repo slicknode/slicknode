@@ -11,7 +11,7 @@ interface IUrlParserParams extends IsURLOptions {
  */
 export function url(params: IUrlParserParams = {}) {
   return (value: string) => {
-    const {message, ...options} = params;
+    const { message, ...options } = params;
     if (!validator.isURL(value, options)) {
       throw new Error(message || `Value "${value}" is not a valid URL`);
     }

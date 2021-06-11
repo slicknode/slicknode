@@ -2,10 +2,12 @@
  * Created by Ivo Meißner on 09.08.17.
  */
 
-import {module as schema} from './configSchemas';
+import { module as schema } from './configSchemas';
 import ValidationError from './ValidationError';
 
-export default async function validateModule(config: {[key: string]: any}): Promise<ValidationError[]> {
+export default async function validateModule(config: {
+  [key: string]: any;
+}): Promise<ValidationError[]> {
   const errors: ValidationError[] = [];
   try {
     const result = schema.validate(config, {
@@ -13,7 +15,9 @@ export default async function validateModule(config: {[key: string]: any}): Prom
     });
     if (result.error) {
       return (result.error.details || []).map((detail) => {
-        return new ValidationError(`Invalid value at path "${detail.path}": ${detail.message}`);
+        return new ValidationError(
+          `Invalid value at path "${detail.path}": ${detail.message}`
+        );
       });
     }
   } catch (e) {

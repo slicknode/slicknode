@@ -1,5 +1,5 @@
-import {expect} from 'chai';
-import {url} from '../url';
+import { expect } from 'chai';
+import { url } from '../url';
 
 describe('url input parser', () => {
   it('parses valid URL with default params', () => {
@@ -11,7 +11,9 @@ describe('url input parser', () => {
   it('throws error for invalid URL', () => {
     const parser = url();
     const value = 'invalidurl';
-    expect(() => parser(value)).to.throw('Value "invalidurl" is not a valid URL');
+    expect(() => parser(value)).to.throw(
+      'Value "invalidurl" is not a valid URL'
+    );
   });
 
   it('throws custom error message', () => {
@@ -28,6 +30,8 @@ describe('url input parser', () => {
       protocols: ['https'],
     });
     const value = 'http://slicknode.com';
-    expect(() => parser(value)).to.throw('Value "http://slicknode.com" is not a valid URL');
+    expect(() => parser(value)).to.throw(
+      'Value "http://slicknode.com" is not a valid URL'
+    );
   });
 });

@@ -1,15 +1,14 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import {
-  IEnvironmentConfig,
-} from '../types';
+import { IEnvironmentConfig } from '../types';
 
-import {flags} from '@oclif/command';
-import {cli} from 'cli-ux';
-import {BaseCommand} from '../base/base-command';
+import { flags } from '@oclif/command';
+import { cli } from 'cli-ux';
+import { BaseCommand } from '../base/base-command';
 
 export default class DeleteCommand extends BaseCommand {
-  public static description = 'Delete the current project deployment from the slicknode servers.';
+  public static description =
+    'Delete the current project deployment from the slicknode servers.';
 
   public static flags = {
     ...BaseCommand.flags,
@@ -28,10 +27,8 @@ export default class DeleteCommand extends BaseCommand {
     const input = this.parse(DeleteCommand);
     const config = await this.getConfig();
     if (!config) {
-      this.error(chalk.red('Delete failed:\n'), {exit: false});
-      this.log(
-        '  The directory is not a slicknode project.',
-      );
+      this.error(chalk.red('Delete failed:\n'), { exit: false });
+      this.log('  The directory is not a slicknode project.');
       return;
     }
 
@@ -47,20 +44,24 @@ export default class DeleteCommand extends BaseCommand {
     // Confirm changes
     if (!input.flags.force) {
       this.warn(
-        chalk.red('WARNING: You are about to delete the project with all its data. \n' +
-        `All data will be lost and can NOT be recovered! Type the project alias "${env.alias}" ` +
-        'to confirm the operation.'),
+        chalk.red(
+          'WARNING: You are about to delete the project with all its data. \n' +
+            `All data will be lost and can NOT be recovered! Type the project alias "${env.alias}" ` +
+            'to confirm the operation.'
+        )
       );
-      const values = await inquirer.prompt([
+      const values = (await inquirer.prompt([
         {
           name: 'alias',
           type: 'input',
           message: 'Project alias:',
         },
-      ]) as {alias: string};
+      ])) as { alias: string };
 
       if (values.alias !== env.alias) {
-        this.error(chalk.red('Entered project alias does not match. Aborting delete.'));
+        this.error(
+          chalk.red('Entered project alias does not match. Aborting delete.')
+        );
         return;
       }
     }
@@ -68,7 +69,9 @@ export default class DeleteCommand extends BaseCommand {
     // Run delete migration
     try {
       cli.action.start('Deleting project in cluster');
-      const result = await this.getClient().fetch(DELETE_PROJECT_MUTATION, {id: env.id});
+      const result = await this.getClient().fetch(DELETE_PROJECT_MUTATION, {
+        id: env.id,
+      });
       cli.action.stop();
       if (result.errors && result.errors.length) {
         throw new Error(result.errors[0].message);
@@ -91,7 +94,9 @@ export default class DeleteCommand extends BaseCommand {
       return env;
     }
 
-    throw new Error('Environment does not exist. Check your .slicknoderc file to see all configured environments.');
+    throw new Error(
+      'Environment does not exist. Check your .slicknoderc file to see all configured environments.'
+    );
   }
 }
 

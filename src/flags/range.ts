@@ -1,4 +1,4 @@
-import {flags} from '@oclif/command';
+import { flags } from '@oclif/command';
 
 export const range = flags.build({
   parse: (value: string): number[] => {

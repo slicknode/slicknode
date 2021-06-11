@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import {EnvCommand} from '../base/env-command';
+import { EnvCommand } from '../base/env-command';
 import * as utils from '../utils';
 
 export const GET_CONSOLE_URL_QUERY = `
@@ -20,15 +20,15 @@ export default class ConsoleCommand extends EnvCommand {
   public async run() {
     const input = this.parse(ConsoleCommand);
 
-    const environment = await this.getEnvironment(
-      input.flags.env || 'default',
-    );
+    const environment = await this.getEnvironment(input.flags.env || 'default');
 
     if (!environment) {
-      this.error(chalk.red(
-        'ERROR: The directory is not a valid slicknode project. ' +
-        'Run this command from your project folder with an initialized project.',
-      ));
+      this.error(
+        chalk.red(
+          'ERROR: The directory is not a valid slicknode project. ' +
+            'Run this command from your project folder with an initialized project.'
+        )
+      );
     }
 
     // Ensure user is authenticate
@@ -45,10 +45,13 @@ export default class ConsoleCommand extends EnvCommand {
 
     const consoleUrl = result?.data?.project?.consoleUrl;
     if (!consoleUrl) {
-      this.error(chalk.red(
-        'ERROR: Could not load project console URL. ' +
-        `Make sure the project "${alias}" exists in the cloud and that you have access to it.`,
-      ), {exit: 1});
+      this.error(
+        chalk.red(
+          'ERROR: Could not load project console URL. ' +
+            `Make sure the project "${alias}" exists in the cloud and that you have access to it.`
+        ),
+        { exit: 1 }
+      );
     }
 
     utils.openUrl(consoleUrl);

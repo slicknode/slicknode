@@ -11,20 +11,20 @@ import {
 } from './constants';
 
 export const runtime = Joi.object().keys({
-  engine: Joi.string().valid(
-    'nodejs@8',
-    'nodejs@10',
-    'nodejs@12',
-  ).required(),
+  engine: Joi.string().valid('nodejs@8', 'nodejs@10', 'nodejs@12').required(),
 });
 
-const handler = Joi.string().regex(/^([a-zA-Z0-9_]+)([a-zA-Z0-9_\-.]*)(\/([a-zA-Z0-9_\-.]+))*$/).required();
+const handler = Joi.string()
+  .regex(/^([a-zA-Z0-9_]+)([a-zA-Z0-9_\-.]*)(\/([a-zA-Z0-9_\-.]+))*$/)
+  .required();
 
 /**
  * Before mutation hook
  */
 const beforeMutationHook = Joi.object().keys({
-  event: Joi.string().regex(/^mutation\.([a-zA-Z0-9_]+)\.BEFORE$/).required(),
+  event: Joi.string()
+    .regex(/^mutation\.([a-zA-Z0-9_]+)\.BEFORE$/)
+    .required(),
   handler,
 });
 
@@ -32,7 +32,9 @@ const beforeMutationHook = Joi.object().keys({
  * After mutation hook
  */
 const afterMutationHook = Joi.object().keys({
-  event: Joi.string().regex(/^mutation\.([a-zA-Z0-9_]+)\.AFTER/).required(),
+  event: Joi.string()
+    .regex(/^mutation\.([a-zA-Z0-9_]+)\.AFTER/)
+    .required(),
   handler,
   config: Joi.object().keys({
     query: Joi.string(),
@@ -44,22 +46,27 @@ const afterMutationHook = Joi.object().keys({
  */
 export const listeners = Joi.alternatives().try(
   beforeMutationHook,
-  afterMutationHook,
+  afterMutationHook
 );
 
 /**
  * Schema for module slicknode.yml configuration
  */
 export const module = Joi.object().keys({
-  module: Joi.object().keys({
-    id: Joi.string().regex(PRIVATE_MODULE_NAME_REGEX).required(),
-    namespace: Joi.string().regex(NAMESPACE_REGEX).required(),
-    label: Joi.string().max(64).required(),
-    remote: Joi.object().keys({
-      endpoint: Joi.string().required(),
-      headers: Joi.object().pattern(/^([A-Za-z0-9-]+)$/, Joi.string().min(1).max(4096).required()),
-    }),
-  }).required(),
+  module: Joi.object()
+    .keys({
+      id: Joi.string().regex(PRIVATE_MODULE_NAME_REGEX).required(),
+      namespace: Joi.string().regex(NAMESPACE_REGEX).required(),
+      label: Joi.string().max(64).required(),
+      remote: Joi.object().keys({
+        endpoint: Joi.string().required(),
+        headers: Joi.object().pattern(
+          /^([A-Za-z0-9-]+)$/,
+          Joi.string().min(1).max(4096).required()
+        ),
+      }),
+    })
+    .required(),
   runtime,
   listeners: Joi.array().items(listeners),
   resolvers: Joi.object().pattern(
@@ -68,8 +75,8 @@ export const module = Joi.object().keys({
       /^([a-zA-Z0-9_]+)$/,
       Joi.object().keys({
         handler,
-      }),
-    ),
+      })
+    )
   ),
 });
 

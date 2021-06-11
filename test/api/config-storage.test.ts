@@ -2,12 +2,14 @@
  * Created by Ivo Meißner on 07.08.17.
  */
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 import * as os from 'os';
 import * as path from 'path';
 import ConfigStorage from '../../src/api/config-storage';
 
-const storage = new ConfigStorage(path.join(os.tmpdir(), 'slicknode', 'ConfigStorage-test'));
+const storage = new ConfigStorage(
+  path.join(os.tmpdir(), 'slicknode', 'ConfigStorage-test')
+);
 
 describe('api ConfigStorage', () => {
   it('Sets and reads values', () => {

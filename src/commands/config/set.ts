@@ -1,4 +1,4 @@
-import {BaseCommand} from '../../base/base-command';
+import { BaseCommand } from '../../base/base-command';
 
 export default class ConfigSet extends BaseCommand {
   public static description = 'Sets the configuration value for a setting';
@@ -12,7 +12,7 @@ export default class ConfigSet extends BaseCommand {
     {
       name: 'name',
       required: true,
-      options: [ 'endpoint' ],
+      options: ['endpoint'],
     },
     {
       name: 'value',
@@ -21,7 +21,7 @@ export default class ConfigSet extends BaseCommand {
   ];
 
   public async run() {
-    const {args} = this.parse(ConfigSet);
+    const { args } = this.parse(ConfigSet);
     this.getConfigStorage().setItem(args.name, args.value);
   }
 }

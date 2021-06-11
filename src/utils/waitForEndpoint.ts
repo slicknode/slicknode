@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import {waitFor} from './waitFor';
+import { waitFor } from './waitFor';
 
 /**
  * Wait for the API endpoint to become available
@@ -12,9 +12,9 @@ export async function waitForEndpoint(endpoint: string) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
-        body: JSON.stringify({query: '{__typename}'}),
+        body: JSON.stringify({ query: '{__typename}' }),
       });
       return res.status === 200;
     },

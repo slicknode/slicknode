@@ -1,8 +1,8 @@
 import originalGlob from 'glob';
-import {promisify} from 'util';
+import { promisify } from 'util';
 const glob = promisify(originalGlob);
 import fs from 'fs';
-import {mkdirp, readFile, writeFile} from 'fs-extra';
+import { mkdirp, readFile, writeFile } from 'fs-extra';
 import _ from 'lodash';
 import path from 'path';
 
@@ -21,23 +21,30 @@ export async function copyTemplate(
   from: string,
   to: string,
   variables: {
-    [name: string]: string,
-  },
+    [name: string]: string;
+  }
 ): Promise<void> {
   const fromResolved = path.resolve(from);
   const toResolved = path.resolve(to);
   const files = await glob(path.join(from, '{**/*,*}'), {});
-  await Promise.all(files.map(async (file) => {
-    const stats = await lstat(file);
-    const targetPath = path.join(toResolved, file.substr(fromResolved.length));
-    if (stats.isDirectory()) {
-      await mkdirp(targetPath);
-    } else {
-      const content = (await readFile(file)).toString('utf-8');
-      const compiledContent = _.template(content, {
-        interpolate: /{{([\s\S]+?)}}/g,
-      })(variables).split('\r\n').join('\n'); // Remove added carriage returns for windows
-      await writeFile(targetPath, compiledContent);
-    }
-  }));
+  await Promise.all(
+    files.map(async (file) => {
+      const stats = await lstat(file);
+      const targetPath = path.join(
+        toResolved,
+        file.substr(fromResolved.length)
+      );
+      if (stats.isDirectory()) {
+        await mkdirp(targetPath);
+      } else {
+        const content = (await readFile(file)).toString('utf-8');
+        const compiledContent = _.template(content, {
+          interpolate: /{{([\s\S]+?)}}/g,
+        })(variables)
+          .split('\r\n')
+          .join('\n'); // Remove added carriage returns for windows
+        await writeFile(targetPath, compiledContent);
+      }
+    })
+  );
 }

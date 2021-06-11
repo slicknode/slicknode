@@ -12,10 +12,7 @@ export default class ValidationError {
   public message: string;
   public options: IValidationErrorOptions;
 
-  constructor(
-    message: string,
-    options: IValidationErrorOptions = {},
-  ) {
+  constructor(message: string, options: IValidationErrorOptions = {}) {
     this.message = message;
     this.options = options;
   }
@@ -24,9 +21,12 @@ export default class ValidationError {
     let result = this.message;
     if (this.options.childErrors && this.options.childErrors.length) {
       result += '\n\n';
-      result += this.options.childErrors.map((err) => {
-        return err.toString();
-      }).join('\n').replace(/^/gm, '    ');
+      result += this.options.childErrors
+        .map((err) => {
+          return err.toString();
+        })
+        .join('\n')
+        .replace(/^/gm, '    ');
     }
     return result;
   }

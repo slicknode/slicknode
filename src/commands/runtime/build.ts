@@ -1,23 +1,25 @@
-import {flags} from '@oclif/command';
+import { flags } from '@oclif/command';
 import chalk from 'chalk';
 import fs from 'fs';
-import {mkdirpSync, outputFileSync} from 'fs-extra';
+import { mkdirpSync, outputFileSync } from 'fs-extra';
 import inquirer from 'inquirer';
 import Listr from 'listr';
 import path from 'path';
 import rimraf from 'rimraf';
 import tar from 'tar';
-import {EnvCommand} from '../../base/env-command';
-import {getModuleList} from '../../utils';
+import { EnvCommand } from '../../base/env-command';
+import { getModuleList } from '../../utils';
 import execute from '../../utils/execute';
-import {IModuleListItem} from '../../utils/getModuleList';
+import { IModuleListItem } from '../../utils/getModuleList';
 
 export class RuntimeBuildCommand extends EnvCommand {
-  public static description = 'Builds the source package for the runtime to be deployed';
+  public static description =
+    'Builds the source package for the runtime to be deployed';
   public static args = [
     {
       name: 'output',
-      description: 'The target output directory or file of the built source bundle',
+      description:
+        'The target output directory or file of the built source bundle',
     },
   ];
   public static flags = {
@@ -44,10 +46,9 @@ export class RuntimeBuildCommand extends EnvCommand {
           {
             name: 'confirm',
             type: 'confirm',
-            message: (
+            message:
               `WARNING: The output destination ${input.args.output} already exists. \n` +
-              'All content will be deleted! Continue?'
-            ),
+              'All content will be deleted! Continue?',
             default: false,
           },
         ]);
@@ -88,7 +89,7 @@ export class RuntimeBuildCommand extends EnvCommand {
                     {
                       title: 'Install dependencies',
                       task: async () => {
-                        await execute(npmCommand, [ 'install' ], null, {
+                        await execute(npmCommand, ['install'], null, {
                           cwd: item.path,
                         });
                       },
@@ -97,13 +98,16 @@ export class RuntimeBuildCommand extends EnvCommand {
                       title: 'Pack module',
                       task: async (moduleCtx) => {
                         return await new Promise<void>((resolve, reject) => {
-                          const packageJson = path.join(item.path, 'package.json');
+                          const packageJson = path.join(
+                            item.path,
+                            'package.json'
+                          );
                           fs.access(packageJson, fs.constants.R_OK, (err) => {
                             if (err) {
                               reject(err);
                             } else {
                               // Create npm package
-                              execute(npmCommand, [ 'pack' ], null, {
+                              execute(npmCommand, ['pack'], null, {
                                 cwd: item.path,
                               })
                                 .then((archive) => {
@@ -112,15 +116,17 @@ export class RuntimeBuildCommand extends EnvCommand {
                                     item.path,
                                     // Pack outputs the filename as last output,
                                     // ignore all other output from build scripts
-                                    archive.trim().split('\n').pop()!.trim(),
+                                    archive.trim().split('\n').pop()!.trim()
                                   );
                                   resolve();
                                 })
                                 .catch((e) => {
-                                  reject(new Error(
-                                    '"npm pack" failed, check your package.json and try to run "npm pack" in module ' +
-                                    `directory manually to find errors. \n\n${e.message}`,
-                                  ));
+                                  reject(
+                                    new Error(
+                                      '"npm pack" failed, check your package.json and try to run "npm pack" in module ' +
+                                        `directory manually to find errors. \n\n${e.message}`
+                                    )
+                                  );
                                 });
                             }
                           });
@@ -132,7 +138,11 @@ export class RuntimeBuildCommand extends EnvCommand {
                       task: async (moduleCtx) => {
                         return await new Promise<void>((resolve, reject) => {
                           function onError(err: Error) {
-                            reject(new Error(`Error extracting files: ${err.message}`));
+                            reject(
+                              new Error(
+                                `Error extracting files: ${err.message}`
+                              )
+                            );
                           }
 
                           // Read entries from tgz file and add to module zip
@@ -152,14 +162,22 @@ export class RuntimeBuildCommand extends EnvCommand {
                             .on('entry', (entry) => {
                               let buffer = Buffer.alloc(0);
                               entry.on('data', (chunk: Uint8Array) => {
-                                buffer = Buffer.concat([ buffer, chunk ]);
+                                buffer = Buffer.concat([buffer, chunk]);
                               });
                               entry.on('end', () => {
                                 // Remove package/ prefix
-                                const entryPath = entry.path.split(path.sep).slice(1).join(path.sep);
+                                const entryPath = entry.path
+                                  .split(path.sep)
+                                  .slice(1)
+                                  .join(path.sep);
                                 outputFileSync(
-                                  path.join(buildDir, 'modules', item.config.module.id, entryPath),
-                                  buffer,
+                                  path.join(
+                                    buildDir,
+                                    'modules',
+                                    item.config.module.id,
+                                    entryPath
+                                  ),
+                                  buffer
                                 );
                                 // zip.addFile(`modules/${item.config.module.id}/${entryPath}`, buffer, '', 0o644);
                               });
@@ -169,7 +187,7 @@ export class RuntimeBuildCommand extends EnvCommand {
                     },
                   ]);
                 },
-              })),
+              }))
           );
         },
       },
@@ -182,14 +200,17 @@ export class RuntimeBuildCommand extends EnvCommand {
           }
 
           // Build dependency and module package map
-          const dependencies: {[name: string]: string} = {
+          const dependencies: { [name: string]: string } = {
             'slicknode-runtime': '~0.2.0',
           };
-          const modulePackageMap: {[moduleId: string]: string} = {};
+          const modulePackageMap: { [moduleId: string]: string } = {};
           for (const item of ctx.modules) {
             if (item.config.runtime) {
               // Read package name
-              const modulePackageJson = fs.readFileSync(path.resolve(item.path, 'package.json'), 'utf8');
+              const modulePackageJson = fs.readFileSync(
+                path.resolve(item.path, 'package.json'),
+                'utf8'
+              );
               const depName = JSON.parse(modulePackageJson).name;
               dependencies[depName] = `file:./modules/${item.config.module.id}`;
               modulePackageMap[item.config.module.id] = depName;
@@ -220,7 +241,7 @@ export class RuntimeBuildCommand extends EnvCommand {
           */
           outputFileSync(
             path.join(buildDir, 'package.json'),
-            Buffer.from(JSON.stringify(packageJson, null, 2)),
+            Buffer.from(JSON.stringify(packageJson, null, 2))
           );
 
           // Generate runtime.js
@@ -232,13 +253,14 @@ export class RuntimeBuildCommand extends EnvCommand {
             ` * Date: ${new Date().toLocaleString()}`,
             ' */',
             '',
-            "const {SlicknodeRuntime} = require('slicknode-runtime');", '',
+            "const {SlicknodeRuntime} = require('slicknode-runtime');",
+            '',
             'const runtime = new SlicknodeRuntime();',
           ];
           for (const moduleId in modulePackageMap) {
             if (modulePackageMap.hasOwnProperty(moduleId)) {
               runtimeLines.push(
-                `runtime.register('${moduleId}', '${modulePackageMap[moduleId]}');`,
+                `runtime.register('${moduleId}', '${modulePackageMap[moduleId]}');`
               );
             }
           }
@@ -248,13 +270,20 @@ export class RuntimeBuildCommand extends EnvCommand {
 
           outputFileSync(
             path.join(buildDir, 'runtime.js'),
-            Buffer.from(runtimeLines.join('\n'), 'utf-8'),
+            Buffer.from(runtimeLines.join('\n'), 'utf-8')
           );
 
           // @TODO: Add different deployment targets (cloudfunction, lambda, docker etc.)
           outputFileSync(
             path.join(buildDir, 'index.js'),
-            Buffer.from(fs.readFileSync(path.join(__dirname, '../../templates/runtime/cloudfunction/index.js'))),
+            Buffer.from(
+              fs.readFileSync(
+                path.join(
+                  __dirname,
+                  '../../templates/runtime/cloudfunction/index.js'
+                )
+              )
+            )
           );
         },
       },

@@ -7,35 +7,36 @@
 import fs from 'fs';
 import yaml from 'js-yaml';
 import path from 'path';
-import {promisify} from 'util';
-import {
-  IProjectConfig,
-} from '../types';
-import {
-  PRIVATE_MODULE_NAME_REGEX,
-} from './constants';
+import { promisify } from 'util';
+import { IProjectConfig } from '../types';
+import { PRIVATE_MODULE_NAME_REGEX } from './constants';
 import ValidationError from './ValidationError';
 const readFile = promisify(fs.readFile) as Function; // tslint:disable-line
 import {
   buildASTSchema,
   buildSchema,
   Kind,
-  parse, print, printSchema, validateSchema as graphqlValidateSchema,
+  parse,
+  print,
+  printSchema,
+  validateSchema as graphqlValidateSchema,
 } from 'graphql';
-import {RenameRootFields, RenameTypes, transformSchema} from 'graphql-tools';
+import { RenameRootFields, RenameTypes, transformSchema } from 'graphql-tools';
 import _ from 'lodash';
 
-async function validateSchema(projectDir: string, config: IProjectConfig): Promise<any> {
+async function validateSchema(
+  projectDir: string,
+  config: IProjectConfig
+): Promise<any> {
   try {
-    const modulePaths = Object.keys(config.dependencies)
-      .map((name) => {
-        const version = config.dependencies[name];
-        if (name.match(PRIVATE_MODULE_NAME_REGEX)) {
-          return path.resolve(path.join(projectDir, version));
-        }
+    const modulePaths = Object.keys(config.dependencies).map((name) => {
+      const version = config.dependencies[name];
+      if (name.match(PRIVATE_MODULE_NAME_REGEX)) {
+        return path.resolve(path.join(projectDir, version));
+      }
 
-        return path.join(projectDir, '.slicknode', 'cache', 'modules', name);
-      });
+      return path.join(projectDir, '.slicknode', 'cache', 'modules', name);
+    });
 
     const promises = modulePaths.map(async (modulePath) => {
       let rawModuleSchema = '';
@@ -64,10 +65,18 @@ async function validateSchema(projectDir: string, config: IProjectConfig): Promi
 
           // Add namespace to types / root fields if we have remote module
           if (_.get(moduleConfig, 'module.remote')) {
-            return transformRemoteSchema(rawModuleSchema, _.get(moduleConfig, 'module.namespace'));
+            return transformRemoteSchema(
+              rawModuleSchema,
+              _.get(moduleConfig, 'module.namespace')
+            );
           }
         } catch (e) {
-          throw new Error(`Could not parse GraphQL schema ${path.relative(projectDir, schemaFile)}: ${e.message}`);
+          throw new Error(
+            `Could not parse GraphQL schema ${path.relative(
+              projectDir,
+              schemaFile
+            )}: ${e.message}`
+          );
         }
       }
       return rawModuleSchema;
@@ -79,9 +88,11 @@ async function validateSchema(projectDir: string, config: IProjectConfig): Promi
     const schema = buildASTSchema(ast);
     const errors = graphqlValidateSchema(schema);
 
-    return errors.map((e) => new ValidationError(`Invalid schema: ${e.message}`));
+    return errors.map(
+      (e) => new ValidationError(`Invalid schema: ${e.message}`)
+    );
   } catch (e) {
-    return [ new ValidationError(`Invalid schema: ${e.toString()}`) ];
+    return [new ValidationError(`Invalid schema: ${e.toString()}`)];
   }
 }
 
@@ -92,14 +103,15 @@ async function validateSchema(projectDir: string, config: IProjectConfig): Promi
  * @param schema
  * @param namespace
  */
-function transformRemoteSchema(schema: string, namespace: string | null): string {
+function transformRemoteSchema(
+  schema: string,
+  namespace: string | null
+): string {
   let transformedSchema = buildSchema(schema);
   transformedSchema = transformSchema(transformedSchema, [
-    new RenameTypes(
-      (name) => namespace ? `${namespace}_${name}` : name,
-    ),
-    new RenameRootFields(
-      ((operation, name) => namespace ? `${namespace}_${name}` : name),
+    new RenameTypes((name) => (namespace ? `${namespace}_${name}` : name)),
+    new RenameRootFields((operation, name) =>
+      namespace ? `${namespace}_${name}` : name
     ),
   ]);
   const rootTypeNames: string[] = [];
@@ -119,14 +131,19 @@ function transformRemoteSchema(schema: string, namespace: string | null): string
     ...transformedSchemaDoc,
     definitions: transformedSchemaDoc.definitions
       // Remove schema definition
-      .filter((definition) => ![
-        Kind.SCHEMA_DEFINITION,
-        Kind.SCHEMA_EXTENSION,
-      ].includes(definition.kind as any))
+      .filter(
+        (definition) =>
+          ![Kind.SCHEMA_DEFINITION, Kind.SCHEMA_EXTENSION].includes(
+            definition.kind as any
+          )
+      )
       .map((definition) => {
-        if (definition.kind === Kind.OBJECT_TYPE_DEFINITION && rootTypeNames.includes(definition.name.value)) {
-          const typeName = definition.name.value === queryType?.name ?
-            'Query' : 'Mutation';
+        if (
+          definition.kind === Kind.OBJECT_TYPE_DEFINITION &&
+          rootTypeNames.includes(definition.name.value)
+        ) {
+          const typeName =
+            definition.name.value === queryType?.name ? 'Query' : 'Mutation';
           return {
             ...definition,
             name: {

@@ -4,7 +4,7 @@
  * @flow
  */
 
-import {spawn} from 'child_process';
+import { spawn } from 'child_process';
 
 /**
  * Opens the URL in the default browser of the operating system
@@ -26,11 +26,11 @@ export function openUrl(url: string): void {
     default:
       throw new Error(
         `Could not automatically open URL, unsupported platform ${process.platform}. ` +
-        `Open the URL ${url} in your browser`,
+          `Open the URL ${url} in your browser`
       );
   }
 
-  const child = spawn(command, [ url ]);
+  const child = spawn(command, [url]);
   child.stderr.setEncoding('utf8');
   let errorMessage = '';
   child.stderr.on('data', (data) => {

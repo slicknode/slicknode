@@ -1,7 +1,10 @@
 import { expect, test } from '../../test';
 import sinon, { SinonStub } from 'sinon';
 import * as utils from '../../../src/utils';
-import { CREATE_API_AUTH_REQUEST_MUTATION, LOGIN_API_AUTH_REQUEST_MUTATION } from '../../../src/base/base-command';
+import {
+  CREATE_API_AUTH_REQUEST_MUTATION,
+  LOGIN_API_AUTH_REQUEST_MUTATION,
+} from '../../../src/base/base-command';
 
 const DUMMY_AUTH_URL = 'http://some-auth-url';
 
@@ -34,10 +37,10 @@ describe('login', () => {
       ctx.stub = sinon.stub(utils, 'openUrl');
     })
     .command(['login'])
-    .finally(ctx => {
+    .finally((ctx) => {
       ctx.stub!.restore();
     })
-    .it('logs user in successfully', ctx => {
+    .it('logs user in successfully', (ctx) => {
       expect(ctx.stdout).to.contain('Login successful!');
       expect(ctx.stub!.calledWith(DUMMY_AUTH_URL)).to.be.true;
     });
@@ -61,8 +64,8 @@ describe('login', () => {
     })
     .command(['login'])
     .catch(/Error creating auth request: Please try again/g)
-    .finally(ctx => {
+    .finally((ctx) => {
       ctx.stub!.restore();
     })
-    .it('throws error if API auth request cannot be created', () => { });
+    .it('throws error if API auth request cannot be created', () => {});
 });

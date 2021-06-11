@@ -5,13 +5,9 @@ import yaml from 'js-yaml';
 import _ from 'lodash';
 import path from 'path';
 import rimraf from 'rimraf';
-import {BaseCommand} from '../../base/base-command';
-import {
-  sortKeys,
-} from '../../utils';
-import {
-  PUBLIC_MODULE_NAME_REGEX,
-} from '../../validation';
+import { BaseCommand } from '../../base/base-command';
+import { sortKeys } from '../../utils';
+import { PUBLIC_MODULE_NAME_REGEX } from '../../validation';
 
 export default class ModuleRemoveCommand extends BaseCommand {
   public static description = 'Remove modules as a dependency from the project';
@@ -34,7 +30,9 @@ export default class ModuleRemoveCommand extends BaseCommand {
     const input = this.parse(ModuleRemoveCommand);
     const config = await this.getConfig();
     if (!config) {
-      throw new Error('No Slicknode project config found. Did you execute the command in the right folder?');
+      throw new Error(
+        'No Slicknode project config found. Did you execute the command in the right folder?'
+      );
     }
     const names = input.argv;
     const removedDirs: string[] = [];
@@ -53,24 +51,28 @@ export default class ModuleRemoveCommand extends BaseCommand {
       this.log('Module directories:\n');
 
       this.log(removedDirs.join('\n') + '\n');
-      const values = await inquirer.prompt([
+      const values = (await inquirer.prompt([
         {
           name: 'confirm',
           type: 'confirm',
-          message: 'Do you want to delete the folders from your file system? WARNING: This cannot be reversed!',
+          message:
+            'Do you want to delete the folders from your file system? WARNING: This cannot be reversed!',
           default: false,
         },
-      ]) as {confirm: boolean};
+      ])) as { confirm: boolean };
       if (values.confirm) {
-        const promises = removedDirs.map((dir) => new Promise((resolve, reject) => {
-          rimraf(path.join(projectRoot, dir), (err) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve();
-            }
-          });
-        }));
+        const promises = removedDirs.map(
+          (dir) =>
+            new Promise((resolve, reject) => {
+              rimraf(path.join(projectRoot, dir), (err) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              });
+            })
+        );
         await Promise.all(promises);
       }
     }
@@ -85,7 +87,7 @@ export default class ModuleRemoveCommand extends BaseCommand {
       path.join(projectRoot, 'slicknode.yml'),
       yaml.safeDump(sortKeys(newConfig), {
         indent: 2,
-      }),
+      })
     );
     names.forEach((name) => {
       this.log(chalk.red(`- Module "${name}" removed`));

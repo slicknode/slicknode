@@ -3,7 +3,6 @@ import { BaseCommand } from '../../src/base/base-command';
 import Client, { MemoryStorage } from 'slicknode-client';
 
 export function login() {
-
   return {
     async run(ctx: { _authenticatedClient: SinonStub }) {
       let stub: SinonStub;
@@ -31,5 +30,5 @@ export function login() {
         (BaseCommand.prototype.getClient as any).restore();
       }
     },
-  }
+  };
 }

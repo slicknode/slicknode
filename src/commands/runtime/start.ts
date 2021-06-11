@@ -1,9 +1,9 @@
-import {flags} from '@oclif/command';
+import { flags } from '@oclif/command';
 import bodyParser from 'body-parser';
 import * as express from 'express';
-import {SlicknodeRuntime} from 'slicknode-runtime';
-import {BaseCommand} from '../../base/base-command';
-import {getModuleList} from '../../utils';
+import { SlicknodeRuntime } from 'slicknode-runtime';
+import { BaseCommand } from '../../base/base-command';
+import { getModuleList } from '../../utils';
 
 const DEFAULT_PORT = 5100;
 
@@ -11,11 +11,13 @@ const DEFAULT_PORT = 5100;
 export const ExpressImport = express;
 
 export class RuntimeStartCommand extends BaseCommand {
-  public static description = 'Builds the source package for the runtime to be deployed';
+  public static description =
+    'Builds the source package for the runtime to be deployed';
   public static args = [
     {
       name: 'output',
-      description: 'The target output directory or file of the built source bundle',
+      description:
+        'The target output directory or file of the built source bundle',
     },
   ];
   public static flags = {
@@ -26,11 +28,13 @@ export class RuntimeStartCommand extends BaseCommand {
     }),
     secret: flags.string({
       char: 's',
-      description: 'The secret that is used for request signatures. Omit for insecure access (default)',
+      description:
+        'The secret that is used for request signatures. Omit for insecure access (default)',
     }),
     watch: flags.boolean({
       char: 'w',
-      description: 'Watch for file system changes and reload code automatically',
+      description:
+        'Watch for file system changes and reload code automatically',
     }),
   };
 
@@ -40,7 +44,7 @@ export class RuntimeStartCommand extends BaseCommand {
 
     // Configure Slicknode runtime
     const runtime = new SlicknodeRuntime({
-      ...(input.flags.secret ? {secret: input.flags.secret} : {}),
+      ...(input.flags.secret ? { secret: input.flags.secret } : {}),
     });
 
     // Register modules in runtime
@@ -54,9 +58,11 @@ export class RuntimeStartCommand extends BaseCommand {
 
     // Create express app
     const app = express.default();
-    app.use(bodyParser.raw({
-      type: 'application/json',
-    }));
+    app.use(
+      bodyParser.raw({
+        type: 'application/json',
+      })
+    );
     app.get('/', (req, res) => {
       res.json({
         message: 'Slicknode runtime running, ready to process events',
@@ -83,10 +89,10 @@ export class RuntimeStartCommand extends BaseCommand {
       // eslint-disable-next-line
       this.log(
         'Runtime started on port %s. Update your runtime endpoint in your Slicknode ' +
-        'project to http://<public-address>:%s/.\n' +
-        'To expose your machine to the internet, you can use something like ngrok',
+          'project to http://<public-address>:%s/.\n' +
+          'To expose your machine to the internet, you can use something like ngrok',
         port,
-        port,
+        port
       );
     });
   }

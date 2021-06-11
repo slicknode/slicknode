@@ -9,14 +9,19 @@
  * @param obj
  * @param recursive
  */
-export function sortKeys(obj: {[key: string]: any}, recursive: boolean = true): {[key: string]: any} {
-  return Object.keys(obj).sort().reduce((sortedObject, key) => {
-    if (typeof obj[key] === 'object' && recursive) {
-      sortedObject[key] = sortKeys(obj[key]);
-    } else {
-      sortedObject[key] = obj[key];
-    }
+export function sortKeys(
+  obj: { [key: string]: any },
+  recursive: boolean = true
+): { [key: string]: any } {
+  return Object.keys(obj)
+    .sort()
+    .reduce((sortedObject, key) => {
+      if (typeof obj[key] === 'object' && recursive) {
+        sortedObject[key] = sortKeys(obj[key]);
+      } else {
+        sortedObject[key] = obj[key];
+      }
 
-    return sortedObject;
-  }, {} as {[key: string]: any});
+      return sortedObject;
+    }, {} as { [key: string]: any });
 }

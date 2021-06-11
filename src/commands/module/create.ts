@@ -2,22 +2,19 @@
  * Created by Ivo Meißner on 30.08.17.
  */
 
-import {flags} from '@oclif/command';
+import { flags } from '@oclif/command';
 import chalk from 'chalk';
 import fs from 'fs';
-import {mkdirpSync} from 'fs-extra';
-import {printSchema} from 'graphql';
+import { mkdirpSync } from 'fs-extra';
+import { printSchema } from 'graphql';
 import inquirer from 'inquirer';
 import yaml from 'js-yaml';
 import _ from 'lodash';
 import path from 'path';
-import {BaseCommand} from '../../base/base-command';
+import { BaseCommand } from '../../base/base-command';
 import * as parsers from '../../parsers';
-import {
-  getRemoteSchema,
-  sortKeys,
-} from '../../utils';
-import {copyTemplate} from '../../utils/copyTemplate';
+import { getRemoteSchema, sortKeys } from '../../utils';
+import { copyTemplate } from '../../utils/copyTemplate';
 import {
   MODULE_LABEL_MAX_LENGTH,
   NAMESPACE_REGEX,
@@ -35,7 +32,9 @@ export default class ModuleCreateCommand extends BaseCommand {
       required: true,
       parse: (value: string) => {
         if (!value.match(PUBLIC_MODULE_NAME_REGEX)) {
-          throw new Error('The module name is invalid, it can only contain letters, numbers and hyphens');
+          throw new Error(
+            'The module name is invalid, it can only contain letters, numbers and hyphens'
+          );
         }
         return value;
       },
@@ -68,12 +67,14 @@ export default class ModuleCreateCommand extends BaseCommand {
       description: 'HTTP headers to be sent to the remote GraphQL API endpoint',
       required: false,
       multiple: true,
-      parse: ((value) => {
+      parse: (value) => {
         if (!value.match(/^([\w-]+):(.*)$/g)) {
-          throw new Error('Please enter a valid header name in the format "Name: Value"');
+          throw new Error(
+            'Please enter a valid header name in the format "Name: Value"'
+          );
         }
         return value;
-      }),
+      },
     }),
   };
 
@@ -88,38 +89,44 @@ export default class ModuleCreateCommand extends BaseCommand {
 
     const moduleId = `@private/${input.args.name}`;
     if (config.dependencies.hasOwnProperty(moduleId)) {
-      throw new Error(`An module with the name ${input.args.name} already exists in the project`);
+      throw new Error(
+        `An module with the name ${input.args.name} already exists in the project`
+      );
     }
 
     let namespace = input.flags.namespace;
 
     if (!namespace) {
-      let defaultNamespace: string | null = _.startCase(input.args.name.replace('-', ' ')).replace(/\s/g, '');
+      let defaultNamespace: string | null = _.startCase(
+        input.args.name.replace('-', ' ')
+      ).replace(/\s/g, '');
       if (!defaultNamespace!.match(NAMESPACE_REGEX)) {
         defaultNamespace = null;
       }
-      const values = await inquirer.prompt([
+      const values = (await inquirer.prompt([
         {
           name: 'namespace',
           message: 'Enter the namespace for the module',
           default: defaultNamespace,
           validate: (value) => {
             if (!value.match(NAMESPACE_REGEX)) {
-              return 'Please enter a valid namespace. It needs to start with an uppercase ' +
-                'letter and can only contain alpha numeric characters';
+              return (
+                'Please enter a valid namespace. It needs to start with an uppercase ' +
+                'letter and can only contain alpha numeric characters'
+              );
             }
             return true;
           },
           filter: (value) => _.trim(value),
         },
-      ]) as {namespace: string};
+      ])) as { namespace: string };
       namespace = values.namespace;
     }
 
     let label = input.flags.label;
     if (!label) {
       const defaultLabel = _.startCase(input.args.name.replace('-', ' '));
-      const labelValues = await inquirer.prompt([
+      const labelValues = (await inquirer.prompt([
         {
           name: 'label',
           message: 'Enter the module label for the admin interface',
@@ -132,7 +139,7 @@ export default class ModuleCreateCommand extends BaseCommand {
           },
           filter: (value) => _.trim(value),
         },
-      ]) as {label: string};
+      ])) as { label: string };
       label = labelValues.label;
     }
 
@@ -148,7 +155,9 @@ export default class ModuleCreateCommand extends BaseCommand {
     try {
       mkdirpSync(moduleDir);
     } catch (e) {
-      return this.error(chalk.red('Could not create module directory: ' + e.message));
+      return this.error(
+        chalk.red('Could not create module directory: ' + e.message)
+      );
     }
 
     try {
@@ -157,7 +166,7 @@ export default class ModuleCreateCommand extends BaseCommand {
       if (endpoint) {
         // We have remote module, build config via introspection
         const headers = ((input.flags.header || []) as string[]).reduce(
-          (h: {[name: string]: string}, value) => {
+          (h: { [name: string]: string }, value) => {
             const parts: string[] = value.split(':');
             if (parts.length <= 1) {
               return h;
@@ -165,7 +174,9 @@ export default class ModuleCreateCommand extends BaseCommand {
             const name = parts.shift()!;
             h[name] = parts.join(':').trim();
             return h;
-          }, {});
+          },
+          {}
+        );
         const schema = await getRemoteSchema({
           endpoint,
           headers,
@@ -179,7 +190,7 @@ export default class ModuleCreateCommand extends BaseCommand {
             label,
             remote: {
               endpoint,
-              ...(Object.keys(headers).length ? {headers} : {}),
+              ...(Object.keys(headers).length ? { headers } : {}),
             },
           },
         };
@@ -187,13 +198,13 @@ export default class ModuleCreateCommand extends BaseCommand {
           path.join(moduleDir, 'slicknode.yml'),
           yaml.safeDump(sortKeys(moduleConfig), {
             indent: 2,
-          }),
+          })
         );
 
         // Write introspection schema to schema.graphql
         fs.writeFileSync(
           path.join(moduleDir, 'schema.graphql'),
-          printSchema(schema),
+          printSchema(schema)
         );
       } else {
         // Create module from template
@@ -204,14 +215,19 @@ export default class ModuleCreateCommand extends BaseCommand {
             MODULE_ID: moduleId,
             MODULE_NAMESPACE: namespace,
             MODULE_LABEL: label,
-          },
+          }
         );
       }
 
       // @TODO: Check of unique namespace
 
       // Add module to slicknode.yml
-      const relModulePath = '.' + moduleDir.substr(this.getProjectRoot().length).split(path.sep).join('/');
+      const relModulePath =
+        '.' +
+        moduleDir
+          .substr(this.getProjectRoot().length)
+          .split(path.sep)
+          .join('/');
       const newConfig = {
         ...config,
         dependencies: {
@@ -223,17 +239,18 @@ export default class ModuleCreateCommand extends BaseCommand {
         path.join(this.getProjectRoot(), 'slicknode.yml'),
         yaml.safeDump(sortKeys(newConfig), {
           indent: 2,
-        }),
+        })
       );
 
-      this.log(chalk.green(`
+      this.log(
+        chalk.green(`
   SUCCESS! Module was created
 
   Add your type definitions to ${relModulePath}/schema.graphql
 
   Afterwards run ${chalk.bold('slicknode deploy')} to deploy the changes
-  `,
-      ));
+  `)
+      );
     } catch (e) {
       this.error(chalk.red('Could not create module: ' + e.message));
     }

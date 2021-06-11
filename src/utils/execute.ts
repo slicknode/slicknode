@@ -3,7 +3,7 @@
  *
  * @flow
  */
-import {spawn, SpawnOptions} from 'child_process';
+import { spawn, SpawnOptions } from 'child_process';
 
 type ApiResult = string;
 
@@ -21,7 +21,7 @@ export default function execute(
   command: string,
   args: ReadonlyArray<string> = [],
   stdin: string | null = null,
-  options: SpawnOptions = {},
+  options: SpawnOptions = {}
 ): Promise<ApiResult> {
   return new Promise((resolve, reject) => {
     const cmd = spawn(command, args, {

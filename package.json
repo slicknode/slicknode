@@ -15,6 +15,7 @@
     "version": "oclif-dev readme && git add README.md",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint -c tslint.json --fix 'src/**/*.ts'",
+    "format": "prettier --config .prettierrc '(src|test)/**/*.ts' --write",
     "build": "tsc",
     "clean": "rimraf lib/",
     "watch": "tsc --watch",

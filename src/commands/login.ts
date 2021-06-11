@@ -1,4 +1,4 @@
-import {BaseCommand} from '../base/base-command';
+import { BaseCommand } from '../base/base-command';
 
 export default class LoginCommand extends BaseCommand {
   public static command = 'login';

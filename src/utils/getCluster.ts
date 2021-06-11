@@ -4,7 +4,7 @@ import inquirer from 'inquirer';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import Client from 'slicknode-client';
-import {ICluster} from '../types';
+import { ICluster } from '../types';
 
 const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100, filter: {node: {openForProjects: true}}) {
@@ -24,10 +24,12 @@ interface IGetClusterParams {
 }
 
 export async function getCluster(params: IGetClusterParams) {
-  const {client} = params;
+  const { client } = params;
   cli.action.start('Load available clusters');
   const result = await client.fetch(LIST_CLUSTER_QUERY);
-  const edges = _.get(result, 'data.listCluster.edges', []) as Array<{node: ICluster}>;
+  const edges = _.get(result, 'data.listCluster.edges', []) as Array<{
+    node: ICluster;
+  }>;
 
   // We only have one cluster, return immediately
   if (edges.length === 1) {
@@ -43,48 +45,52 @@ export async function getCluster(params: IGetClusterParams) {
   });
 
   // Trigger requests to setup connections
-  await Promise.all(edges.map(async ({node}) => {
-    try {
-      await fetch(node.pingUrl, {
-        timeout: 5000,
-        agent,
-      });
-    } catch (e) {
-      // tslint-ignore
-    }
-  }));
+  await Promise.all(
+    edges.map(async ({ node }) => {
+      try {
+        await fetch(node.pingUrl, {
+          timeout: 5000,
+          agent,
+        });
+      } catch (e) {
+        // tslint-ignore
+      }
+    })
+  );
 
   // Determine latencies
-  const dcTimers = await Promise.all(edges.map(async ({node}) => {
-    const start = Date.now();
-    let latency;
-    try {
-      await fetch(node.pingUrl, {
-        timeout: 5000,
-        agent,
-      });
-      latency = Date.now() - start;
-    } catch (e) {
-      latency = null;
-    }
-    return {
-      latency,
-      cluster: node,
-    };
-  }));
+  const dcTimers = await Promise.all(
+    edges.map(async ({ node }) => {
+      const start = Date.now();
+      let latency;
+      try {
+        await fetch(node.pingUrl, {
+          timeout: 5000,
+          agent,
+        });
+        latency = Date.now() - start;
+      } catch (e) {
+        latency = null;
+      }
+      return {
+        latency,
+        cluster: node,
+      };
+    })
+  );
   cli.action.stop();
 
-  const inputValues = await inquirer.prompt<{cluster: ICluster}>([
+  const inputValues = await inquirer.prompt<{ cluster: ICluster }>([
     {
       name: 'cluster',
       message: 'Select the cluster for the project:',
       type: 'list',
-      choices: dcTimers.sort(
-        (a, b) => (a.latency || Infinity) - (b.latency || Infinity),
-      ).map(({cluster, latency}) => ({
-        name: `${cluster.alias}: ${cluster.name} (latency: ${latency}ms)`,
-        value: cluster,
-      })),
+      choices: dcTimers
+        .sort((a, b) => (a.latency || Infinity) - (b.latency || Infinity))
+        .map(({ cluster, latency }) => ({
+          name: `${cluster.alias}: ${cluster.name} (latency: ${latency}ms)`,
+          value: cluster,
+        })),
     },
   ]);
   return inputValues.cluster;

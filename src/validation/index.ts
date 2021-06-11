@@ -4,11 +4,11 @@
  * @flow
  */
 
-export {default as default} from './validate';
+export { default as default } from './validate';
 
-export {default as validateConfig} from './validateConfig';
+export { default as validateConfig } from './validateConfig';
 
-export {default as validateModule} from './validateModule';
+export { default as validateModule } from './validateModule';
 
 export {
   PRIVATE_MODULE_NAME_REGEX,

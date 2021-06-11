@@ -4,10 +4,8 @@
  * @flow
  */
 
-import {expect} from 'chai';
-import {
-  semverCompare,
-} from '../string';
+import { expect } from 'chai';
+import { semverCompare } from '../string';
 
 describe('string utils', () => {
   describe('semverCompare', () => {
@@ -43,11 +41,7 @@ describe('string utils', () => {
       ]);
     });
     it('throws an error for invalid semver versions', () => {
-      const invalidVersions = [
-        'f',
-        '0.0.g.g',
-        '1.2.3.4',
-      ];
+      const invalidVersions = ['f', '0.0.g.g', '1.2.3.4'];
       invalidVersions.forEach((version) => {
         expect(() => {
           semverCompare(version, '0.0.1');

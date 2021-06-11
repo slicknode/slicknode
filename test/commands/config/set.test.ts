@@ -1,6 +1,6 @@
-import {expect, test} from '@oclif/test'
+import { expect, test } from '@oclif/test';
 import ConfigStorage from '../../../src/api/config-storage';
-import sinon, {SinonStub} from 'sinon';
+import sinon, { SinonStub } from 'sinon';
 
 // @TODO: Stubbing of default export doesn't seem to work on win, ignore for now.
 if (!/^win/.test(process.platform)) {
@@ -11,7 +11,7 @@ if (!/^win/.test(process.platform)) {
       .timeout(20000)
       .stub(ConfigStorage.prototype, 'setValues', sinon.stub())
       .command(['config:set', 'endpoint', TEST_URL])
-      .it('sets the endpoint', ctx => {
+      .it('sets the endpoint', (ctx) => {
         expect(ctx.stdout).to.equal('');
         const stub = ConfigStorage.prototype.setValues as SinonStub;
         expect(stub.called).to.equal(true);

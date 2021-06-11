@@ -3,13 +3,13 @@
  */
 
 import * as fs from 'fs';
-import {mkdirpSync} from 'fs-extra';
+import { mkdirpSync } from 'fs-extra';
 import _ from 'lodash';
 import * as path from 'path';
 
 export default class ConfigStorage {
   public file: string;
-  public cache: {[key: string]: any} | null;
+  public cache: { [key: string]: any } | null;
 
   constructor(file: string) {
     this.file = file;
@@ -29,7 +29,7 @@ export default class ConfigStorage {
   }
 
   public removeItem(keyName: string): void {
-    this.setValues(_.omit(this.getValues(), [ keyName ]));
+    this.setValues(_.omit(this.getValues(), [keyName]));
   }
 
   public clear(): void {
@@ -39,7 +39,7 @@ export default class ConfigStorage {
   /**
    * @private
    */
-  public getValues(): {[key: string]: any} {
+  public getValues(): { [key: string]: any } {
     try {
       if (!this.cache) {
         const data = fs.readFileSync(this.file, 'utf8');
@@ -54,7 +54,7 @@ export default class ConfigStorage {
   /**
    * @private
    */
-  public setValues(values: {[key: string]: any}): void {
+  public setValues(values: { [key: string]: any }): void {
     try {
       mkdirpSync(path.dirname(this.file));
       const data = JSON.stringify(values);
@@ -62,7 +62,7 @@ export default class ConfigStorage {
       this.cache = null;
     } catch (e) {
       throw new Error(
-        'ERROR: Could not write configuration to user home dir. Make sure your user has write permission.',
+        'ERROR: Could not write configuration to user home dir. Make sure your user has write permission.'
       );
     }
   }

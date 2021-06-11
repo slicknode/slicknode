@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import _ from 'lodash';
-import {EnvCommand} from '../base/env-command';
+import { EnvCommand } from '../base/env-command';
 import loadProjectVersion from '../utils/loadProjectVersion';
-import {pullDependencies} from '../utils/pullDependencies';
+import { pullDependencies } from '../utils/pullDependencies';
 
 export const LOAD_PROJECT_BUNDLE_QUERY = `
 query GetProjectBundle($id: ID!) {
@@ -69,7 +69,7 @@ export default class PullCommand extends EnvCommand {
     const bundle = _.get(result, 'data.project.version.bundle');
     if (!bundle) {
       this.error(
-        'The project does not exist on the Slicknode Servers or you don\'t have enough permissions.',
+        "The project does not exist on the Slicknode Servers or you don't have enough permissions."
       );
       return;
     }
@@ -78,7 +78,9 @@ export default class PullCommand extends EnvCommand {
     try {
       await loadProjectVersion(projectRoot, bundle);
     } catch (e) {
-      this.error(`Updating private modules failed: ${e.message}`, {exit: false});
+      this.error(`Updating private modules failed: ${e.message}`, {
+        exit: false,
+      });
     }
 
     // Update non private modules from registry

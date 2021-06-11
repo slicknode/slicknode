@@ -1,7 +1,7 @@
-import {pathExists} from 'fs-extra';
-import {IProjectConfig} from 'IProjectConfig';
+import { pathExists } from 'fs-extra';
+import { IProjectConfig } from 'IProjectConfig';
 import path from 'path';
-import {PRIVATE_MODULE_NAME_REGEX} from '../validation';
+import { PRIVATE_MODULE_NAME_REGEX } from '../validation';
 
 interface IIsDependencyTreeLoadedParams {
   dir: string;
@@ -14,8 +14,10 @@ interface IIsDependencyTreeLoadedParams {
  *
  * @param params
  */
-export async function isDependencyTreeLoaded(params: IIsDependencyTreeLoadedParams) {
-  const {dir, config} = params;
+export async function isDependencyTreeLoaded(
+  params: IIsDependencyTreeLoadedParams
+) {
+  const { dir, config } = params;
   const moduleCacheDir = path.join(dir, '.slicknode', 'cache', 'modules');
   const cacheDirExists = await pathExists(moduleCacheDir);
   if (!cacheDirExists) {
