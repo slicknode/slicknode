@@ -5,8 +5,8 @@
  */
 
 import Joi, { ValidationResult } from 'joi';
-import _ from 'lodash';
-import path from 'path';
+import * as _ from 'lodash';
+import * as path from 'path';
 import ValidationError from './ValidationError';
 
 import { IProjectConfig } from '../types';

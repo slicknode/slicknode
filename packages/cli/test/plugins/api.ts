@@ -32,7 +32,7 @@ export function api(request: MockRequest, response: MockResponse) {
       const mockRequest =
         typeof request === 'string' ? { query: request } : request;
 
-      const DUMMY_ENDPOINT = 'http://localhost';
+      const DUMMY_ENDPOINT = 'http://localhost/';
       ctx.apiMocks = ctx.apiMocks || [];
 
       const interceptor = nock(DUMMY_ENDPOINT)

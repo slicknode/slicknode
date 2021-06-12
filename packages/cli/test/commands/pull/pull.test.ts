@@ -1,5 +1,5 @@
 import { expect, test } from '../../test';
-import path from 'path';
+import * as path from 'path';
 import fs from 'fs';
 import yaml from 'js-yaml';
 import { Kind, parse } from 'graphql';

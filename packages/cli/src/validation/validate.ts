@@ -2,7 +2,7 @@
  * Created by Ivo Meißner on 08.08.17.
  */
 
-import path from 'path';
+import * as path from 'path';
 import { IProjectConfig } from '../types';
 import { PRIVATE_MODULE_NAME_REGEX } from './constants';
 import validateConfig from './validateConfig';

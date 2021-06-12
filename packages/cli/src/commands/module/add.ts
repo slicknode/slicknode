@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import yaml from 'js-yaml';
-import _ from 'lodash';
-import path from 'path';
+import * as _ from 'lodash';
+import * as path from 'path';
 import { BaseCommand } from '../../base/base-command';
 import { sortKeys } from '../../utils';
 import { PUBLIC_MODULE_NAME_REGEX } from '../../validation';

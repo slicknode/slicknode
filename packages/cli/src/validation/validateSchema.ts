@@ -6,7 +6,7 @@
 
 import fs from 'fs';
 import yaml from 'js-yaml';
-import path from 'path';
+import * as path from 'path';
 import { promisify } from 'util';
 import { IProjectConfig } from '../types';
 import { PRIVATE_MODULE_NAME_REGEX } from './constants';
@@ -22,7 +22,7 @@ import {
   validateSchema as graphqlValidateSchema,
 } from 'graphql';
 import { RenameRootFields, RenameTypes, transformSchema } from 'graphql-tools';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 async function validateSchema(
   projectDir: string,

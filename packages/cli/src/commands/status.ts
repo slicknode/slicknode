@@ -7,7 +7,7 @@
 import { flags } from '@oclif/command';
 import chalk from 'chalk';
 import cli from 'cli-ux';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { Uploadable } from 'slicknode-client';
 import { BaseCommand } from '../base/base-command';
 import {

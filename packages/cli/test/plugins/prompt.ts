@@ -1,11 +1,11 @@
-import sinon, { SinonStub } from 'sinon';
+import * as sinon from 'sinon';
 import inquirer, { Questions } from 'inquirer';
 
 export function prompt(values: any[]) {
   const valueStack = [...values];
 
   return {
-    async run(ctx: { prompt?: SinonStub }) {
+    async run(ctx: { prompt?: sinon.SinonStub }) {
       ctx.prompt = sinon
         .stub(inquirer, 'prompt')
         .callsFake(async (questions: Questions<any>) => {
@@ -28,7 +28,7 @@ export function prompt(values: any[]) {
               if (question.validate && filteredValue !== null) {
                 const isValid = question.validate(filteredValue);
                 if (isValid !== true) {
-                  throw new Error(isValid);
+                  throw new Error(String(isValid));
                 }
               }
               result[question.name] =
@@ -44,7 +44,7 @@ export function prompt(values: any[]) {
         });
     },
 
-    finally(ctx: { prompt?: SinonStub }) {
+    finally(ctx: { prompt?: sinon.SinonStub }) {
       if (ctx.prompt) {
         ctx.prompt.restore();
         if (valueStack.length !== 0) {

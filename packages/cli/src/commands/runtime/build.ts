@@ -4,7 +4,7 @@ import fs from 'fs';
 import { mkdirpSync, outputFileSync } from 'fs-extra';
 import inquirer from 'inquirer';
 import Listr from 'listr';
-import path from 'path';
+import * as path from 'path';
 import rimraf from 'rimraf';
 import tar from 'tar';
 import { EnvCommand } from '../../base/env-command';

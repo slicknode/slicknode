@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import { expect } from '@oclif/test';
 import os from 'os';
 import * as uuid from 'uuid';

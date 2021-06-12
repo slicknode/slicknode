@@ -1,5 +1,5 @@
 import fs from 'fs';
-import path from 'path';
+import * as path from 'path';
 
 /**
  * Throws an error if the provided value is not a valid directory

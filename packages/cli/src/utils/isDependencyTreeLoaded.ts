@@ -1,6 +1,6 @@
 import { pathExists } from 'fs-extra';
 import { IProjectConfig } from 'IProjectConfig';
-import path from 'path';
+import * as path from 'path';
 import { PRIVATE_MODULE_NAME_REGEX } from '../validation';
 
 interface IIsDependencyTreeLoadedParams {

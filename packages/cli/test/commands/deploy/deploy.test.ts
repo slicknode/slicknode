@@ -1,5 +1,5 @@
 import { expect, test } from '../../test';
-import path from 'path';
+import * as path from 'path';
 import { MIGRATE_PROJECT_MUTATION } from '../../../src/commands/status';
 import {
   CREATE_PROJECT_MUTATION,

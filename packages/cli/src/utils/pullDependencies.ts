@@ -1,9 +1,9 @@
 import AdmZip from 'adm-zip';
 import cli from 'cli-ux';
 import { mkdirp, remove } from 'fs-extra';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import fetch from 'node-fetch';
-import path from 'path';
+import * as path from 'path';
 import rimraf from 'rimraf';
 import Client from 'slicknode-client';
 import { IProjectConfig } from '../types';

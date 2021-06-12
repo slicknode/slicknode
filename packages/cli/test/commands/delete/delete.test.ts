@@ -1,6 +1,5 @@
 import { expect, test } from '../../test';
-import path from 'path';
-import sinon, { SinonStub } from 'sinon';
+import * as path from 'path';
 import { DELETE_PROJECT_MUTATION } from '../../../src/commands/delete';
 import { readFileSync } from 'fs';
 

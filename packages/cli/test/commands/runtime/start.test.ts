@@ -1,6 +1,5 @@
 import { expect, test } from '../../test';
-import path from 'path';
-import sinon from 'sinon';
+import * as path from 'path';
 import { ExpressImport } from '../../../src/commands/runtime/start';
 import request from 'supertest';
 import { RuntimeContext } from 'slicknode-runtime';

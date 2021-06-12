@@ -1,6 +1,6 @@
 import { execFile } from 'child_process';
 import { emptyDir, ensureDir, readdir, remove } from 'fs-extra';
-import path from 'path';
+import * as path from 'path';
 import { promisify } from 'util';
 
 const exec = promisify(execFile);

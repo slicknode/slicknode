@@ -1,7 +1,7 @@
 import { expect, test } from '../../test';
-import path from 'path';
+import * as path from 'path';
 import execute from '../../../src/utils/execute';
-import sinon from 'sinon';
+import * as sinon from 'sinon';
 
 function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);

@@ -1,11 +1,11 @@
-import sinon, { SinonStub } from 'sinon';
+import * as sinon from 'sinon';
 import { BaseCommand } from '../../src/base/base-command';
 import Client, { MemoryStorage } from 'slicknode-client';
 
 export function login() {
   return {
-    async run(ctx: { _authenticatedClient: SinonStub }) {
-      let stub: SinonStub;
+    async run(ctx: { _authenticatedClient: sinon.SinonStub }) {
+      let stub: sinon.SinonStub;
       const storage = new MemoryStorage();
       const DUMMY_ENDPOINT = 'http://localhost';
       const fakeClient = new Client({
@@ -25,7 +25,7 @@ export function login() {
       stub = sinon.stub(BaseCommand.prototype, 'getClient').returns(fakeClient);
       ctx._authenticatedClient = stub;
     },
-    finally(ctx: { _authenticatedClient: SinonStub }) {
+    finally(ctx: { _authenticatedClient: sinon.SinonStub }) {
       if (BaseCommand.prototype.getClient.hasOwnProperty('restore')) {
         (BaseCommand.prototype.getClient as any).restore();
       }

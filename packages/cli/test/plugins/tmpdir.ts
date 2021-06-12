@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import { mkdirpSync } from 'fs-extra';
 import os from 'os';
 import * as uuid from 'uuid';

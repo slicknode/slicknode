@@ -11,7 +11,7 @@ import StatusCommand from './status';
 
 import { flags } from '@oclif/command';
 import cli from 'cli-ux';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import fetch from 'node-fetch';
 import * as uuid from 'uuid';
 import * as parsers from '../parsers';

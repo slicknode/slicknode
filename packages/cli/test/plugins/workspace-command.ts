@@ -1,11 +1,11 @@
 import { FancyTypes } from 'fancy-test';
-import path from 'path';
+import * as path from 'path';
 import { mkdirpSync } from 'fs-extra';
 import copyfiles from 'copyfiles';
 import os from 'os';
 import * as uuid from 'uuid';
 import rimraf = require('rimraf');
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 interface IWorkspaceCommandOptions {
   setWorkspaceAsDir?: boolean;

@@ -1,6 +1,6 @@
 import { expect, test } from '../../test';
-import path from 'path';
-import sinon, { SinonStub } from 'sinon';
+import * as path from 'path';
+import * as sinon from 'sinon';
 import * as utils from '../../../src/utils';
 import { GET_CONSOLE_URL_QUERY } from '../../../src/commands/console';
 
@@ -29,7 +29,7 @@ describe('console', () => {
         },
       },
     })
-    .do((ctx: { stub?: SinonStub }) => {
+    .do((ctx: { stub?: sinon.SinonStub }) => {
       ctx.stub = sinon.stub(utils, 'openUrl');
     })
     .command(['console', '--dir', projectPath('initialized')])
@@ -49,7 +49,7 @@ describe('console', () => {
         project: null,
       },
     })
-    .do((ctx: { stub?: SinonStub }) => {
+    .do((ctx: { stub?: sinon.SinonStub }) => {
       ctx.stub = sinon.stub(utils, 'openUrl');
     })
     .command(['console', '--dir', projectPath('initialized')])

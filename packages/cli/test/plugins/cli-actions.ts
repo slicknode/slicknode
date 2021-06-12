@@ -1,12 +1,12 @@
-import sinon, { SinonStub } from 'sinon';
+import * as sinon from 'sinon';
 import cli from 'cli-ux';
 import { expect } from '@oclif/test';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 export function cliActions(expectedActions: string[]) {
   const startedActions: string[] = [];
   return {
-    async run(ctx: { cliActionStub?: SinonStub }) {
+    async run(ctx: { cliActionStub?: sinon.SinonStub }) {
       ctx.cliActionStub = sinon
         .stub(cli.action, 'start')
         .callsFake((action: string) => {
@@ -14,7 +14,7 @@ export function cliActions(expectedActions: string[]) {
         });
     },
 
-    finally(ctx: { cliActionStub?: SinonStub }) {
+    finally(ctx: { cliActionStub?: sinon.SinonStub }) {
       if (ctx.cliActionStub) {
         ctx.cliActionStub.restore();
         if (expectedActions.length > startedActions.length) {

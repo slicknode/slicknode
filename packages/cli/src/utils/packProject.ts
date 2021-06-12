@@ -10,7 +10,7 @@ import originalGlob from 'glob';
 import { IModuleConfig } from 'IModuleConfig';
 import { IProjectConfig } from 'IProjectConfig';
 import yaml from 'js-yaml';
-import path from 'path';
+import * as path from 'path';
 import tar from 'tar';
 import { promisify } from 'util';
 import {

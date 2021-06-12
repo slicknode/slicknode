@@ -3,7 +3,7 @@ import {
   LIST_CLUSTER_QUERY,
   CREATE_PROJECT_MUTATION,
 } from '../../../src/commands/init';
-import path from 'path';
+import * as path from 'path';
 import fs from 'fs';
 import yaml from 'js-yaml';
 import {

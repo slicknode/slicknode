@@ -4,7 +4,7 @@
 import fs, { PathLike } from 'fs';
 import { parse } from 'graphql';
 import yaml from 'js-yaml';
-import path from 'path';
+import * as path from 'path';
 import { promisify } from 'util';
 import validateModule from './validateModule';
 import ValidationError from './ValidationError';

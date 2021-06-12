@@ -1,5 +1,5 @@
 import { expect, test } from '../../test';
-import sinon, { SinonStub } from 'sinon';
+import * as sinon from 'sinon';
 import * as utils from '../../../src/utils';
 import {
   CREATE_API_AUTH_REQUEST_MUTATION,
@@ -33,7 +33,7 @@ describe('login', () => {
         },
       },
     })
-    .do((ctx: { stub?: SinonStub }) => {
+    .do((ctx: { stub?: sinon.SinonStub }) => {
       ctx.stub = sinon.stub(utils, 'openUrl');
     })
     .command(['login'])
@@ -59,7 +59,7 @@ describe('login', () => {
         },
       },
     })
-    .do((ctx: { stub?: SinonStub }) => {
+    .do((ctx: { stub?: sinon.SinonStub }) => {
       ctx.stub = sinon.stub(utils, 'openUrl');
     })
     .command(['login'])

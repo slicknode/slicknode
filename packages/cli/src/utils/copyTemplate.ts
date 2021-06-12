@@ -3,8 +3,8 @@ import { promisify } from 'util';
 const glob = promisify(originalGlob);
 import fs from 'fs';
 import { mkdirp, readFile, writeFile } from 'fs-extra';
-import _ from 'lodash';
-import path from 'path';
+import * as _ from 'lodash';
+import * as path from 'path';
 
 const lstat = promisify(fs.lstat);
 /**

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { EnvCommand } from '../base/env-command';
 import loadProjectVersion from '../utils/loadProjectVersion';
 import { pullDependencies } from '../utils/pullDependencies';

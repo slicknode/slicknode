@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import { expect } from '@oclif/test';
 import { mkdirpSync, readFileSync } from 'fs-extra';
 import { test } from '../../../test';

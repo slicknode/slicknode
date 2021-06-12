@@ -1,6 +1,6 @@
 import fs from 'fs';
 import yaml from 'js-yaml';
-import path from 'path';
+import * as path from 'path';
 import { IModuleConfig, IProjectConfig } from '../types';
 import {
   PRIVATE_MODULE_NAME_REGEX,

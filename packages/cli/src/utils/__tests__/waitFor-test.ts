@@ -1,6 +1,6 @@
 import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import sinon from 'sinon';
+import * as sinon from 'sinon';
 import { waitFor } from '../waitFor';
 chai.use(chaiAsPromised);
 

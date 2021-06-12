@@ -4,7 +4,7 @@
  * @flow
  */
 
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 const adjectives = [
   'Awesome',

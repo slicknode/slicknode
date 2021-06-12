@@ -1,7 +1,7 @@
 import cli from 'cli-ux';
 import https from 'https';
 import inquirer from 'inquirer';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import fetch from 'node-fetch';
 import Client from 'slicknode-client';
 import { ICluster } from '../types';

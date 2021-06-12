@@ -6,10 +6,10 @@
 import AdmZip from 'adm-zip';
 import fs, { mkdirpSync } from 'fs-extra';
 import yaml from 'js-yaml';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import fetch from 'node-fetch';
 import os from 'os';
-import path from 'path';
+import * as path from 'path';
 import * as uuid from 'uuid';
 
 /**

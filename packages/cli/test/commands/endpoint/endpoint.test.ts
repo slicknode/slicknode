@@ -1,5 +1,5 @@
 import { expect, test } from '../../test';
-import path from 'path';
+import * as path from 'path';
 
 function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);
