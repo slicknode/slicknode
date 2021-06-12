@@ -5,7 +5,11 @@ import { waitFor } from './waitFor';
  * Wait for the API endpoint to become available
  * @param endpoint GraphQL API endpoint
  */
-export async function waitForEndpoint(endpoint: string) {
+export async function waitForEndpoint(
+  endpoint: string,
+  options: { interval?: number; timeout?: number } = {}
+) {
+  const { interval = 1500, timeout = 60000 } = options;
   await waitFor({
     async handler() {
       const res = await fetch(endpoint, {
@@ -18,7 +22,7 @@ export async function waitForEndpoint(endpoint: string) {
       });
       return res.status === 200;
     },
-    interval: 1500,
-    timeout: 60000,
+    interval,
+    timeout,
   });
 }

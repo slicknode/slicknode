@@ -16,7 +16,7 @@ export interface IWaitForParams {
 export async function waitFor(params: IWaitForParams) {
   const start = new Date().getTime();
 
-  return await new Promise(async (resolve, reject) => {
+  return await new Promise<void>(async (resolve, reject) => {
     if (await params.handler()) {
       resolve();
       return;

@@ -53,6 +53,11 @@ export default class DeployCommand extends StatusCommand {
     alias: flags.string({
       description: 'The alias of the project which is part of the endpoint URL',
     }),
+    timeout: flags.integer({
+      description:
+        'Number of milliseconds to wait for API to become available before triggering timeout error',
+      default: 30000,
+    }),
   };
 
   public async run(): Promise<void> {
@@ -302,7 +307,10 @@ export default class DeployCommand extends StatusCommand {
     // Wait for API to become available
     try {
       cli.action.start('Waiting for API to launch');
-      await waitForEndpoint(project.endpoint);
+      await waitForEndpoint(project.endpoint, {
+        interval: 1000,
+        timeout: input.flags.timeout,
+      });
       cli.action.stop();
     } catch (e) {
       cli.action.stop('failed');

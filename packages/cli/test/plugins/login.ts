@@ -19,6 +19,9 @@ export function login() {
         refreshToken: 'sef',
         refreshTokenLifetime: 344356,
       });
+      sinon.stub(fakeClient, 'logout').callsFake(async () => {
+        storage.clear();
+      });
       if (BaseCommand.prototype.getClient.hasOwnProperty('restore')) {
         throw new Error('getClient is already stubbed');
       }

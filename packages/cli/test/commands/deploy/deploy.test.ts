@@ -424,7 +424,7 @@ describe('deploy', () => {
     .nock('http://testproject', (api) =>
       api.post('/').reply(403, { data: { __typename: 'Query' } })
     )
-    .timeout(62000) // Testing wait for API timeout
+    // .timeout(62000) // Testing wait for API timeout
     .api(LIST_CLUSTER_QUERY, listClusterResult)
     .api(CREATE_PROJECT_MUTATION, createProjectResult)
     .prompt([true, true, false])
@@ -432,6 +432,8 @@ describe('deploy', () => {
       'deploy',
       '--env',
       'staging',
+      '--timeout',
+      '500',
     ])
     .it('displays warning message for unavailable API', (ctx) => {
       expect(ctx.stderr).to.contain(

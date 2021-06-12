@@ -2,6 +2,7 @@ import { expect, test } from '../../test';
 import * as path from 'path';
 import { DELETE_PROJECT_MUTATION } from '../../../src/commands/delete';
 import { readFileSync } from 'fs';
+import { unifyStderr } from '../../utils';
 
 function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);
@@ -23,7 +24,7 @@ describe('delete', () => {
     .workspaceCommand(projectPath('initialized'), ['delete'])
     .catch(/Entered project alias does not match\. Aborting delete\./)
     .it('aborts deletion for wrong alias input', (ctx) => {
-      expect(ctx.stderr).to.contain(
+      expect(unifyStderr(ctx.stderr)).to.contain(
         'WARNING: You are about to delete the project with all its data.'
       );
     });
