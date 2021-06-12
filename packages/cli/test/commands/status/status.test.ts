@@ -1,7 +1,7 @@
 import { expect, test } from '../../test';
 import * as path from 'path';
 import { MIGRATE_PROJECT_MUTATION } from '../../../src/commands/status';
-import { unifyStderr } from '../../utils';
+import { normalizeStderr } from '../../utils';
 
 function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);
@@ -234,7 +234,7 @@ describe('status', () => {
     ])
     .catch(/Abort/)
     .it('validates remote GraphQL schema', (ctx) => {
-      expect(unifyStderr(ctx.stderr)).to.contain(
+      expect(normalizeStderr(ctx.stderr)).to.contain(
         'There can be only one type named "Viewer"'
       );
     });
