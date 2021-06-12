@@ -1,29 +1,31 @@
-name: Node.js CI
+name: Slicknode CLI Test
 
 on: [push]
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12.x, 14.x, 16.x]
         os: [ubuntu-latest, windows-latest]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: yarn
-    - run: ./bin/run --version
-    - run: ./bin/run --help
-    - run: yarn test
-      env:
-        CI: true
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn
+      - name: Test CLI commands
+        working-directory: ./packages/cli
+        run: |
+          ./bin/run --version
+          ./bin/run --help
+      - run: yarn workspace slicknode test
+        env:
+          CI: true
     #- name: Submitting code coverage to codecov
     #  run: |
     #    ./node_modules/.bin/nyc report --reporter text-lcov > coverage.lcov
