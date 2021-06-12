@@ -36,8 +36,8 @@ describe('waitFor util', () => {
     await expect(
       waitFor({
         handler,
-        timeout: 1,
-        interval: 2,
+        timeout: 10,
+        interval: 20,
       })
     ).to.eventually.rejectedWith('Wait timeout exceeded');
     expect(handler.callCount).to.equal(2);
