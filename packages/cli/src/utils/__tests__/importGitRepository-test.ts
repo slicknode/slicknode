@@ -37,7 +37,7 @@ describe('importGitRepository', () => {
     const result = JSON.parse(
       (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
-    expect(result.name).to.equal('slicknode');
+    expect(result.private).to.equal(true);
   });
 
   it('loads git repository into folder keeping .git files', async () => {
@@ -56,7 +56,7 @@ describe('importGitRepository', () => {
     const result = JSON.parse(
       (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
-    expect(result.name).to.equal('slicknode');
+    expect(result.private).to.equal(true);
   });
 
   it('can checkout specific commit hash', async () => {
@@ -114,7 +114,7 @@ describe('importGitRepository', () => {
     const result = JSON.parse(
       (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
-    expect(result.name).to.equal('slicknode');
+    expect(result.private).to.equal(true);
   });
 
   it('throws error for invalid git repo', async () => {
