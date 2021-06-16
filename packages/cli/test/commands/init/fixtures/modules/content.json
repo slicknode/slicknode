@@ -1,0 +1,9 @@
+{
+  "id": "content",
+  "tags": { "latest": "0.0.1" },
+  "versions": {
+    "0.0.1": {
+      "dist": { "zip": "https://api.slicknode.com/archive/content_0.0.1.zip" }
+    }
+  }
+}

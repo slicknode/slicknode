@@ -381,10 +381,10 @@ export class BaseCommand extends Command {
    * Returns the project config
    * @returns {Promise.<null>}
    */
-  protected async getConfig(): Promise<IProjectConfig | null> {
+  protected async getConfig(dir?: string): Promise<IProjectConfig | null> {
     try {
       const data = fs.readFileSync(
-        path.join(this.getProjectRoot(), 'slicknode.yml'),
+        path.join(dir || this.getProjectRoot(), 'slicknode.yml'),
         'utf8'
       );
       try {

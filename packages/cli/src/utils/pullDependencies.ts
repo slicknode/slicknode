@@ -16,7 +16,7 @@ interface IPullDependenciesParams {
   repositoryUrl?: string;
 }
 
-export const GET_REPOSITORY_URL_QUERY = '{registryUrl}';
+export const GET_REPOSITORY_URL_QUERY = 'query GetRegistryUrl {registryUrl}';
 
 /**
  *
