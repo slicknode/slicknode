@@ -5,7 +5,7 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { ICluster, IEnvironmentConfig, IProjectChangeError } from '../types';
-import { loadProjectVersion, randomName } from '../utils';
+import { loadProjectVersion, packProject, randomName } from '../utils';
 import validate from '../validation/validate';
 import StatusCommand from './status';
 
@@ -20,7 +20,8 @@ import { isDependencyTreeLoaded } from '../utils/isDependencyTreeLoaded';
 import { pullDependencies } from '../utils/pullDependencies';
 import { waitForEndpoint } from '../utils/waitForEndpoint';
 import { PROJECT_ALIAS_REGEX } from '../validation';
-import { CREATE_PROJECT_MUTATION, LIST_CLUSTER_QUERY } from './init';
+import { CREATE_PROJECT_MUTATION } from './init';
+import { Uploadable } from 'slicknode-client';
 
 interface IChangeCounts {
   update: number;
@@ -110,13 +111,35 @@ export default class DeployCommand extends StatusCommand {
     }
 
     // Run migration
-    const env = await this.getOrCreateEnvironment();
+    const { env, created } = await this.getOrCreateEnvironment();
     // cli.action.start('Validating project status');
-    const validStatus = await this.loadAndPrintStatus(env);
-    // cli.action.stop();
+    if (!created) {
+      const validStatus = await this.loadAndPrintStatus(env);
+      // cli.action.stop();
 
-    // Check if we have valid status
-    if (!validStatus) {
+      // Check if we have valid status
+      if (!validStatus) {
+        return;
+      }
+    }
+
+    // Project was newly created, print new project info and exit
+    if (created) {
+      this.log(
+        chalk.green(
+          `\n\nDeployment successful! GraphQL Server for environment "${
+            input.flags.env || 'default'
+          }" is ready: \n\n` +
+            '    ' +
+            chalk.bold('Name: ') +
+            chalk.bold(env.name) +
+            '\n' +
+            chalk.bold('Endpoint: ') +
+            chalk.bold(env.endpoint) +
+            '    ' +
+            '\n'
+        )
+      );
       return;
     }
 
@@ -137,7 +160,7 @@ export default class DeployCommand extends StatusCommand {
     }
 
     cli.action.start('Deploying changes');
-    const result = await this.migrateProject(false, await env);
+    const result = await this.migrateProject(false, env);
     cli.action.stop();
 
     const serverErrors = _.get(result, 'data.migrateProject.errors', []).filter(
@@ -189,12 +212,15 @@ export default class DeployCommand extends StatusCommand {
     this.log(chalk.green('Deployment successful!'));
   }
 
-  public async getOrCreateEnvironment(): Promise<IEnvironmentConfig> {
+  public async getOrCreateEnvironment(): Promise<{
+    created: boolean;
+    env: IEnvironmentConfig;
+  }> {
     const input = this.parse(DeployCommand);
     const name = input.flags.env || 'default';
     const env = await this.getEnvironment(name);
     if (env) {
-      return env;
+      return { env, created: false };
     }
     const client = this.getClient();
 
@@ -280,8 +306,21 @@ export default class DeployCommand extends StatusCommand {
       },
     };
 
+    // Run server side validation and get status
+    const zip = await packProject(this.getProjectRoot());
+
+    // Convert zip to buffer
+    const file = (await new Promise((resolve, reject) => {
+      zip.toBuffer(resolve, reject);
+    })) as Uploadable;
+
     cli.action.start('Create project in cluster');
-    const result = await client.fetch(CREATE_PROJECT_MUTATION, variables);
+    const result = await client.fetch(
+      CREATE_PROJECT_MUTATION,
+      variables,
+      null,
+      { file }
+    );
     cli.action.stop();
     const project = _.get(result, 'data.createProject.node');
     if (!project) {
@@ -297,7 +336,6 @@ export default class DeployCommand extends StatusCommand {
     // Update environment
     const envConfig = {
       endpoint: project.endpoint,
-      version: project.version.id,
       alias: project.alias,
       name: project.name,
       id: project.id,
@@ -320,6 +358,6 @@ export default class DeployCommand extends StatusCommand {
       );
     }
 
-    return envConfig;
+    return { env: envConfig, created: true };
   }
 }

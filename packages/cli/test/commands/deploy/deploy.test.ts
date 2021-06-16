@@ -200,44 +200,13 @@ describe('deploy', () => {
       'Load available clusters',
       'Create project in cluster',
       'Waiting for API to launch',
-      'Comparing local changes with cluster state',
-      'Deploying changes',
-      'Updating local source files',
     ])
-    // Dry run request
-    .api(MIGRATE_PROJECT_MUTATION, {
-      data: {
-        migrateProject: {
-          changes: [],
-        },
-      },
-    })
-    // Actual migration
-    .api(MIGRATE_PROJECT_MUTATION, {
-      data: {
-        migrateProject: {
-          node: {
-            version: {
-              bundle: 'http://localhost/dummybundle.zip',
-            },
-          },
-        },
-      },
-    })
     .api(LIST_CLUSTER_QUERY, listClusterResult)
-    .nock('http://localhost', (loader) =>
-      loader
-        .get('/dummybundle.zip')
-        .replyWithFile(
-          200,
-          path.join(__dirname, 'testprojects', 'testbundle.zip')
-        )
-    )
     .nock('http://testproject', (api) =>
       api.post('/').reply(200, { data: { __typename: 'Query' } })
     )
     .api(CREATE_PROJECT_MUTATION, createProjectResult)
-    .prompt([true, true, true])
+    .prompt([true, true])
     .workspaceCommand(projectPath('with-module'), [
       'deploy',
       '--env',
@@ -378,56 +347,14 @@ describe('deploy', () => {
       'Load available clusters',
       'Create project in cluster',
       'Waiting for API to launch',
-      'Comparing local changes with cluster state',
     ])
-    // Dry run request
-    .api(MIGRATE_PROJECT_MUTATION, {
-      data: {
-        migrateProject: {
-          changes: [],
-        },
-      },
-    })
-    .nock('http://testproject', (api) =>
-      api.post('/').reply(200, { data: { __typename: 'Query' } })
-    )
-    .api(LIST_CLUSTER_QUERY, listClusterResult)
-    .api(CREATE_PROJECT_MUTATION, createProjectResult)
-    .prompt([true, true, false])
-    .workspaceCommand(projectPath('with-module'), [
-      'deploy',
-      '--env',
-      'staging',
-    ])
-    .it('aborts project deployment for new env on user input', (ctx) => {
-      expect(ctx.stdout).to.contain('Deployment aborted');
-    });
-
-  test
-    .login()
-    .stdout({ stripColor: true })
-    .stderr()
-    .cliActions([
-      'Load available clusters',
-      'Create project in cluster',
-      'Waiting for API to launch',
-      'Comparing local changes with cluster state',
-    ])
-    // Dry run request
-    .api(MIGRATE_PROJECT_MUTATION, {
-      data: {
-        migrateProject: {
-          changes: [],
-        },
-      },
-    })
     .nock('http://testproject', (api) =>
       api.post('/').reply(403, { data: { __typename: 'Query' } })
     )
     // .timeout(62000) // Testing wait for API timeout
     .api(LIST_CLUSTER_QUERY, listClusterResult)
     .api(CREATE_PROJECT_MUTATION, createProjectResult)
-    .prompt([true, true, false])
+    .prompt([true, true])
     .workspaceCommand(projectPath('with-module'), [
       'deploy',
       '--env',
@@ -439,7 +366,6 @@ describe('deploy', () => {
       expect(ctx.stderr).to.contain(
         'The project was created but the API is not reachable'
       );
-      expect(ctx.stdout).to.contain('Deployment aborted');
     });
 });
 
