@@ -1,53 +1,18 @@
 import { expect, test } from '../../test';
-import {
-  LIST_CLUSTER_QUERY,
-  CREATE_PROJECT_MUTATION,
-} from '../../../src/commands/init';
 import * as path from 'path';
 import fs from 'fs';
 import yaml from 'js-yaml';
-import {
-  DefinitionNode,
-  DocumentNode,
-  Kind,
-  ObjectTypeDefinitionNode,
-  parse,
-} from 'graphql';
+import { DefinitionNode, Kind, ObjectTypeDefinitionNode, parse } from 'graphql';
 import nock = require('nock');
+import { GET_REPOSITORY_URL_QUERY } from '../../../src/utils/pullDependencies';
 
-const clusterResult = {
-  data: {
-    listCluster: {
-      edges: [
-        {
-          node: {
-            id: 'Q2x1c3Rlcjox',
-            alias: 'gcp.us-east1',
-            name: 'Google US East 1 (South Carolina)',
-            pingUrl: 'http://ping.us-east1.slicknode.com/',
-          },
-        },
-      ],
-    },
-  },
+const REGISTRY_URL = 'http://localhost/repository/';
+const registryUrlResult = {
+  data: { registryUrl: REGISTRY_URL },
 };
 
 describe('init', () => {
   const EMPTY_DIR = path.join(__dirname, 'testprojects', 'empty');
-
-  test
-    .stdout()
-    .stderr()
-    .cliActions(['Load available clusters'])
-    .login()
-    .api(LIST_CLUSTER_QUERY, { data: null, errors: [{ message: 'Error' }] })
-    .command(['init'])
-    .catch(
-      'Could not load available clusters. Make sure you have a working internet connection and try again.'
-    )
-    .it('shows error when cluster could not be loaded', (ctx) => {
-      // expect(ctx.stderr).to.contain('done');
-    });
 
   test
     .stdout()
@@ -59,138 +24,6 @@ describe('init', () => {
     ])
     .catch('The directory is already initialized as a slicknode project')
     .it('checks if project is already initialized', (ctx) => {});
-
-  test
-    .stdout()
-    .stderr()
-    .cliActions([
-      'Load available clusters',
-      'Deploying project to cluster',
-      'Update local files',
-    ])
-    .login()
-    .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {
-      data: null,
-      errors: [{ message: 'Error' }],
-    })
-    .command(['init', '--dir', EMPTY_DIR])
-    .catch(
-      'Initialization failed: ERROR: Could not create project. Please try again later.\nError'
-    )
-    .it('shows error for failed project creation', (ctx) => {});
-
-  test
-    .stdout({
-      print: true,
-    })
-    .stderr({
-      print: true,
-    })
-    .cliActions([
-      'Load available clusters',
-      'Deploying project to cluster',
-      'Update local files',
-      'Waiting for API to launch',
-    ])
-    .login()
-    .nock('http://localhost', (loader) =>
-      loader
-        .get('/fakeversionbundle.zip')
-        .replyWithFile(
-          200,
-          path.join(__dirname, 'testprojects', 'testbundle.zip')
-        )
-    )
-    .nock('http://testproject', (api) =>
-      api.post('/').reply(403, { data: { __typename: 'Query' } })
-    )
-    .timeout(62000) // Testing API timeout
-    .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {
-      data: {
-        createProject: {
-          node: {
-            id: '234',
-            endpoint: 'http://testproject',
-            name: 'TestName',
-            version: {
-              id: 'someid',
-              bundle: 'http://localhost/fakeversionbundle.zip',
-            },
-          },
-        },
-      },
-    })
-    .workspaceCommand(EMPTY_DIR, ['init'])
-    .it('displays warning for unavailable project API', (ctx) => {
-      // Check slicknoderc contents
-      const slicknodeRc = JSON.parse(
-        fs.readFileSync(path.join(ctx.workspace!, '.slicknoderc')).toString()
-      );
-      expect(slicknodeRc).to.deep.equal({
-        default: {
-          version: 'someid',
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-        },
-      });
-
-      // Check slicknode.yml content
-      const slicknodeYml = yaml.safeLoad(
-        fs.readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString()
-      );
-      expect(slicknodeYml).to.deep.equal({
-        dependencies: {
-          '@private/test-app': './modules/test-app',
-          auth: 'latest',
-          core: 'latest',
-          image: 'latest',
-          relay: 'latest',
-        },
-      });
-
-      // Check if core modules were added to cache
-      const coreModuleYml = yaml.safeLoad(
-        fs
-          .readFileSync(
-            path.join(
-              ctx.workspace!,
-              '.slicknode',
-              'cache',
-              'modules',
-              'core',
-              'slicknode.yml'
-            )
-          )
-          .toString()
-      );
-      expect(coreModuleYml).to.deep.equal({
-        module: { id: 'core', label: 'Core' },
-      });
-
-      // Check schema.graphql of core module
-      const coreSchema = parse(
-        fs
-          .readFileSync(
-            path.join(
-              ctx.workspace!,
-              '.slicknode',
-              'cache',
-              'modules',
-              'core',
-              'schema.graphql'
-            )
-          )
-          .toString()
-      );
-      expect(coreSchema.kind).to.equal(Kind.DOCUMENT);
-      expect(coreSchema.definitions.length).to.be.above(5);
-
-      expect(ctx.stdout).to.contain('Endpoint: http://testproject');
-      expect(ctx.stdout).to.contain('Name: TestName');
-    });
 
   test
     .stdout()
@@ -207,121 +40,31 @@ describe('init', () => {
   test
     .stdout()
     .stderr()
-    .cliActions([
-      'Load available clusters',
-      'Deploying project to cluster',
-      'Update local files',
-    ])
+    .cliActions(['Updating dependencies'])
     .login()
-    .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {
-      data: {
-        createProject: {
-          node: {
-            id: '234',
-          },
-        },
-      },
-    })
-    .command(['init', '--dir', EMPTY_DIR])
-    .catch(
-      /Initialization failed: Project was created but could not be fully initialized/
-    )
-    .it('fails for successful creation but incomplete setup', (ctx) => {
+    .api(GET_REPOSITORY_URL_QUERY, registryUrlResult)
+    .workspaceCommand(EMPTY_DIR, ['init'])
+    .catch(/Update of module "core" failed/)
+    .it('fails if module cannot be loaded from registry', (ctx) => {
       // expect(ctx.stdout).to.contain('Creating project');
     });
 
-  test
+  mockRegistry(test)
     .stdout()
     .stderr()
-    .cliActions([
-      'Load available clusters',
-      'Deploying project to cluster',
-      'Update local files',
-    ])
+    .api(GET_REPOSITORY_URL_QUERY, registryUrlResult)
+    .cliActions(['Updating dependencies'])
     .login()
-    .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {
-      data: {
-        createProject: {
-          node: {
-            id: '234',
-            version: {
-              id: 'someid',
-              bundle: 'http://localhost/fakeversionbundle.zip',
-            },
-          },
-        },
-      },
-    })
-    .command(['init', '--dir', EMPTY_DIR])
-    .catch(/Initialization failed/)
-    .it('fails when bundle cannot be loaded', (ctx) => {
-      // expect(ctx.stdout).to.contain('Creating project');
-    });
-
-  test
-    .stdout()
-    .stderr()
-    .cliActions([
-      'Load available clusters',
-      'Deploying project to cluster',
-      'Update local files',
-      'Waiting for API to launch',
-    ])
-    .login()
-    .nock('http://localhost', (loader) =>
-      loader
-        .get('/fakeversionbundle.zip')
-        .replyWithFile(
-          200,
-          path.join(__dirname, 'testprojects', 'testbundle.zip')
-        )
-    )
-    .nock('http://testproject', (api) =>
-      api.post('/').reply(200, { data: { __typename: 'Query' } })
-    )
-    .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {
-      data: {
-        createProject: {
-          node: {
-            id: '234',
-            endpoint: 'http://testproject',
-            name: 'TestName',
-            version: {
-              id: 'someid',
-              bundle: 'http://localhost/fakeversionbundle.zip',
-            },
-          },
-        },
-      },
-    })
     .workspaceCommand(EMPTY_DIR, ['init'])
     .it('initializes project successfully', (ctx) => {
-      // Check slicknoderc contents
-      const slicknodeRc = JSON.parse(
-        fs.readFileSync(path.join(ctx.workspace!, '.slicknoderc')).toString()
-      );
-      expect(slicknodeRc).to.deep.equal({
-        default: {
-          version: 'someid',
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-        },
-      });
-
       // Check slicknode.yml content
       const slicknodeYml = yaml.safeLoad(
         fs.readFileSync(path.join(ctx.workspace!, 'slicknode.yml')).toString()
       );
       expect(slicknodeYml).to.deep.equal({
         dependencies: {
-          '@private/test-app': './modules/test-app',
           auth: 'latest',
           core: 'latest',
-          image: 'latest',
           relay: 'latest',
         },
       });
@@ -363,64 +106,17 @@ describe('init', () => {
       expect(coreSchema.kind).to.equal(Kind.DOCUMENT);
       expect(coreSchema.definitions.length).to.be.above(5);
 
-      expect(ctx.stdout).to.contain('Endpoint: http://testproject');
-      expect(ctx.stdout).to.contain('Name: TestName');
+      expect(ctx.stdout).to.contain('Project initialized');
     });
 
-  test
+  mockRegistry(test)
     .stdout()
     .stderr()
-    .cliActions([
-      'Load available clusters',
-      'Deploying project to cluster',
-      'Update local files',
-      'Waiting for API to launch',
-    ])
+    .cliActions(['Updating dependencies'])
     .login()
-    .nock('http://localhost', (loader) =>
-      loader
-        .get('/fakeversionbundle.zip')
-        .replyWithFile(
-          200,
-          path.join(__dirname, 'testprojects', 'testbundle.zip')
-        )
-    )
-    .nock('http://testproject', (api) =>
-      api.post('/').reply(200, { data: { __typename: 'Query' } })
-    )
-    .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {
-      data: {
-        createProject: {
-          node: {
-            id: '234',
-            endpoint: 'http://testproject',
-            name: 'TestName',
-            version: {
-              id: 'someid',
-              bundle: 'http://localhost/fakeversionbundle.zip',
-            },
-          },
-        },
-      },
-    })
+    .api(GET_REPOSITORY_URL_QUERY, registryUrlResult)
     .workspaceCommand(EMPTY_DIR, ['init', 'test-dir'])
     .it('initializes project successfully and creates directory', (ctx) => {
-      // Check slicknoderc contents
-      const slicknodeRc = JSON.parse(
-        fs
-          .readFileSync(path.join(ctx.workspace!, 'test-dir', '.slicknoderc'))
-          .toString()
-      );
-      expect(slicknodeRc).to.deep.equal({
-        default: {
-          version: 'someid',
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-        },
-      });
-
       // Check slicknode.yml content
       const slicknodeYml = yaml.safeLoad(
         fs
@@ -429,10 +125,8 @@ describe('init', () => {
       );
       expect(slicknodeYml).to.deep.equal({
         dependencies: {
-          '@private/test-app': './modules/test-app',
           auth: 'latest',
           core: 'latest',
-          image: 'latest',
           relay: 'latest',
         },
       });
@@ -476,8 +170,7 @@ describe('init', () => {
       expect(coreSchema.kind).to.equal(Kind.DOCUMENT);
       expect(coreSchema.definitions.length).to.be.above(5);
 
-      expect(ctx.stdout).to.contain('Endpoint: http://testproject');
-      expect(ctx.stdout).to.contain('Name: TestName');
+      expect(ctx.stdout).to.contain('Project initialized');
     });
 
   test
@@ -514,45 +207,16 @@ describe('init', () => {
     .catch(/Error checking out git reference "invalidreference"/)
     .it('fails for invalid git reference', (ctx) => {});
 
-  test
+  mockRegistry(test)
     .stdout()
     .stderr()
     .cliActions([
-      'Loading project template',
+      'Loading project template "https://github.com/slicknode/starter-nextjs-blog.git"',
       'Installing node dependencies',
-      'Load available clusters',
-      'Deploying project to cluster',
-      'Update local files',
-      'Waiting for API to launch',
+      'Updating dependencies',
     ])
     .login()
-    .nock('http://localhost1', (loader) =>
-      loader
-        .get('/fakeversionbundle.zip')
-        .replyWithFile(
-          200,
-          path.join(__dirname, 'testprojects', 'testbundle.zip')
-        )
-    )
-    .nock('http://testproject', (api) =>
-      api.post('/').reply(200, { data: { __typename: 'Query' } })
-    )
-    .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {
-      data: {
-        createProject: {
-          node: {
-            id: '234',
-            endpoint: 'http://testproject',
-            name: 'TestName',
-            version: {
-              id: 'someid',
-              bundle: 'http://localhost1/fakeversionbundle.zip',
-            },
-          },
-        },
-      },
-    })
+    .api(GET_REPOSITORY_URL_QUERY, registryUrlResult)
     .timeout(180000)
     .workspaceCommand(EMPTY_DIR, [
       'init',
@@ -560,21 +224,6 @@ describe('init', () => {
       'https://github.com/slicknode/starter-nextjs-blog.git',
     ])
     .it('initializes project successfully from template URL', (ctx) => {
-      // Check slicknoderc contents
-      const slicknodeRc = JSON.parse(
-        fs
-          .readFileSync(path.join(ctx.workspace!, 'test-dir', '.slicknoderc'))
-          .toString()
-      );
-      expect(slicknodeRc).to.deep.equal({
-        default: {
-          version: 'someid',
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-        },
-      });
-
       // Check slicknode.yml content
       const slicknodeYml = yaml.safeLoad(
         fs
@@ -583,8 +232,9 @@ describe('init', () => {
       );
       expect(slicknodeYml).to.deep.equal({
         dependencies: {
-          '@private/test-app': './modules/test-app',
+          '@private/blog': './modules/blog',
           auth: 'latest',
+          content: 'latest',
           core: 'latest',
           image: 'latest',
           relay: 'latest',
@@ -630,8 +280,7 @@ describe('init', () => {
       expect(coreSchema.kind).to.equal(Kind.DOCUMENT);
       expect(coreSchema.definitions.length).to.be.above(5);
 
-      expect(ctx.stdout).to.contain('Endpoint: http://testproject');
-      expect(ctx.stdout).to.contain('Name: TestName');
+      expect(ctx.stdout).to.contain('Project initialized');
 
       // Check if blog module was downloaded from git
       const blogSchema = parse(
@@ -672,67 +321,23 @@ describe('init', () => {
       expect(nextPackageJson.name).to.equal('next');
     });
 
-  test
+  mockRegistry(test)
     .stdout()
     .stderr()
     .cliActions([
       'Loading project template',
       'Installing node dependencies',
-      'Load available clusters',
-      'Deploying project to cluster',
-      'Update local files',
-      'Waiting for API to launch',
+      'Updating dependencies',
     ])
     .login()
-    .nock('http://localhost', (loader) =>
-      loader
-        .get('/fakeversionbundle.zip')
-        .replyWithFile(
-          200,
-          path.join(__dirname, 'testprojects', 'testbundle.zip')
-        )
-    )
-    .nock('http://testproject', (api) =>
-      api.post('/').reply(200, { data: { __typename: 'Query' } })
-    )
-    .api(LIST_CLUSTER_QUERY, clusterResult)
-    .api(CREATE_PROJECT_MUTATION, {
-      data: {
-        createProject: {
-          node: {
-            id: '234',
-            endpoint: 'http://testproject',
-            name: 'TestName',
-            version: {
-              id: 'someid',
-              bundle: 'http://localhost/fakeversionbundle.zip',
-            },
-          },
-        },
-      },
-    })
+    .api(GET_REPOSITORY_URL_QUERY, registryUrlResult)
     .timeout(180000)
     .workspaceCommand(EMPTY_DIR, [
       'init',
       'test-dir',
       'https://github.com/slicknode/starter-nextjs-blog.git#b3262fc1ac2793e7199ba8b2b546d767c45ad4e2',
     ])
-    .it('initializes project successfully from commit hash', (ctx) => {
-      // Check slicknoderc contents
-      const slicknodeRc = JSON.parse(
-        fs
-          .readFileSync(path.join(ctx.workspace!, 'test-dir', '.slicknoderc'))
-          .toString()
-      );
-      expect(slicknodeRc).to.deep.equal({
-        default: {
-          version: 'someid',
-          id: '234',
-          endpoint: 'http://testproject',
-          name: 'TestName',
-        },
-      });
-
+    .it('initializes from commit hash successfully', (ctx) => {
       // Check slicknode.yml content
       const slicknodeYml = yaml.safeLoad(
         fs
@@ -741,10 +346,8 @@ describe('init', () => {
       );
       expect(slicknodeYml).to.deep.equal({
         dependencies: {
-          '@private/test-app': './modules/test-app',
           auth: 'latest',
           core: 'latest',
-          image: 'latest',
           relay: 'latest',
         },
       });
@@ -788,8 +391,7 @@ describe('init', () => {
       expect(coreSchema.kind).to.equal(Kind.DOCUMENT);
       expect(coreSchema.definitions.length).to.be.above(5);
 
-      expect(ctx.stdout).to.contain('Endpoint: http://testproject');
-      expect(ctx.stdout).to.contain('Name: TestName');
+      expect(ctx.stdout).to.contain('Project initialized');
 
       // Check if node_modules was installed
       const packageJson = JSON.parse(
@@ -804,3 +406,28 @@ describe('init', () => {
       });
     });
 });
+
+function mockRegistry(t: typeof test) {
+  // Mock repository detail requests for modules
+  const url = 'http://localhost';
+  return t.nock(url, (loader) =>
+    loader
+      .persist(true)
+      .get((uri) => {
+        return uri.startsWith('/repository');
+      })
+      .reply(200, (uri) => {
+        const file = uri.split('/').pop()!;
+        if (file.endsWith('.zip')) {
+          const archive = fs.readFileSync(
+            path.resolve(__dirname, `./fixtures/modules/${file}`)
+          );
+          if (!archive) {
+            throw new Error(`Fixture for module ${file} does not exist`);
+          }
+          return archive;
+        }
+        return require(`./fixtures/modules/${file}`);
+      })
+  );
+}

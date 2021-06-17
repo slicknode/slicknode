@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { DEFAULT_CONSOLE_URL } from '../config';
 import { EnvCommand } from '../base/env-command';
 import * as utils from '../utils';
 
@@ -23,12 +24,9 @@ export default class ConsoleCommand extends EnvCommand {
     const environment = await this.getEnvironment(input.flags.env || 'default');
 
     if (!environment) {
-      this.error(
-        chalk.red(
-          'ERROR: The directory is not a valid slicknode project. ' +
-            'Run this command from your project folder with an initialized project.'
-        )
-      );
+      // Open start page of console
+      utils.openUrl(DEFAULT_CONSOLE_URL);
+      return;
     }
 
     // Ensure user is authenticate

@@ -3,3 +3,5 @@
  */
 
 export const DEFAULT_API_ENDPOINT = 'https://api.slicknode.com/';
+
+export const DEFAULT_CONSOLE_URL = 'https://console.slicknode.com';

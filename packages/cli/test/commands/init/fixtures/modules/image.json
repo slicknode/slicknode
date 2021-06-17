@@ -1,0 +1,9 @@
+{
+  "id": "image",
+  "tags": { "latest": "0.0.1" },
+  "versions": {
+    "0.0.1": {
+      "dist": { "zip": "http://localhost/repository/image.zip" }
+    }
+  }
+}

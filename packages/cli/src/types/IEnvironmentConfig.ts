@@ -3,7 +3,6 @@
  */
 
 export interface IEnvironmentConfig {
-  version: string;
   endpoint: string;
   alias: string;
   id: string;

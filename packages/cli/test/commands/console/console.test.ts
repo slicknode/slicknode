@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 import * as utils from '../../../src/utils';
 import { GET_CONSOLE_URL_QUERY } from '../../../src/commands/console';
+import { DEFAULT_CONSOLE_URL } from '../../../src/config';
 
 function projectPath(name: string) {
   return path.join(__dirname, 'testprojects', name);
@@ -14,9 +15,16 @@ describe('console', () => {
   test
     .stdout({ stripColor: true })
     .stderr({ stripColor: true })
+    .do((ctx: { stub?: sinon.SinonStub }) => {
+      ctx.stub = sinon.stub(utils, 'openUrl');
+    })
     .command(['console', '--dir', projectPath('empty')])
-    .catch(/The directory is not a valid slicknode project/)
-    .it('fails for folder without slicknode.yml', (ctx) => {});
+    .finally((ctx) => {
+      ctx.stub!.restore();
+    })
+    .it('opens default console URL for folder without slicknode.yml', (ctx) => {
+      expect(ctx.stub!.calledWith(DEFAULT_CONSOLE_URL)).to.be.true;
+    });
 
   test
     .stdout({ stripColor: true, print: true })
