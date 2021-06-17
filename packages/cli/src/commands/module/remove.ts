@@ -63,7 +63,7 @@ export default class ModuleRemoveCommand extends BaseCommand {
       if (values.confirm) {
         const promises = removedDirs.map(
           (dir) =>
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
               rimraf(path.join(projectRoot, dir), (err) => {
                 if (err) {
                   reject(err);
