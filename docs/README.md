@@ -12,6 +12,14 @@ Start the local development server:
 
     mkdocs serve
 
+## Build
+
+To create a static site build of the documentation:
+
+    mkdocs build
+
+This will create a static site export into the [./site](./site) folder.
+
 ## More Docs
 
 Documentation of the [mkdocs material theme](https://squidfunk.github.io/mkdocs-material/)
