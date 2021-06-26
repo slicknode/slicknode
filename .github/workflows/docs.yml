@@ -1,0 +1,26 @@
+name: Deploy Documentation
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+    working-directory: ./docs
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install awscli
+      - name: Build + Deploy
+        run: |
+          mkdocs build
+          aws s3 sync ./site "s3://$DOCS_BUCKET/docs" --cache-control max-age=3600,public --acl public-read
