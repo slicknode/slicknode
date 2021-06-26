@@ -4,7 +4,7 @@ cfn-flip==1.2.1
 Click==7.0
 graphqllexer @ git+https://github.com/ivome/pygments-graphql-lexer.git@92b69328d53dc1c6f019d16415ad340ea6e47d28
 htmlmin==0.1.12
-Jinja2==2.10.1
+Jinja2==2.11.3
 jsmin==2.2.2
 livereload==2.6.1
 Markdown==3.1.1
