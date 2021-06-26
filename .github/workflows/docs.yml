@@ -20,8 +20,15 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install awscli
-      - name: Build + Deploy
+      - name: Build
         working-directory: ./docs
         run: |
           mkdocs build
+      - name: Deploy
+        working-directory: ./docs
+        run: |
           aws s3 sync ./site "s3://$DOCS_BUCKET/docs" --cache-control max-age=3600,public --acl public-read
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          DOCS_BUCKET: ${{ secrets.DOCS_BUCKET }}
