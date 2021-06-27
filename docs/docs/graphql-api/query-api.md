@@ -565,7 +565,7 @@ query GetPost($slug: String!) {
     # since `preview` was set to true in a parent field
     category {
       name
-      # This will also be returned in preview node, preview settings cascades
+      # This will also be returned in preview node, the preview setting cascades
       articles {
         edges {
           node {
