@@ -521,15 +521,15 @@ The sorting direction is a system enum type with the values `ASC` for ascending 
 The Slicknode GraphQL API has two modes to load content for all nodes that implement the `Content` interface.
 
 - **Published Mode (default):** This mode returns all content from the published storage. Unpublished content is not returned from the API.
-- **Preview Mode:** In this mode, the API returns all content from the draft storage including unpublished content.
+- **Preview Mode:** In this mode, the API returns all content from the preview storage including unpublished content.
 
 Usually you would use the preview mode to preview changes and unpublished content and use the published node to deliver the content to end users.
 
-By default, the API returns content in the published mode. There are several ways to enable the published mode of the API.
+By default, the API returns content in the published mode. There are several ways to set the mode of the API.
 
 ### HTTP-Header
 
-You can enable the preview mode by adding the HTTP header `X-Slicknode-Preview: 1` in requests to the GraphQL API:
+You can enable set preview mode by adding the HTTP header `X-Slicknode-Preview` in requests to the GraphQL API:
 
 ```javascript
 const endpoint = 'https://<your-slicknode-endpoint>';
@@ -550,7 +550,7 @@ fetch(endpoint, {
 
 ### Input Arguments
 
-You can enable the preview and published mode for individual parts of your GraphQL query by using the `preview` input argument. The selected mode will then be used to return the data of that node and the entire selection set of all its children.
+You can set the preview and published mode for individual parts of your GraphQL query by using the `preview` input argument. The selected mode will then be used to return the data of that node and the entire selection set of all its children.
 
 **For example:**
 

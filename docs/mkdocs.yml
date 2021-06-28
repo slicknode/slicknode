@@ -7,64 +7,67 @@ nav:
   - Home: index.md
   - Quickstart: quickstart.md
   - Tutorial:
-    - 1. Introduction: tutorial/index.md
-    - 2. Project Description: tutorial/description.md
-    - 3. Setup: tutorial/setup.md
-    - 4. Create Module: tutorial/create-module.md
-    - 5. Data Modeling I: tutorial/data-modeling.md
-    - 6. GraphQL API: tutorial/graphql-api.md
-    - 7. Data Modeling II (relations): tutorial/data-modeling-2.md
-    - 8. Data Modeling III (relations): tutorial/data-modeling-3.md
-    - 9. Publishing Workflow: tutorial/publishing-workflow.md
-    - 10. Authorization: tutorial/authorization.md
-    - 11. Comment System: tutorial/comment-system.md
+      - 1. Introduction: tutorial/index.md
+      - 2. Project Description: tutorial/description.md
+      - 3. Setup: tutorial/setup.md
+      - 4. Create Module: tutorial/create-module.md
+      - 5. Data Modeling I: tutorial/data-modeling.md
+      - 6. GraphQL API: tutorial/graphql-api.md
+      - 7. Data Modeling II (relations): tutorial/data-modeling-2.md
+      - 8. Data Modeling III (relations): tutorial/data-modeling-3.md
+      - 9. Publishing Workflow: tutorial/publishing-workflow.md
+      - 10. Authorization: tutorial/authorization.md
+      - 11. Comment System: tutorial/comment-system.md
   - Data Modeling:
-    - Introduction: data-modeling/introduction.md
-    - Modules: data-modeling/modules.md
-    - Object Types: data-modeling/object-types.md
-    - Scalar Types: data-modeling/scalar-types.md
-    - Enum Types: data-modeling/enum-types.md
-    - Union Types: data-modeling/union-types.md
-    - Relations: data-modeling/relations.md
-    - Indexes / Unique Constraints: data-modeling/indexes.md
-    - Type Extensions: data-modeling/extensions.md
-    - Interfaces:
-      - Overview: data-modeling/interfaces/introduction.md
-      - Node: data-modeling/interfaces/node.md
-      - Content: data-modeling/interfaces/content.md
-      - TimeStampedInterface: data-modeling/interfaces/time-stamped-interface.md
-    - Images: data-modeling/images.md
-    - Files: data-modeling/files.md
+      - Introduction: data-modeling/introduction.md
+      - Modules: data-modeling/modules.md
+      - Object Types: data-modeling/object-types.md
+      - Scalar Types: data-modeling/scalar-types.md
+      - Enum Types: data-modeling/enum-types.md
+      - Union Types: data-modeling/union-types.md
+      - Relations: data-modeling/relations.md
+      - Indexes / Unique Constraints: data-modeling/indexes.md
+      - Type Extensions: data-modeling/extensions.md
+      - Interfaces:
+          - Overview: data-modeling/interfaces/introduction.md
+          - Node: data-modeling/interfaces/node.md
+          - Content: data-modeling/interfaces/content.md
+          - TimeStampedInterface: data-modeling/interfaces/time-stamped-interface.md
+      - Images: data-modeling/images.md
+      - Files: data-modeling/files.md
   - Client Setup:
-    - Introduction: client-setup/index.md
-    - Apollo Client:
-      - Setup / Usage: client-setup/apollo-client/index.md
-      - React: client-setup/apollo-client/react.md
-    - GraphQL Clients: client-setup/clients.md
+      - Introduction: client-setup/index.md
+      - Apollo Client:
+          - Setup / Usage: client-setup/apollo-client/index.md
+          - React: client-setup/apollo-client/react.md
+      - GraphQL Clients: client-setup/clients.md
   - GraphQL API:
-    - Introduction: graphql-api/index.md
-    - Query API: graphql-api/query-api.md
-    - Mutation API: graphql-api/mutation-api.md
+      - Introduction: graphql-api/index.md
+      - Query API: graphql-api/query-api.md
+      - Mutation API: graphql-api/mutation-api.md
   - Extensions:
-    - Overview: extensions/index.md
-    - Create Extension: extensions/create-extension.md
-    - Handlers: extensions/handlers.md
-    - Resolvers: extensions/resolvers.md
-    - Mutations: extensions/mutations.md
-    - Listeners: extensions/listeners.md
-    - Remote Modules: extensions/remote-modules.md
-    - Apollo Federation: extensions/apollo-federation.md
-    - Settings / Environment Variables: extensions/settings.md
+      - Overview: extensions/index.md
+      - Create Extension: extensions/create-extension.md
+      - Handlers: extensions/handlers.md
+      - Resolvers: extensions/resolvers.md
+      - Mutations: extensions/mutations.md
+      - Listeners: extensions/listeners.md
+      - Remote Modules: extensions/remote-modules.md
+      - Apollo Federation: extensions/apollo-federation.md
+      - Settings / Environment Variables: extensions/settings.md
   - Auth:
-    - Overview: auth/index.md
-    - Authentication:
-      - Introduction: auth/authentication/index.md
-      - Custom Authentication: auth/authentication/custom.md
-      - Email / Password: auth/authentication/email-password.md
-    - Authorization: auth/authorization/index.md
+      - Overview: auth/index.md
+      - Authentication:
+          - Introduction: auth/authentication/index.md
+          - Custom Authentication: auth/authentication/custom.md
+          - Email / Password: auth/authentication/email-password.md
+      - Authorization: auth/authorization/index.md
   - Reference:
-    - slicknode.yml: reference/slicknode-yml.md
+      - slicknode.yml: reference/slicknode-yml.md
   - Slicknode CLI: cli/index.md
+
+repo_url: https://github.com/slicknode/slicknode
+edit_uri: edit/master/docs/docs/
 
 theme:
   name: 'material'
