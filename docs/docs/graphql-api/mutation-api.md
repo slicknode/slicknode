@@ -102,10 +102,10 @@ node types. For nodes with the `Content` interface, Slicknode adds two additiona
 
 There are two different storage types in the Slicknode API for all content nodes, which are represented by separate database tables under the hood:
 
-- **A draft storage** for creating, editing and reviewing content. When a content node is first created, it is automatically assigned the `DRAFT` status.
-- **A published storage** that you usually use to deliver the production live content. Content nodes have the `PUBLISHED` status will be copied from the draft storage to the published storage.
+- **A preview storage** for creating, editing and reviewing content. When a content node is first created, it is automatically assigned the `DRAFT` status and added to the preview storage.
+- **A published storage** to deliver the production live content. When you assign the `PUBLISHED` status to a content node, it will be copied from the preview storage to the published storage.
 
-The two storages are independent. You can make changes to content in the draft storage without affecting the same node that already has a copy in the published storage. You can create additional statuses via the console by adding additional `ContentStatus` nodes. Custom content statuses allow you to create custom workflows like **Draft > Review > Q&A > Published**. The statuses will only be applied to nodes in the draft storage. Only the `PUBLISHED` status moves the node to the published storage.
+The two storages are independent. You can make changes to content in the preview storage without affecting the same node that already has a copy in the published storage. You can create additional statuses via the console by adding additional `ContentStatus` nodes. Custom content statuses allow you to create custom workflows like **Draft > Review > Q&A > Published**. The statuses will only be applied to nodes in the preview storage. Only the `PUBLISHED` status moves the node to the published storage.
 
 Use the publish and unpublish mutations to manage the status of content nodes.
 
@@ -133,8 +133,10 @@ The publish mutation has the following rules and behaviors:
 - `$status` can be any of the statuses that are available as `ContentStatus` in your Slicknode project.
 - The statuses `DRAFT` and `PUBLISHED` are builtin and cannot be changed.
 - Newly created nodes are automatically assigned the `DRAFT` status.
-- When you change the status to `PUBLISHED`, the node is copied to the published storage and the status is in the preview storage is changed to `PUBLISHED` as well.
-- After a content node is copied to the publishing storage, publishing a node to a new status will only be applied to the node in the draft storage. The published node will remain published and won't be affected by updates that are applied to the node. To apply changes to the node in the draft storage to the published storage, publish the node to the `PUBLISHED` status again.
+- When you change the status to `PUBLISHED`, the node is copied to the published storage.
+- Changes that are applied via the update mutation are only applied to nodes in the preview storage.
+- Publishing a node to the `PUBLISHED` status will be applied to both the preview and the published storage.
+- Publishing a node to any other than the `PUBLISHED` status will only be applied to the preview storage.
 
 ### Unpublish
 
@@ -155,5 +157,5 @@ mutation PublishPost($ids: [ID!]!) {
 
 This will remove the nodes with the provided `$ids` from the published storage and a list of the updated nodes is returned.
 
-- Unpublishing a node does not affect the draft storage. So all changes to the node won't be affected and the unpublished node can be published again via the publish mutation.
+- Unpublishing a node does not affect the preview storage. So all changes to the node won't be affected and the unpublished node can be published again via the publish mutation.
 - To remove a node from your project entirely, use the delete mutation instead.
