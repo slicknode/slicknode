@@ -529,7 +529,7 @@ By default, the API returns content in the published mode. There are several way
 
 ### HTTP-Header
 
-You can enable the preview mode by adding the HTTP header `X-Slicknode-Preview: 1` to requests to the GraphQL API:
+You can enable the preview mode by adding the HTTP header `X-Slicknode-Preview: 1` in requests to the GraphQL API:
 
 ```javascript
 const endpoint = 'https://<your-slicknode-endpoint>';
@@ -598,3 +598,110 @@ query GetPost($slug: String!) {
 ```
 
 Setting the preview mode via HTTP-Header and via input arguments can be used in combination. In that case, the preview setting of the HTTP header is applied to the query and the setting of the input argument overrides the setting for the particular part of the GraphQL query.
+
+## Localization
+
+Slicknode has comprehensive locatiztion capabilities that allow you to localize content for your audiences. The localiztion features are available for all types that implement the `Content` interface.
+
+Slicknode has several ways to set the locale and load localized content via the GraphQL API.
+
+### HTTP-Header
+
+You can set the locale for your content by adding the HTTP header `X-Slicknode-Locale` in requests to the GraphQL API, for example:
+
+```javascript
+const endpoint = 'https://<your-slicknode-endpoint>';
+fetch(endpoint, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    'X-Slicknode-Locale': 'en-US',
+  },
+  body: JSON.stringify({
+    query: '{ Blog_getPostBySlug(slug: "my-article") {title} }',
+  }),
+})
+  .then((r) => r.json())
+  .then((data) => console.log('data returned:', data));
+```
+
+This will load all content nodes with the locale `en-US`.
+
+### Input Arguments
+
+You can set the locale for individual parts of your GraphQL query by using the `locale` input argument. The specified locale will then be used to return the data of that node and the entire selection set of all its children.
+
+**For example:**
+
+```graphql
+query GetPost($slug: String!) {
+  # This will return the blog post for the `de-DE` locale
+  postDE: Blog_getPostBySlug(slug: $slug, locale: "de-DE") {
+    title
+    # ...
+
+    # The category will be loaded with the `de-DE` locale,
+    # since the `locale` was set to `de-DE` in a parent field
+    category {
+      name
+      # This will also be returned with the `de-DE`, the locale setting cascades
+      articles {
+        edges {
+          node {
+            title
+          }
+        }
+      }
+    }
+  }
+
+  # Returns the english version of the post
+  postEN: Blog_getPostBySlug(slug: $slug, locale: "en-US") {
+    title
+    # You can also override the locale in a child selection set.
+    # `category` will now be loaded for the locale `de-DE`
+    category(locale: "de-DE") {
+      name
+      # Articles will now be loaded for the locale `de-DE`,
+      # since the `locale` setting of the closest parent is `de-DE`
+      articles {
+        edges {
+          node {
+            title
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+You can configure the available locales by adding and removing nodes of type `Locale` to your project via the Slicknode console or the API.
+
+### Loading Localiztions
+
+You can load all localizations of a content node via the `_localizations` field that is automatically added to all types that implement the `Content` interface.
+
+```graphql
+query GetTranslations($slug: String!) {
+  Blog_getPostBySlug(slug: $slug) {
+    # Returns the title in the default locale (or set via HTTP-Header)
+    title
+    locale {
+      code
+    }
+    # List of all localiztions for the particular content node
+    _localizations {
+      edges {
+        node {
+          title
+          locale {
+            code
+          }
+        }
+      }
+    }
+  }
+}
+```
