@@ -52,7 +52,7 @@
     "rimraf": "^3.0.2",
     "slicknode-client": "^0.4.1",
     "slicknode-runtime": "^0.3.0",
-    "tar": "^6.0.5",
+    "tar": "^6.1.9",
     "tslib": "^1",
     "uuid": "^8.3.2",
     "validator": "^13.5.2",
