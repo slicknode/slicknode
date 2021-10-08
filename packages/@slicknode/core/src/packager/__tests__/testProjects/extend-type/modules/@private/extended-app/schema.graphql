@@ -1,0 +1,10 @@
+extend type Test_Test {
+  """Test extension"""
+  extendedField: String
+
+  users: [User]! @relation(path: "Test_Test=Test_test.User")
+}
+
+extend type User {
+  Test_test: Test_Test
+}

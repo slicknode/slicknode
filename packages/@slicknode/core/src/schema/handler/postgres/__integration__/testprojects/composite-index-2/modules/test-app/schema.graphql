@@ -1,0 +1,20 @@
+type Test_Test implements Node
+@index(fields: ["connected", "boolean"])
+{
+  id: ID!
+  connected: Test_Connected
+  string: String!
+  description: String!
+  boolean: Boolean
+  float: Float
+}
+
+type Test_Connected implements Node {
+  id: ID!
+  name: String
+}
+
+type Test_AddIndex implements Node @index(fields: ["name"]) {
+  id: ID!
+  name: String
+}

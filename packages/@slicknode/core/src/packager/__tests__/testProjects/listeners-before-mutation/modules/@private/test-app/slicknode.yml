@@ -1,0 +1,12 @@
+module:
+  id: '@private/test-app'
+  label: Private Module
+  namespace: Test
+
+listeners:
+  - event: mutation.uploadImage.BEFORE
+    handler: src/myHook.js
+
+runtime:
+  engine: nodejs@8
+

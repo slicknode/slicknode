@@ -1,0 +1,8 @@
+type Blog_Post implements Node {
+  id: ID!
+  string: String
+  uniqueString: String @unique
+  int: Int
+  uniqueInt: Int @unique
+  publishedAt: DateTime
+}

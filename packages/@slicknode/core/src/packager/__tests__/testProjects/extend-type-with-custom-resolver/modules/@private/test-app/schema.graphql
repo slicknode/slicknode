@@ -1,0 +1,10 @@
+"""Test type"""
+type Test_Test {
+  id: ID!
+  """Test title"""
+  title: String
+}
+
+extend type User {
+  Test_someField: String
+}

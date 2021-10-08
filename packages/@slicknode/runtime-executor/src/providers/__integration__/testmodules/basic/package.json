@@ -1,0 +1,30 @@
+{
+  "name": "testproject",
+  "version": "0.1.0",
+  "description": "Slicknode runtime testproject",
+  "main": "",
+  "type": "module",
+  "options": {
+    "mocha": "--check-leaks --full-trace src/**/__tests__/**/*-test.js",
+    "mochacoverage": "-t 100000 --check-leaks --full-trace src/**/__*__/**/*-test.js"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "check": "flow check",
+    "clean": "rimraf dist/*",
+    "test": "npm run lint && npm run check && npm run testonly",
+    "testonly": "NODE_PATH=src babel-node ./node_modules/.bin/_mocha $npm_package_options_mocha",
+    "build": "npm run clean && babel --ignore __tests__ -d dist src && npm run build-dot-flow",
+    "build-dot-flow": "find ./src -name '*.js' -not -path '*/__tests__*' | while read filepath; do cp $filepath `echo $filepath | sed 's/\\/src\\//\\/dist\\//g'`.flow; done"
+  },
+  "private": true,
+  "directories": {},
+  "dependencies": {
+    "bcrypt": "^2.0.1",
+    "lodash": "^4.17.4"
+  },
+  "peerDependencies": {},
+  "files": [],
+  "author": "Ivo Meißner",
+  "license": "UNLICENSED"
+}

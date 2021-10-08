@@ -1,0 +1,14 @@
+type Member implements Node {
+  id: ID!
+  groups: [Group] @relation(path: "Article=article.Comment")
+}
+
+type Membership implements Node {
+    id: ID!
+    member: Member!
+    group: Member!
+}
+
+type Group implements Node {
+  id: ID!
+}

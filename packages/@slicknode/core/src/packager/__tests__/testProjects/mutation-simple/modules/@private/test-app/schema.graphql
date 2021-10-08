@@ -1,0 +1,10 @@
+input Test_TestMutationInput {
+  value: String
+}
+
+extend type Mutation {
+  """
+  Some description
+  """
+  Test_testMutation(input: Test_TestMutationInput!): String
+}

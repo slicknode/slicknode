@@ -1,0 +1,8 @@
+"""Test type"""
+type Test_Test {
+  """Test title"""
+  text: String @input(type: TEXT)
+  password: String @input(type: PASSWORD)
+  textarea: String @input(type: TEXTAREA)
+  markdown: String @input(type: MARKDOWN)
+}

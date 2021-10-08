@@ -1,0 +1,6 @@
+dependencies:
+  core: latest
+  file: latest
+  invalid-app: latest
+  relay: latest
+

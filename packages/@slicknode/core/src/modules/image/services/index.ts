@@ -1,0 +1,1 @@
+export { updateImageMetaData } from './updateImageMetaData';

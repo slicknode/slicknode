@@ -1,0 +1,101 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: test-runtime
+spec:
+  selector:
+    matchLabels:
+      app: test-runtime
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'docker/default'
+        apparmor.security.beta.kubernetes.io/allowedProfileNames: 'runtime/default'
+        seccomp.security.alpha.kubernetes.io/defaultProfileName:  'docker/default'
+        apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
+      labels:
+        app: test-runtime
+    spec:
+      automountServiceAccountToken: false
+      volumes:
+      - name: user-source
+        emptyDir: {}
+      containers:
+      # The runtime server for code execution
+      - name: server
+        image: slicknode-runtime-server:v1
+        volumeMounts:
+        - mountPath: /data
+          name: user-source
+          readOnly: true
+        ports:
+        - containerPort: 8080
+        env:
+          - name: SOURCE_ROOT
+            value: /data
+          - name: SOURCE_LOADER_ENDPOINT
+            value: http://localhost:3000/
+          - name: PORT
+            value: "8080"
+          - name: PREFIX
+            value: webserverruntime/sources/testnamespace/
+        securityContext:
+          readOnlyRootFilesystem: true
+        #  runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+      # Source loader sidecar container
+      - name: source-loader
+        image: slicknode-source-loader:v1
+        volumeMounts:
+        - mountPath: /data
+          name: user-source
+        ports:
+        - containerPort: 3000
+        env:
+          - name: S3_AWS_SECRET_KEY
+            value: ${S3_AWS_SECRET_KEY}
+          - name: S3_AWS_ACCESS_KEY
+            value: ${S3_AWS_ACCESS_KEY}
+          - name: S3_SOURCE_BUCKET
+            value: runtime
+          - name: S3_SOURCE_ENDPOINT
+            value: ${S3_SOURCE_ENDPOINT}
+          - name: PREFIX
+            value: webserverruntime/sources/testnamespace/
+          - name: SOURCE_DIR
+            value: /data
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+        #  runAsNonRoot: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 1
+          periodSeconds: 3
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: test-runtime
+spec:
+  selector:
+    app: test-runtime
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: NodePort

@@ -1,0 +1,13 @@
+module:
+  id: '@private/test-app'
+  label: Private Module
+  namespace: Test
+
+
+runtime:
+  engine: nodejs@8
+
+resolvers:
+  Mutation:
+    testMutation:
+      handler: src/resolvers/testMutation

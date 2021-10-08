@@ -1,0 +1,21 @@
+query Account_AccountPermission1 {
+  scope(role: STAFF, operations: [CREATE, UPDATE, DELETE, READ])
+}
+
+
+query Account_AccountPermission2($user_id: ID!) {
+  scope(role: AUTHENTICATED, operations: [CREATE, UPDATE, DELETE, READ])
+  node(filter: {managedBy: {users: {node: {roleAdmin: true, user: {id: {eq: $user_id}}}}}})
+}
+
+
+query Account_AccountPermission3($user_id: ID!) {
+  scope(role: AUTHENTICATED, operations: [CREATE, UPDATE, READ])
+  node(filter: {managedBy: {users: {node: {user: {id: {eq: $user_id}}}}}})
+}
+
+
+query Account_AccountPermission4($user_id: ID!) {
+  scope(role: AUTHENTICATED, operations: [READ])
+  node(filter: {users: {node: {user: {id: {eq: $user_id}}}}})
+}

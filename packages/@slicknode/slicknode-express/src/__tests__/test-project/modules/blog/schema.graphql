@@ -1,0 +1,49 @@
+type Blog_Post implements Node {
+  id: ID!
+  title: String
+  slug: String! @unique
+  text: String
+  description: String
+}
+
+"""
+A Keyword
+"""
+type Blog_Keyword implements Node & TimeStampedInterface {
+  id: ID!
+
+  name: String
+  slug: String! @unique
+
+  createdAt: DateTime!
+  lastUpdatedAt: DateTime
+}
+
+"""
+A Category
+"""
+type Blog_Category implements Node & TimeStampedInterface {
+  id: ID!
+
+  name: String
+  slug: String
+
+  createdAt: DateTime!
+  lastUpdatedAt: DateTime
+}
+
+extend type Query {
+  Blog_hello(name: String): String
+}
+
+input Blog_RegisterUserInput {
+  username: String!
+}
+
+type Blog_RegisterUserPayload {
+  success: Boolean
+}
+
+extend type Mutation {
+  Blog_registerUser(input: Blog_RegisterUserInput!): Blog_RegisterUserPayload
+}

@@ -1,0 +1,9 @@
+module:
+  id: '@private/blog'
+  namespace: Blog
+  label: Blog
+
+resolvers:
+  Query:
+    Blog_hello:
+      handler: resolvers/Query-hello.js

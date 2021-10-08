@@ -1,0 +1,7 @@
+extend type Query {
+  Test_simpleField(
+    """Description"""
+    name: String!,
+    count: Int
+  ): String
+}

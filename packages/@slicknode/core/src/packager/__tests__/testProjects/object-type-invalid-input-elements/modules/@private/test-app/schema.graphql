@@ -1,0 +1,4 @@
+"""Test type"""
+type Test {
+  text: String @input(type: INVALID_INPUT)
+}

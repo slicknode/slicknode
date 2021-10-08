@@ -1,0 +1,70 @@
+{
+  "name": "@slicknode/slicknode-express",
+  "version": "0.1.0",
+  "description": "Slicknode GraphQL Server",
+  "main": "dist/index.js",
+  "repository": "https://github.com/slicknode/slicknode-express.git",
+  "author": "Slicknode LLC",
+  "license": "OSL-3.0",
+  "scripts": {
+    "start": "ts-node src/server",
+    "build": "npm run clean && npm run build:tsc",
+    "build:tsc": "tsc -p tsconfig.build.json",
+    "build:test": "tsc -p tsconfig.test.json",
+    "watch": "tsc -w -p tsconfig.json",
+    "lint": "eslint ./src --ext .ts",
+    "watch:test": "tsc -w -p tsconfig.test.json",
+    "clean": "rimraf dist/*",
+    "test": "npm run lint && npm run build:test && npm run testonly",
+    "testonly": "mocha -n experimental-modules -n es-module-specifier-resolution=node --exit --full-trace --timeout 10000 --check-leaks --require esm 'dist/**/{__integration__,__tests__}/**/*-test.js'",
+    "prepublishOnly": "npm run clean && npm run build",
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@slicknode/core": "workspace:*",
+    "@slicknode/image-transform": "^0.0.2",
+    "@slicknode/project-admin-api": "workspace:*",
+    "@slicknode/runtime-executor": "workspace:*",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express-graphql": "^0.12.0",
+    "helmet": "^4.4.1",
+    "i18n": "^0.13.2",
+    "knex": "^0.19.5",
+    "multer": "^1.4.2",
+    "node-watch": "^0.7.1"
+  },
+  "peerDependencies": {
+    "express": "^4.17.1"
+  },
+  "directories": {
+    "lib": "./dist"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@types/adm-zip": "^0.4.34",
+    "@types/chai": "^4.2.16",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.11",
+    "@types/i18n": "^0.13.0",
+    "@types/mocha": "^9.0.0",
+    "@types/multer": "^1.4.5",
+    "@types/node": "^16.10.1",
+    "chai": "^4.3.4",
+    "eslint": "^7.32.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "graphql": "^15.6.0",
+    "mocha": "^9.1.2",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.4.3"
+  }
+}

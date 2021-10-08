@@ -1,0 +1,23 @@
+type Account_Account implements Node {
+  id: ID!
+  name: String!
+  """Shows all users which have access to this account"""
+  users: [Account_AccountUser!]! @relation(path: "Account_Account=account.Account_AccountUser")
+
+  """The agency account that is managing this account."""
+  managedBy: Account_Account
+}
+
+type Account_AccountUser implements Node {
+  id: ID!
+  """Account the user has access to"""
+  account: Account_Account!
+  """User who should have access to the account"""
+  user: User!
+  """If `roleAdmin` is set to true the user has extended right, e.g. can delete the account"""
+  roleAdmin: Boolean!
+}
+
+extend type User {
+  Account_accounts:[Account_Account!]! @relation(path: "User=user.Account_AccountUser.account=Account_Account")
+}

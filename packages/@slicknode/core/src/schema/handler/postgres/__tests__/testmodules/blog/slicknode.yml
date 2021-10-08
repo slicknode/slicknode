@@ -1,0 +1,4 @@
+module:
+  id: "@private/blog"
+  namespace: "Blog"
+  label: "Blog"

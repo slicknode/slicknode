@@ -1,0 +1,31 @@
+query UserPermission1 {
+  scope(role: ADMIN, operations: [CREATE, UPDATE, READ])
+}
+
+
+query UserPermission2 {
+  scope(role: STAFF, operations: [READ])
+}
+
+
+query UserPermission3 {
+  scope(role: RUNTIME, operations: [CREATE, UPDATE, DELETE, READ])
+}
+
+
+query UserPermission4 {
+  scope(role: STAFF, operations: [CREATE, UPDATE, DELETE])
+  node(filter: {isAdmin: false, isStaff: false})
+}
+
+
+query UserPermission5($user_id: ID!) {
+  scope(role: ADMIN, operations: [DELETE])
+  node(filter: {id: {notEq: $user_id}})
+}
+
+
+query UserPermission6($user_id: ID!) {
+  scope(role: AUTHENTICATED, operations: [READ], fields: ["id", "firstName", "lastName", "locale", "email"])
+  node(filter: {id: {eq: $user_id}})
+}

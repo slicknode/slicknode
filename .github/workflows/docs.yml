@@ -1,0 +1,41 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - docs
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        working-directory: ./docs
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install awscli
+      - name: Build
+        working-directory: ./docs
+        run: |
+          mkdocs build
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.DOCS_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DOCS_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Deploy
+        working-directory: ./docs
+        run: |
+          aws s3 sync ./site "s3://$DOCS_BUCKET/docs" --cache-control max-age=3600,public --acl public-read
+        env:
+          DOCS_BUCKET: ${{ secrets.DOCS_BUCKET }}

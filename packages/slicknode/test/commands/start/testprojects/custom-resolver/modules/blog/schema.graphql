@@ -1,0 +1,3 @@
+extend type Query {
+  Blog_hello(name: String): String
+}

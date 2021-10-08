@@ -1,0 +1,6 @@
+"""Test type"""
+type Test_Test {
+  uniqueIndexedField: String @unique @index
+  indexedField: String @index
+  uniqueField: String @unique
+}

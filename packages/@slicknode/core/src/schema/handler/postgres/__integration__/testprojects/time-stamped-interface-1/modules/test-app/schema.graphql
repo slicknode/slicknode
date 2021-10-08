@@ -1,0 +1,8 @@
+type Test_Post implements Node & TimeStampedInterface {
+  id: ID!
+  text: String!
+  """The time when the object was first added"""
+  createdAt: DateTime!
+  """The time when the object was last updated"""
+  lastUpdatedAt: DateTime
+}

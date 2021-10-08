@@ -1,0 +1,15 @@
+query Test_EnumTestPermission1 {
+  scope(
+    role: STAFF
+    operations: [CREATE, UPDATE, DELETE, READ, PUBLISH, UNPUBLISH]
+  )
+}
+
+query Test_EnumTestPermission1($user_id: ID!) {
+  scope(role: ADMIN, operations: [PUBLISH, UNPUBLISH])
+  node(filter: { createdBy: { id: { eq: $user_id } } })
+}
+
+query Test_EnumTestPermission2 {
+  scope(role: ANONYMOUS, operations: [READ])
+}

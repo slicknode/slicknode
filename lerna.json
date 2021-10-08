@@ -1,0 +1,7 @@
+{
+  "npmClient": "yarn",
+  "npmClientArgs": ["--force"],
+  "useWorkspaces": true,
+  "packages": ["packages/*", "packages/@slicknode/*"],
+  "version": "0.0.0"
+}

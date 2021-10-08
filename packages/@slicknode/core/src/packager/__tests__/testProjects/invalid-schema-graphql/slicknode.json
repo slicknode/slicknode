@@ -1,0 +1,9 @@
+{
+  "modules": {
+    "core": "latest",
+    "relay": "latest",
+    "file": "latest",
+    "image": "latest",
+    "@private/test-app": "./modules/test-app"
+  }
+}

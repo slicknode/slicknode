@@ -1,29 +1,83 @@
-name: Slicknode CLI Test
+name: Slicknode Tests
 
 on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [14.x, 16.x]
         os: [ubuntu-latest, windows-latest]
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_SERVICE_TOKEN }}
+
+      # Connecetion config
+      DB_MASTER_HOST: localhost
+      DB_PROJECT_HOST: localhost
+      DB_PROJECT_PORT: 5433
+
+      S3_AWS_SECRET_KEY: fake_secret
+      S3_AWS_ACCESS_KEY: fake_access
+      S3_CONFIG_ENDPOINT: http://s3:9000
+      S3_FILE_PRIVATE_ENDPOINT: http://s3:9000
+      S3_FILE_PUBLIC_ENDPOINT: http://s3:9000
+      S3_FILE_PUBLIC_ENDPOINT_CDN: http://s3:9000/publicupload/
+      S3_IMAGE_ENDPOINT: http://s3:9000
+      S3_IMAGE_ENDPOINT_CDN: http://s3:9000/image/
 
     steps:
       - uses: actions/checkout@v2
+      - name: Launch Services
+        run: docker-compose up -d
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+      - name: Configure S3 hostname
+        run: echo "127.0.0.1 s3" | sudo tee -a /etc/hosts
+        if: ${{ matrix.os == 'ubuntu-latest' }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn
       - name: Test CLI commands
-        working-directory: ./packages/cli
+        working-directory: ./packages/slicknode
         run: |
           ./bin/run --version
           ./bin/run --help
-      - run: yarn workspace slicknode test
+      - name: 'Test package: @slicknode/core'
+        run: yarn workspace @slicknode/core test
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        env:
+          CI: true
+      - name: 'Test package: slicknode'
+        run: yarn workspace slicknode test
+        env:
+          CI: true
+      - name: 'Test package: @slicknode/client-node'
+        run: yarn workspace @slicknode/client-node test
+        env:
+          CI: true
+      - name: 'Test package: @slicknode/project-admin-api'
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: yarn workspace @slicknode/project-admin-api test
+        env:
+          CI: true
+      - name: 'Test package: @slicknode/project-config-schema'
+        run: yarn workspace @slicknode/project-config-schema test
+        env:
+          CI: true
+      - name: 'Test package: @slicknode/project-config-transform'
+        run: yarn workspace @slicknode/project-config-transform test
+        env:
+          CI: true
+      - name: 'Test package: @slicknode/runtime-executor'
+        run: yarn workspace @slicknode/runtime-executor test
+        env:
+          CI: true
+      - name: 'Test package: @slicknode/slicknode-express'
+        run: yarn workspace @slicknode/slicknode-express test
         env:
           CI: true
     #- name: Submitting code coverage to codecov

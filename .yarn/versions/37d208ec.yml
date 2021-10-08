@@ -1,0 +1,8 @@
+undecided:
+  - "@slicknode/client-node"
+  - "@slicknode/core"
+  - "@slicknode/project-admin-api"
+  - "@slicknode/project-config-schema"
+  - "@slicknode/project-config-transform"
+  - "@slicknode/runtime-executor"
+  - "@slicknode/slicknode-express"

@@ -1,0 +1,14 @@
+"""Test type"""
+type Test_Type1 {
+  """Test title"""
+  title: String
+}
+
+"""Test Type2"""
+type Test_Type2 {
+  """Text description"""
+  text: String
+}
+
+"""Union description"""
+union Test_Union = Test_Type1 | Test_Type2

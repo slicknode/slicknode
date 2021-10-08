@@ -1,0 +1,4 @@
+type SettingsType {
+  """Test Description"""
+  apiKey: String!
+}

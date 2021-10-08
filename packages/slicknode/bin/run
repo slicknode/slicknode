@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+SCRIPT_FILE=$0
+WORKING_DIR=$PWD
+
+cd `dirname $SCRIPT_FILE`
+SCRIPT_FILE=`basename $SCRIPT_FILE`
+
+# Iterate down a (possible) chain of symlinks
+while [ -L "$SCRIPT_FILE" ]
+do
+    SCRIPT_FILE=`readlink $SCRIPT_FILE`
+    cd `dirname $SCRIPT_FILE`
+    SCRIPT_FILE=`basename $SCRIPT_FILE`
+done
+
+# Compute the canonicalized name by finding the physical path 
+# for the directory we're in and appending the target file.
+SCRIPT_DIR=`pwd -P`
+RESULT=$SCRIPT_DIR/$SCRIPT_FILE
+
+# Reset working directory
+cd $WORKING_DIR
+/usr/bin/env node $RESULT.js "$@"

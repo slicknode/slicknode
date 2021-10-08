@@ -1,0 +1,8 @@
+module:
+  id: '@private/test-app'
+  label: Private Module
+  namespace: Test
+
+runtime:
+  engine: nodejs@8
+  memory: 123

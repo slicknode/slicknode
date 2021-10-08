@@ -1,0 +1,60 @@
+{
+  "name": "@slicknode/runtime-executor",
+  "version": "0.6.0",
+  "description": "Slicknode runtime executor",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "options": {
+    "mocha": "--check-leaks --full-trace src/**/__tests__/**/*-test.js",
+    "mochacoverage": "-t 100000 --check-leaks --full-trace src/**/__*__/**/*-test.js"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "clean": "rimraf dist/*",
+    "build": "npm run clean && tsc",
+    "build:test": "npm run clean && tsc -p tsconfig.test.json",
+    "test": "npm run lint && npm run build:test && npm run copy-test-files && npm run testonly",
+    "testonly": "mocha --check-leaks --exit --full-trace 'dist/**/*-test.js'",
+    "copy-test-files": "copyfiles -u 1 src/**/{__tests__,__integration__}/**/*.{cjs,zip,js,json} dist/",
+    "prepare": "npm run build"
+  },
+  "directories": {
+    "lib": "./dist"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "slicknode-runtime": "^0.4.4"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "author": "Slicknode LLC",
+  "license": "OSL-3.0",
+  "devDependencies": {
+    "@types/adm-zip": "^0.4.34",
+    "@types/chai": "^4.2.16",
+    "@types/lodash": "^4.14.168",
+    "@types/mkdirp": "^1.0.1",
+    "@types/mocha": "^9.0.0",
+    "@types/node-fetch": "^2.5.10",
+    "@types/request": "^2.48.5",
+    "@types/rimraf": "^3.0.0",
+    "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "chai": "^4.3.4",
+    "copyfiles": "^2.4.1",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.29.0",
+    "esm": "^3.2.25",
+    "lodash": "^4.17.21",
+    "mocha": "^9.1.2",
+    "nock": "^13.0.11",
+    "prettier": "^2.3.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.4.3",
+    "uuid": "^8.3.2"
+  }
+}

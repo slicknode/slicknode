@@ -1,0 +1,10 @@
+# Node modules, logs
+node_modules
+yarn-error.log
+npm-debug.log
+
+# Env variables
+.env
+
+# Slicknode cache data
+.slicknode

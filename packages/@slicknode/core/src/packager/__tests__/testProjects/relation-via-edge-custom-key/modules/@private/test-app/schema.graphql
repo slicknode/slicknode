@@ -1,0 +1,16 @@
+type Test_Member implements Node {
+  id: ID!
+  groups: [Test_Group] @relation(path: "Test_Member.key=memberKey.Test_Membership.groupKey=key.Test_Group")
+  key: String!
+}
+
+type Test_Membership implements Node {
+    id: ID!
+    memberKey: String!
+    groupKey: String!
+}
+
+type Test_Group implements Node {
+  id: ID!
+  key: String!
+}

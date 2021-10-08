@@ -1,0 +1,16 @@
+"""Test type"""
+enum Test_Enum {
+  """First description"""
+  FIRST
+
+  """Second description"""
+  SECOND
+
+  """Second description"""
+  THIRD
+}
+
+type Test_EnumTest implements Node {
+  id: ID!
+  enum: Test_Enum!
+}

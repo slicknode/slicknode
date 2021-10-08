@@ -1,0 +1,7 @@
+dependencies:
+  INVALIDID: 'sef'
+  core: 'latest'
+  auth: 'latest'
+
+someUnknownKey:
+  other: false

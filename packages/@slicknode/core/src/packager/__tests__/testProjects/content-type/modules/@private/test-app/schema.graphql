@@ -1,0 +1,15 @@
+"""Test type"""
+type Test_Test implements Content & Node {
+  id: ID!
+  title: String
+
+  contentNode: ContentNode!
+  locale: Locale!
+  status: ContentStatus!
+  publishedAt: DateTime
+  publishedBy: User
+  createdAt: DateTime!
+  createdBy: User
+  lastUpdatedAt: DateTime
+  lastUpdatedBy: User
+}

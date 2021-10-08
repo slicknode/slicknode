@@ -1,0 +1,51 @@
+type Test_Test implements Node & Content {
+  id: ID!
+  test: String
+
+  createdUnique: Test_Connected @unique
+  updatedContent: Test_Connected
+  deletedContent: Test_Connected
+  deletedContentRequired: Test_Connected!
+
+  createdListUnique: [Test_Connected!] @unique
+  updatedListContent: [Test_Connected!]
+  deletedListContent: [Test_Connected!]
+  deletedListContentRequired: [Test_Connected!]!
+
+  createdUniqueUnion: Test_Union @unique
+  updatedUnion: Test_Union
+  deletedUnion: Test_Union
+  deletedUnionRequired: Test_Union!
+
+  createdListUnionUnique: [Test_Union!] @unique
+  updatedListUnion: [Test_Union!]
+  deletedListUnion: [Test_Union!]
+  deletedListUnionRequired: [Test_Union!]!
+
+  contentNode: ContentNode!
+  locale: Locale!
+  status: ContentStatus!
+  createdBy: User
+  createdAt: DateTime!
+  lastUpdatedBy: User
+  lastUpdatedAt: DateTime
+  publishedAt: DateTime
+  publishedBy: User
+}
+
+type Test_Connected implements Node & Content {
+  id: ID!
+  name: String
+
+  contentNode: ContentNode!
+  locale: Locale!
+  status: ContentStatus!
+  createdBy: User
+  createdAt: DateTime!
+  lastUpdatedBy: User
+  lastUpdatedAt: DateTime
+  publishedAt: DateTime
+  publishedBy: User
+}
+
+union Test_Union = Test_Connected | Test_Test

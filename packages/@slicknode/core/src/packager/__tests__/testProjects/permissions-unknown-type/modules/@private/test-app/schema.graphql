@@ -1,0 +1,6 @@
+"""Test type"""
+type Test_Node implements Node {
+  """Test title"""
+  title: String
+  user: User
+}

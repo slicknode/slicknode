@@ -1,0 +1,58 @@
+type Test_User implements Node & Content {
+  id: ID!
+
+  name: String!
+  user: User!
+
+  groups: [Test_Group!]! @relation(
+    path: "Test_User=user.Test_Membership.group=Test_Group"
+  )
+
+  contentNode: ContentNode!
+  locale: Locale!
+  status: ContentStatus!
+  createdBy: User
+  createdAt: DateTime!
+  lastUpdatedBy: User
+  lastUpdatedAt: DateTime
+  publishedAt: DateTime
+  publishedBy: User
+}
+
+type Test_Membership implements Node & Content {
+  id: ID!
+
+  group: Test_Group!
+  user: Test_User!
+
+  contentNode: ContentNode!
+  locale: Locale!
+  status: ContentStatus!
+  createdBy: User
+  createdAt: DateTime!
+  lastUpdatedBy: User
+  lastUpdatedAt: DateTime
+  publishedAt: DateTime
+  publishedBy: User
+}
+
+
+type Test_Group implements Node & Content {
+  id: ID!
+
+  name: String!
+
+  users: [Test_User!]! @relation(
+    path: "Test_Group=group.Test_Membership.user=Test_User"
+  )
+
+  contentNode: ContentNode!
+  locale: Locale!
+  status: ContentStatus!
+  createdBy: User
+  createdAt: DateTime!
+  lastUpdatedBy: User
+  lastUpdatedAt: DateTime
+  publishedAt: DateTime
+  publishedBy: User
+}

@@ -1,0 +1,10 @@
+type Test_Test implements Node {
+  id: ID!
+  string: String!
+  connected: [Test_Connected!] @relation(path: "Test_Test=test.Test_Connected")
+}
+
+type Test_Connected implements Node {
+  id: ID!
+  test: Test_Test
+}

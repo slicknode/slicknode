@@ -1,0 +1,5 @@
+module:
+  id: '@private/extended-app'
+  label: Private Module
+  namespace: Extended
+
