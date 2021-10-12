@@ -1,0 +1,7 @@
+"""Test type"""
+type Test_Test implements Node {
+  """ID description"""
+  id: ID!
+  """Test title"""
+  title: String
+}

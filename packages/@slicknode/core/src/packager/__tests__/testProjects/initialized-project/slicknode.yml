@@ -1,0 +1,6 @@
+dependencies:
+  core: latest
+  file: latest
+  image: latest
+  relay: latest
+

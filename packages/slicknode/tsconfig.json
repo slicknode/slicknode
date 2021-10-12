@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "importHelpers": true,
+    "module": "CommonJS",
+    "outDir": "./lib",
+    "rootDir": "src",
+    "strict": true,
+    "target": "ES2020",
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "lib": ["es7", "esnext.asynciterable", "dom"],
+    "paths": {
+      "*": ["src/types/*", "node_modules/*", "../../node_modules/*"]
+    }
+  },
+  "include": ["src/**/*"]
+}

@@ -1,0 +1,3 @@
+query MutationPermission{
+  scope(role: AUTHENTICATED, fields: ["Test_testMutation"])
+}

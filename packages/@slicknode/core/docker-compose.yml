@@ -1,0 +1,46 @@
+# Docker services for test / dev environment
+
+version: '3.0'
+services:
+  s3:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+    command: minio server /export
+    environment:
+      - MINIO_ACCESS_KEY=fake_access
+      - MINIO_SECRET_KEY=fake_secret
+  s3_init:
+    image: minio/mc:latest
+    depends_on:
+      - s3
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5 &&
+      mc alias set minio http://s3:9000 fake_access fake_secret --api S3v4 &&
+      mc mb minio/config || true &&
+      mc mb minio/project || true &&
+      mc mb minio/upload || true &&
+      mc mb minio/runtime || true &&
+      mc mb minio/publicupload || true &&
+      mc mb minio/image || true &&
+      mc policy set download minio/publicupload || true &&
+      mc policy set download minio/image || true &&
+      exit 0
+      "
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=master
+  postgres_project1:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=master

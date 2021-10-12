@@ -1,0 +1,12 @@
+module:
+  id: '@private/test-app'
+  label: Private Module
+  namespace: Test
+
+resolvers:
+  Query:
+    Test_simpleField:
+      handler: src/resolvers/Test_simpleField
+
+runtime:
+  engine: nodejs@8

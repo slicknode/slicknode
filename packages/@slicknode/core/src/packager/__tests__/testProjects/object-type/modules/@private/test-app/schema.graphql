@@ -1,0 +1,5 @@
+"""Test type"""
+type Test_Test {
+  """Test title"""
+  title: String
+}

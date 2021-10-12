@@ -1,0 +1,6 @@
+"""Test type"""
+type Test_Test implements Node {
+  id: ID!
+  """Test title"""
+  title: String
+}

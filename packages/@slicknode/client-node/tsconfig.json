@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "allowUmdGlobalAccess": true,
+    "sourceMap": true,
+    "outDir": "dist/cjs",
+    "baseUrl": ".",
+    "declaration": true,
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"]
+    },
+    "lib": ["es6"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/__tests__/**/*"]
+}

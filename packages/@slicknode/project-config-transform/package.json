@@ -1,0 +1,53 @@
+{
+  "name": "@slicknode/project-config-transform",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "repository": "slicknode/slicknode",
+  "author": "Slicknode LLC",
+  "license": "OSL-3.0",
+  "scripts": {
+    "build": "npm run clean && npm run build:tsc",
+    "build:tsc": "tsc -p tsconfig.json",
+    "build:test": "tsc -p tsconfig.test.json",
+    "watch": "tsc -w -p tsconfig.json",
+    "lint": "eslint ./src --ext .ts",
+    "watch:test": "tsc -w -p tsconfig.test.json",
+    "prepublishOnly": "npm run clean && npm run build",
+    "clean": "rimraf dist/*",
+    "test": "npm run lint && npm run build:test && npm run testonly",
+    "testonly": "mocha --exit --full-trace --timeout 10000 --check-leaks --require esm 'dist/**/{__integration__,__tests__}/**/*-test.js'",
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "prepare": "npm run build"
+  },
+  "directories": {
+    "lib": "./dist"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@slicknode/core": "workspace:*",
+    "@slicknode/project-config-schema": "workspace:*",
+    "@types/adm-zip": "^0.4.34",
+    "@types/chai": "^4.2.16",
+    "@types/express": "^4.17.11",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^14.14.41",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "chai": "^4.3.4",
+    "eslint": "^7.25.0",
+    "esm": "^3.2.25",
+    "mocha": "^9.1.2",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@slicknode/core": "*",
+    "@slicknode/project-config-schema": "*"
+  }
+}

@@ -1,0 +1,17 @@
+"""Test type"""
+type Test_Article implements Node {
+  id: ID!
+
+  """Test title"""
+  title: String
+
+  joinKey: String @unique
+
+  comments: [Test_Comment] @relation(path: "Test_Article.joinKey=joinKey.Test_Comment")
+}
+
+type Test_Comment implements Node {
+  id: ID!
+  joinKey: String
+  text: String
+}

@@ -1,0 +1,19 @@
+query Account_AccountUserPermission1 {
+  scope(role: AUTHENTICATED, operations: [READ])
+}
+
+
+query Account_AccountUserPermission2 {
+  scope(role: ADMIN, operations: [CREATE, UPDATE, DELETE, READ])
+}
+
+
+query Account_AccountUserPermission3 {
+  scope(role: STAFF, operations: [CREATE, UPDATE, DELETE, READ])
+}
+
+
+query Account_AccountUserPermission4($user_id: ID!) {
+  scope(role: AUTHENTICATED, operations: [READ])
+  node(filter: {account: {users: {node: {user: {id: {eq: $user_id}}}}}})
+}

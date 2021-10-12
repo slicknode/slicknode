@@ -1,0 +1,8 @@
+{
+  "modules": {
+    "core": "latest",
+    "relay": "latest",
+    "file": "latest",
+    "invalid-app": "latest",,
+  }
+}

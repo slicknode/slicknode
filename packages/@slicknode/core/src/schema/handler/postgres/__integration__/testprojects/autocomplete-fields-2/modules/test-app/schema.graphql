@@ -1,0 +1,23 @@
+type Test_Test implements Node @autocomplete(fields: ["string"]) {
+  id: ID!
+  connected: Test_Connected
+  string: String!
+  description: String!
+  boolean: Boolean
+  float: Float
+}
+
+type Test_Connected implements Node {
+  id: ID!
+  name: String
+}
+
+type Test_DeleteFieldOfIndex implements Node {
+  id: ID!
+  someField: String
+}
+
+type Test_AddIndex implements Node @autocomplete(fields: ["name"]) {
+  id: ID!
+  name: String
+}

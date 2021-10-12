@@ -6,9 +6,6 @@ description: Setup a Serverless GraphQL API with Slicknode in 5 minutes. Product
 This is a quickstart tutorial to create a Slicknode project from scratch. If you would rather start with
 a fullstack application, check out our [NextJS blog starter](https://github.com/slicknode/starter-nextjs-blog)
 
-To get started with [Slicknode](https://slicknode.com), you need a Slicknode Cloud account.
-You can [sign up for free here](https://console.slicknode.com/register) _(No credit card required)_
-
 If you prefer a video, check out this 10-minute tutorial which walks you through
 everything you need to get started:
 
@@ -121,8 +118,7 @@ type Blog_Category implements Content & Node {
 }
 ```
 
-Save the file and check if you have any errors in your project by printing the project status.
-Run the status command from the project folder:
+Save the file and check if you have any errors in your project by printing the project status:
 
     slicknode status
 
@@ -132,7 +128,7 @@ To deploy the changes to the cloud, simply run:
 
     slicknode deploy
 
-Now you have a production ready content HUB with GraphQL API.
+Now you have a production ready content HUB with GraphQL API. To run the GraphQL API locally, follow [the development setup guide](guides/development-setup.md)
 
 ### Explore
 

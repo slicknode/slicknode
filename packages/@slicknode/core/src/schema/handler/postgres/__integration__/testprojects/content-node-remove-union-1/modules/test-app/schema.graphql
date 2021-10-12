@@ -1,0 +1,50 @@
+type Test_Test implements Node & Content {
+  id: ID!
+
+  test: String
+  union: Test_Union
+
+  contentNode: ContentNode!
+  locale: Locale!
+  status: ContentStatus!
+  createdBy: User
+  createdAt: DateTime!
+  lastUpdatedBy: User
+  lastUpdatedAt: DateTime
+  publishedAt: DateTime
+  publishedBy: User
+}
+
+type Test_Type1 implements Node & Content {
+  id: ID!
+
+  name: String
+
+  contentNode: ContentNode!
+  locale: Locale!
+  status: ContentStatus!
+  createdBy: User
+  createdAt: DateTime!
+  lastUpdatedBy: User
+  lastUpdatedAt: DateTime
+  publishedAt: DateTime
+  publishedBy: User
+}
+
+type Test_Type2 implements Node & Content {
+  id: ID!
+
+  name: String
+
+  contentNode: ContentNode!
+  locale: Locale!
+  status: ContentStatus!
+  createdBy: User
+  createdAt: DateTime!
+  lastUpdatedBy: User
+  lastUpdatedAt: DateTime
+  publishedAt: DateTime
+  publishedBy: User
+}
+
+union Test_Union = Test_Type1 | Test_Type2

@@ -1,0 +1,12 @@
+module:
+  id: '@private/test-app'
+  label: Private Module
+  namespace: Test
+
+runtime:
+  engine: nodejs@12
+
+resolvers:
+  Test_Test:
+    extension:
+      handler: src/resolvers/title

@@ -1,0 +1,24 @@
+{
+	"You must be logged in to perform this action": "You must be logged in to perform this action",
+	"validation": {
+		"validators": {
+			"regex": {
+				"messages": {
+					"doesNotMatch": "The input value has an invalid format"
+				}
+			}
+		}
+	},
+	"The provided input values could not be validated. Please check the values.": "The provided input values could not be validated. Please check the values.",
+	"Invalid file token": "Invalid file token",
+	"mutations": {
+		"uploadImage": {
+			"invalidFile": {
+				"message": "There was no file provided in the request"
+			},
+			"invalidFileType": {
+				"message": "The file has an invalid format. Please only upload images."
+			}
+		}
+	}
+}

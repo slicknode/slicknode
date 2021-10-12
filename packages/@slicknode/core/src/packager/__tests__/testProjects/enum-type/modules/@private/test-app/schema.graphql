@@ -1,0 +1,8 @@
+"""Test type"""
+enum Test_Test {
+  """First description"""
+  FIRST
+
+  """Second description"""
+  SECOND
+}

@@ -1,0 +1,1 @@
+Moved to [slicknode-auth-email-password](https://github.com/slicknode/slicknode-auth-email-password)

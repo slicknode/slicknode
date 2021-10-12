@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.build.json",
+
+  "compilerOptions": {
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "lib": ["es7", "ES2020"]
+  },
+  "exclude": ["node_modules"]
+}

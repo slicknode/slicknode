@@ -1,0 +1,8 @@
+*/**/__integration__/tasks/**/*
+*/**/node_modules/**/*
+
+*/**/build/**/*
+*/**/dist/**/*
+
+# We have syntax errors etc. in there
+src/providers/__integration__/testmodules/**/*

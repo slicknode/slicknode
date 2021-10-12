@@ -1,0 +1,69 @@
+/**
+ * Created by Ivo Meißner on 07.08.17.
+ */
+
+import * as fs from 'fs';
+import { mkdirpSync } from 'fs-extra';
+import * as _ from 'lodash';
+import * as path from 'path';
+
+export class ConfigStorage {
+  public file: string;
+  public cache: { [key: string]: any } | null;
+
+  constructor(file: string) {
+    this.file = file;
+    this.cache = null;
+  }
+
+  public getItem(keyName: string): string | null {
+    const val = this.getValues()[keyName];
+    return val ? String(val) : null;
+  }
+
+  public setItem(keyName: string, keyValue: string): void {
+    this.setValues({
+      ...this.getValues(),
+      [keyName]: keyValue,
+    });
+  }
+
+  public removeItem(keyName: string): void {
+    this.setValues(_.omit(this.getValues(), [keyName]));
+  }
+
+  public clear(): void {
+    this.setValues({});
+  }
+
+  /**
+   * @private
+   */
+  public getValues(): { [key: string]: any } {
+    try {
+      if (!this.cache) {
+        const data = fs.readFileSync(this.file, 'utf8');
+        this.cache = JSON.parse(data) || {};
+      }
+      return this.cache || {};
+    } catch (e: any) {
+      return {};
+    }
+  }
+
+  /**
+   * @private
+   */
+  public setValues(values: { [key: string]: any }): void {
+    try {
+      mkdirpSync(path.dirname(this.file));
+      const data = JSON.stringify(values);
+      fs.writeFileSync(this.file, data);
+      this.cache = null;
+    } catch (e: any) {
+      throw new Error(
+        'ERROR: Could not write configuration to user home dir. Make sure your user has write permission.'
+      );
+    }
+  }
+}

@@ -1,0 +1,9 @@
+dependencies:
+  '@private/test-app': ./modules/test-app
+  auth: latest
+  core: latest
+  file: latest
+  image: latest
+  relay: latest
+  content: latest
+

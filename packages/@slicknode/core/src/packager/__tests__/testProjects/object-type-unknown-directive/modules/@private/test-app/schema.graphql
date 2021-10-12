@@ -1,0 +1,5 @@
+"""Test type"""
+type Test @someDirective {
+  """Test title"""
+  title: String
+}

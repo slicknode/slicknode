@@ -1,0 +1,12 @@
+module:
+  id: '@private/blog'
+  label: 'Blog'
+  namespace: Blog
+
+resolvers:
+  Query:
+    Blog_hello:
+      handler: src/resolvers/Query.hello.js
+  Mutation:
+    Blog_registerUser:
+      handler: src/resolvers/Mutation.registerUser

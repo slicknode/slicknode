@@ -5,7 +5,6 @@ node_modules
 .idea
 .vscode
 /site
-/_src
 /oclif.manifest.json
 /.nyc_output
 /coverage
@@ -13,3 +12,12 @@ node_modules
 # We don't need package-lock.json, using yarn
 /package-lock.json
 /yarn-error.log
+/lerna-debug.log
+
+# Yarn 2 build artifacts
+# https://yarnpkg.com/advanced/qa#which-files-should-be-gitignored
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions

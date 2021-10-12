@@ -1,0 +1,4 @@
+module:
+  id: '@private/account'
+  label: Account
+  namespace: Account

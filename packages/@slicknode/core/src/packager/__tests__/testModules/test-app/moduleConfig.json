@@ -1,0 +1,51 @@
+{
+  "kind": "1",
+  "rawConfig": "module:\n  id: '@private/test-app'\n  label: Private Module\n  namespace: Test\n\n",
+  "id": "@private/test-app",
+  "namespace": "Test",
+  "types": [
+    {
+      "name": "Test_Test",
+      "kind": 1,
+      "fields": {
+        "uniqueIndexedField": {
+          "typeName": "String",
+          "required": false,
+          "list": false,
+          "unique": true,
+          "index": true
+        },
+        "indexedField": {
+          "typeName": "String",
+          "required": false,
+          "list": false,
+          "index": true
+        },
+        "uniqueField": {
+          "typeName": "String",
+          "required": false,
+          "list": false,
+          "unique": true
+        }
+      },
+      "description": "Test type"
+    }
+  ],
+  "mutations": [],
+  "connections": [],
+  "typeExtensions": {},
+  "resolvers": {},
+  "version": "latest",
+  "admin": {
+    "base": {
+      "name": "Private Module",
+      "description": "",
+      "pages": [],
+      "types": {},
+      "mutations": {}
+    }
+  },
+  "listeners": [],
+  "functions": {},
+  "rawSchema": "\"\"\"Test type\"\"\"\ntype Test_Test {\n  uniqueIndexedField: String @unique @index\n  indexedField: String @index\n  uniqueField: String @unique\n}\n"
+}

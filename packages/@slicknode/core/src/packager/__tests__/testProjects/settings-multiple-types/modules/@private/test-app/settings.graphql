@@ -1,0 +1,9 @@
+input SettingsType {
+  """Test Description"""
+  apiKey: String
+}
+
+input SettingsType2 {
+  """Test Description"""
+  apiKey: String
+}

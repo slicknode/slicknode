@@ -1,0 +1,4 @@
+query UserPermission1($user_id: ID!) {
+  scope(role: AUTHENTICATED, operations: [READ])
+  node(filter: {Account_accounts: {node: {users: {node: {user: {id: {eq: $user_id}}}}}}})
+}

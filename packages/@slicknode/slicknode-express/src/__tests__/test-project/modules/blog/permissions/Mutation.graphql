@@ -1,0 +1,3 @@
+query MutationPermission {
+  scope(role: ANONYMOUS, fields: ["Blog_registerUser"])
+}

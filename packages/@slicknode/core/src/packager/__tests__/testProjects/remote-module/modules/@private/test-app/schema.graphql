@@ -1,0 +1,13 @@
+type Query {
+  hello(name: String!): String
+}
+
+
+type SomeType implements Test {
+  id: ID
+  string: String
+}
+
+interface Test {
+  string: String
+}

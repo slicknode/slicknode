@@ -1,0 +1,8 @@
+"""Test type"""
+enum Test @unknownDirective {
+  """First description"""
+  FIRST
+
+  """Second description"""
+  SECOND
+}

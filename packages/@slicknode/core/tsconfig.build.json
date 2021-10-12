@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": false,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "lib": ["ES2020"],
+    "typeRoots": ["./src/types/", "./node_modules/@types"]
+  },
+
+  "include": ["src/*", "src/**/*"],
+  "exclude": [
+    "**/__tests__",
+    "**/__mocks__",
+    "**/__integration__",
+    "node_modules"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "@slicknode/project-config-schema",
+  "version": "0.2.0",
+  "main": "dist/index.js",
+  "repository": "slicknode/slicknode",
+  "author": "Slicknode LLC",
+  "license": "OSL-3.0",
+  "scripts": {
+    "build": "npm run clean && npm run build:tsc",
+    "build:tsc": "tsc -p tsconfig.json",
+    "build:test": "tsc -p tsconfig.test.json",
+    "watch": "tsc -w -p tsconfig.json",
+    "lint": "eslint ./src --ext .ts",
+    "watch:test": "tsc -w -p tsconfig.test.json",
+    "prepublishOnly": "npm run clean && npm run build",
+    "clean": "rimraf dist/*",
+    "test": "npm run lint && npm run build:test && npm run testonly",
+    "testonly": "mocha -n experimental-modules -n es-module-specifier-resolution=node --check-leaks --exit --full-trace -r esm --timeout 10000 'dist/**/__tests__/**/*-test.js'",
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "prepare": "npm run build"
+  },
+  "directories": {
+    "lib": "./dist"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@types/chai": "^4.2.16",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^14.14.41",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "chai": "^4.3.4",
+    "eslint": "^7.25.0",
+    "esm": "^3.2.25",
+    "mocha": "^9.1.2",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.4.3"
+  }
+}

@@ -1,0 +1,13 @@
+/build
+/buildcache
+.tsbuildinfo
+node_modules
+/yarn-error.log
+/.idea
+tsconfig.build.tsbuildinfo
+
+# Generated
+/src/proto
+/.env
+/tmp
+.DS_Store

@@ -1,0 +1,14 @@
+"""Test type"""
+type Test_Test {
+  string: String
+  requiredString: String!
+  stringList: [String]
+  requiredStringList: [String]!
+
+  otherType: Test_OtherType
+  otherTypeList: [Test_OtherType]
+}
+
+type Test_OtherType {
+  id: ID!
+}

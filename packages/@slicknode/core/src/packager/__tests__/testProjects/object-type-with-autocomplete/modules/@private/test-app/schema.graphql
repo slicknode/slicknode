@@ -1,0 +1,20 @@
+"""Test type"""
+type Test_Test implements Node
+@autocomplete(
+  fields: ["title"]
+)
+{
+  id: ID!
+  """Test title"""
+  title: String
+}
+
+type Test_TestMulti implements Node
+@autocomplete(
+  fields: ["title", "text"]
+)
+{
+  id: ID!
+  title: String
+  text: String
+}

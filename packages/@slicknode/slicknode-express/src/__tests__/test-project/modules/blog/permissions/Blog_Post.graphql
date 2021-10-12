@@ -1,0 +1,3 @@
+query Blog_PostPermission1 {
+  scope(role: ANONYMOUS, operations: [CREATE, UPDATE, DELETE, READ])
+}

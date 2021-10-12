@@ -1,0 +1,5 @@
+module:
+  id: '@private/test-app'
+  label: Private Module
+  namespace: Test
+

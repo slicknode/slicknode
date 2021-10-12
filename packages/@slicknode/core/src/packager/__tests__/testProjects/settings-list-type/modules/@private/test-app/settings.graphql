@@ -1,0 +1,4 @@
+input SettingsType {
+  """Test Description"""
+  apiKey: [String]
+}

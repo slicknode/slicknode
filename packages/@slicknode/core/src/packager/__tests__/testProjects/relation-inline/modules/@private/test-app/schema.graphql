@@ -1,0 +1,14 @@
+"""Test type"""
+type Test_Article implements Node {
+  id: ID!
+
+  """Test title"""
+  title: String
+
+  comments: [Test_Comment] @relation(path: "Test_Article=article.Test_Comment")
+}
+
+type Test_Comment implements Node {
+  id: ID!
+  article: Test_Article!
+}

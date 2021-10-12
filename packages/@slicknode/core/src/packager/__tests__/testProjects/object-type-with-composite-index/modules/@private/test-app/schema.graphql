@@ -1,0 +1,30 @@
+"""Test type"""
+type Test_Test implements Node
+@index(
+  fields: ["title"]
+)
+{
+  id: ID!
+  """Test title"""
+  title: String
+}
+
+type Test_TestMulti implements Node
+@index(
+  fields: ["title", "text"]
+)
+{
+  id: ID!
+  title: String
+  text: String
+}
+
+type Test_TestMultiIndex implements Node
+@index(fields: ["title", "text"])
+@index(fields: ["title"])
+@index(fields: ["title", "id"], unique: true)
+{
+  id: ID!
+  title: String
+  text: String
+}

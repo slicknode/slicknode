@@ -1,0 +1,3 @@
+query Project_MarketplacePermission1 {
+  scope(role: ANONYMOUS, operations: [READ, CREATE, UPDATE])
+}

@@ -1,7 +1,0 @@
-# Node modules, logs
-node_modules
-yarn-error.log
-npm-debug.log
-
-# Slicknode cache data
-.slicknode

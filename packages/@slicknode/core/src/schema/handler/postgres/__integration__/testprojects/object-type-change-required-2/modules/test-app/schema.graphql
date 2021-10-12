@@ -1,0 +1,9 @@
+type Test_Test implements Node {
+  id: ID!
+  connected: Test_Connected!
+}
+
+type Test_Connected implements Node {
+  id: ID!
+  name: String
+}

@@ -1,0 +1,8 @@
+"""Test type"""
+type Test_Test implements Node & TimeStampedInterface {
+  """Test title"""
+  id: ID!
+  title: String
+  createdAt: DateTime!
+  lastUpdatedAt: DateTime
+}

@@ -1,0 +1,5 @@
+"""Test type"""
+type Test {
+  """Test title"""
+  list: [[String!]!]!
+}

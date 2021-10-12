@@ -1,0 +1,4 @@
+type Blog_Post implements Node {
+  id: ID!
+  file: File
+}

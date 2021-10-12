@@ -10,14 +10,16 @@ nav:
       - 1. Introduction: tutorial/index.md
       - 2. Project Description: tutorial/description.md
       - 3. Setup: tutorial/setup.md
-      - 4. Create Module: tutorial/create-module.md
-      - 5. Data Modeling I: tutorial/data-modeling.md
-      - 6. GraphQL API: tutorial/graphql-api.md
-      - 7. Data Modeling II (relations): tutorial/data-modeling-2.md
-      - 8. Data Modeling III (relations): tutorial/data-modeling-3.md
-      - 9. Publishing Workflow: tutorial/publishing-workflow.md
+      - 4. Install Modules: tutorial/install-modules.md
+      - 5. Create Module: tutorial/create-module.md
+      - 6. Data Modeling I: tutorial/data-modeling.md
+      - 7. GraphQL API: tutorial/graphql-api.md
+      - 8. Data Modeling II (relations): tutorial/data-modeling-2.md
+      - 9. Data Modeling III (relations): tutorial/data-modeling-3.md
       - 10. Authorization: tutorial/authorization.md
       - 11. Comment System: tutorial/comment-system.md
+  - Guides:
+      - Development Setup: guides/development-setup.md
   - Data Modeling:
       - Introduction: data-modeling/introduction.md
       - Modules: data-modeling/modules.md
@@ -64,7 +66,10 @@ nav:
       - Authorization: auth/authorization/index.md
   - Reference:
       - slicknode.yml: reference/slicknode-yml.md
-  - Slicknode CLI: cli/index.md
+  - Slicknode CLI: # cli/index.md
+      - Installation: cli/index.md
+      - migrate: cli/migrate.md
+      - start: cli/start.md
 
 repo_url: https://github.com/slicknode/slicknode
 edit_uri: edit/master/docs/docs/

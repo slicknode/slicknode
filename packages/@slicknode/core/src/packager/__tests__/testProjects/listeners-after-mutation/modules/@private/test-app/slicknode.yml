@@ -1,0 +1,16 @@
+module:
+  id: '@private/test-app'
+  label: Private Module
+  namespace: Test
+
+listeners:
+  - event: mutation.uploadImage.AFTER
+    handler: src/myHook.js
+    config:
+      query: |
+        {node{id}}
+
+runtime:
+  memory: 512
+  engine: nodejs@8
+

@@ -1,0 +1,4 @@
+query Test_QueryPermission1($user_id: ID!) {
+    scope(role: AUTHENTICATED, operations: [READ, CREATE, DELETE, UPDATE])
+    node(filter: {user: {id: {eq: $user_id}}})
+}
