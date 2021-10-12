@@ -7,7 +7,7 @@ import CoreModule from '../../../modules/core';
 import RelayModule from '../../../modules/relay';
 import AuthModule from '../../../modules/auth';
 import ImageModule from '../../../modules/image';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
 import DateTime from '../../../modules/core/types/DateTime';
 

@@ -9,7 +9,7 @@ import Context from '../../../context';
 
 import { S3_FILE_PRIVATE_BUCKET, S3_FILE_PUBLIC_BUCKET } from '../../../config';
 import { fileClientPrivate, fileClientPublic } from '../../../storage';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
 import _, { create } from 'lodash';
 import File from '../types/File';

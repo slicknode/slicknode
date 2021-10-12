@@ -15,7 +15,7 @@ import chaiAsPromised from 'chai-as-promised';
 import _ from 'lodash';
 import { AuthContext, Role } from '../type';
 import Context from '../../context';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { ErrorCode } from '../../errors';
 
 chai.use(chaiAsPromised);

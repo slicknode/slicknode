@@ -4,7 +4,7 @@
  */
 import Knex$Knex from 'knex';
 import knex from 'knex';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { ProjectRuntimeInfo } from '../definition';
 import _ from 'lodash';
 import {

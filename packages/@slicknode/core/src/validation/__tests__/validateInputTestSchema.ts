@@ -3,7 +3,7 @@
  *
  */
 import { TypeKind, ModuleKind, ModuleConfig } from '../../definition';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
 const modules: ModuleConfig[] = [
   {

@@ -23,7 +23,7 @@ import {
 } from 'graphql';
 import sinon from 'sinon';
 import nock from 'nock';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { ModuleKind, TypeKind } from '../../definition';
 import { UnconfiguredRuntime } from '@slicknode/runtime-executor';
 import { Role } from '../../auth';

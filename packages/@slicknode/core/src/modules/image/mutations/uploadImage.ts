@@ -3,7 +3,7 @@
  *
  */
 
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
 import { MutationConfig } from '../../../definition';
 import Context from '../../../context';

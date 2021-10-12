@@ -3,7 +3,7 @@
  *
  */
 import { baseModules } from '../../modules';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { TypeKind, ModuleKind, ModuleConfig } from '../../definition';
 import Node from '../../modules/relay/types/Node';
 import { HANDLER_POSTGRES } from '../../schema/handler';
