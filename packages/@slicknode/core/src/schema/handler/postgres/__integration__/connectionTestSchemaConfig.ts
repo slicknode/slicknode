@@ -8,7 +8,7 @@ import RelayModule from '../../../../modules/relay/index';
 import { TypeKind, ModuleKind, ModuleConfig } from '../../../../definition';
 import { HANDLER_POSTGRES } from '../..';
 import Node from '../../../../modules/relay/types/Node';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
 const modules: ModuleConfig[] = [
   CoreModule,

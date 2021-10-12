@@ -1,7 +1,7 @@
 import { MutationConfig } from '../../../definition';
 import { Role } from '../../../auth';
 import { EXTENSION_MIME_TYPES, VALID_FILE_EXTENSIONS } from '../constants';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { S3_IMAGE_BUCKET } from '../../../config';
 import { imageClient } from '../../../storage';
 

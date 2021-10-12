@@ -10,7 +10,7 @@ import { HANDLER_POSTGRES } from '../..';
 import Node from '../../../../modules/relay/types/Node';
 import { TypeKind, ModuleKind, ModuleConfig } from '../../../../definition';
 
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
 import { Role } from '../../../../auth';
 

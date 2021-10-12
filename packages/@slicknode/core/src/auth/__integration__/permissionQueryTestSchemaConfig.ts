@@ -9,7 +9,7 @@ import AuthModule from '../../modules/auth/index';
 import { TypeKind, ModuleKind, ModuleConfig } from '../../definition';
 import { HANDLER_POSTGRES } from '../../schema/handler';
 import Node from '../../modules/relay/types/Node';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { Role } from '../type';
 
 const moduleConfigs: ModuleConfig[] = [

@@ -6,7 +6,7 @@
 import CoreModule from '../../../modules/core';
 import RelayModule from '../../../modules/relay';
 import AuthModule from '../../../modules/auth';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { ModuleKind, ModuleConfig, TypeKind } from '../../../definition';
 import { HANDLER_POSTGRES } from '../../handler';
 

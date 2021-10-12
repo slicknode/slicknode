@@ -8,7 +8,7 @@ import RelayModule from '../../../modules/relay';
 import ContentModule from '../../../modules/content';
 import AuthModule from '../../../modules/auth';
 import Node from '../../../modules/relay/types/Node';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import {
   TypeKind,
   RFDefinitionKind,
@@ -289,9 +289,7 @@ const modules: ModuleConfig[] = [
             description: 'Description',
           },
         },
-        async mutate(input: {
-          [x: string]: any;
-        }): Promise<{
+        async mutate(input: { [x: string]: any }): Promise<{
           [x: string]: any;
         }> {
           return {
@@ -321,9 +319,7 @@ const modules: ModuleConfig[] = [
             description: 'Description',
           },
         },
-        async mutate(input: {
-          [x: string]: any;
-        }): Promise<{
+        async mutate(input: { [x: string]: any }): Promise<{
           [x: string]: any;
         }> {
           return {
@@ -393,9 +389,7 @@ const modules: ModuleConfig[] = [
             description: 'Description',
           },
         },
-        async mutate(input: {
-          [x: string]: any;
-        }): Promise<{
+        async mutate(input: { [x: string]: any }): Promise<{
           [x: string]: any;
         }> {
           return {
@@ -424,9 +418,7 @@ const modules: ModuleConfig[] = [
             description: 'Description',
           },
         },
-        async mutate(input: {
-          [x: string]: any;
-        }): Promise<{
+        async mutate(input: { [x: string]: any }): Promise<{
           [x: string]: any;
         }> {
           return {
@@ -455,9 +447,7 @@ const modules: ModuleConfig[] = [
             description: 'Description',
           },
         },
-        async mutate(input: {
-          [x: string]: any;
-        }): Promise<{
+        async mutate(input: { [x: string]: any }): Promise<{
           [x: string]: any;
         }> {
           return {
@@ -493,9 +483,7 @@ const modules: ModuleConfig[] = [
             description: 'Description',
           },
         },
-        async mutate(input: {
-          [x: string]: any;
-        }): Promise<{
+        async mutate(input: { [x: string]: any }): Promise<{
           [x: string]: any;
         }> {
           return {

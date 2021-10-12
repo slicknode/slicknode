@@ -4,7 +4,7 @@
  */
 
 import { expect } from 'chai';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { ModuleConfig, ModuleKind, TypeKind } from '../../definition';
 
 import {
