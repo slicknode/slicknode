@@ -13,6 +13,8 @@ We will start with a simple version of the blog schema that we extend throughout
 To determine the schema for your application, we just have to convert [the requirements](./description.md)
 into a GraphQL schema.
 
+If you are using VS Code, you can install [the Slicknode VS Code extension](https://marketplace.visualstudio.com/items?itemName=Slicknode.slicknode-vscode) with snippets and other features from the marketplace.
+
 The schema of our blog is part of the blog module and should therefore be added
 to the `schema.graphql` file in that module folder. Open the file in your favorite
 IDE and add the following:

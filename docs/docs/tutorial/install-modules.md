@@ -29,3 +29,13 @@ dependencies:
 ```
 
 You now have image support and can create types that automatically have functionality for localiztion, versioning and publishing workflows. You'll get to that in the next step when you create your custom types.
+
+## Deploy API
+
+Let's deploy this to the [Slicknode Cloud](https://slicknode.com) to create the GraphQL API:
+
+```bash
+slicknode deploy
+```
+
+This will ask you for a name of the project, select a region for the project etc.
