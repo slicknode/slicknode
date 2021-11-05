@@ -59,7 +59,7 @@
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.1",
     "rimraf": "^3.0.2",
-    "slicknode-runtime": "^0.4.4",
+    "slicknode-runtime": "^0.4.5",
     "tar": "^6.0.5",
     "tslib": "^1",
     "uuid": "^8.3.2",
