@@ -30,7 +30,7 @@ resolvers:
     # The field name (prepended with the module namespace to avoid name collisions)
     MyModule_hello:
       # Path to the JS source file where the custom resolver logic is implemented (within module)
-      handler: src/resolvers/Query.MyModule_hello
+      handler: src/resolvers/Query.MyModule_hello.js
 ```
 
 For the field to be exposed via the GraphQL API we have to add it to

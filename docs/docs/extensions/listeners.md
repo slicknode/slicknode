@@ -17,8 +17,8 @@ your `slicknode.yml` file that contains the code that you want to execute:
 listeners:
   # The name of the event
   - event: mutation.createUser.AFTER
-    # The path to the NodeJS module that contains the code (".js" can be omitted)
-    handler: dist/listeners/afterCreateUser
+    # The path to the NodeJS module that contains the code
+    handler: dist/listeners/afterCreateUser.js
 ```
 
 This listens to the event `mutation.createUser.AFTER` and invokes the handler that is located in the specified file
@@ -52,7 +52,7 @@ the handler function.
 ```yaml
 listeners:
   - event: mutation.createUser.BEFORE
-    handler: src/listeners/beforeCreateUser
+    handler: src/listeners/beforeCreateUser.js
 ```
 
 **src/listeners/beforeCreateUser:**
@@ -90,7 +90,7 @@ configuration of your `slicknode.yml` could look something like this:
 ```yaml
 listeners:
   - event: mutation.createUser.AFTER
-    handler: src/listeners/afterCreateUser
+    handler: src/listeners/afterCreateUser.js
     # Additional configuration for this specific listener:
     config:
       # Query of the mutation payload to be sent to handler

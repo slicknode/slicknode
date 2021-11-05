@@ -88,7 +88,7 @@ resolvers:
     # The mutation name as defined in the schema (prepended with the module namespace to avoid name collisions)
     Blog_registerUser:
       # Path to the JS source file where the custom resolver logic is implemented (within module)
-      handler: src/resolvers/Mutation.Blog_registerUser
+      handler: src/resolvers/Mutation.Blog_registerUser.js
 ```
 
 ## Configure Permissions
