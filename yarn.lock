@@ -1591,7 +1591,7 @@ __metadata:
     faker: ^4.1.0
     glob: ^7.1.6
     graphql: ^15.5.0
-    graphql-query-complexity: ^0.10.0
+    graphql-query-complexity: ^0.11.0
     graphql-tools: ^4.0.5
     helmet: ^3.21.3
     i18n: ^0.13.3
@@ -6353,14 +6353,14 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"graphql-query-complexity@npm:^0.10.0":
-  version: 0.10.0
-  resolution: "graphql-query-complexity@npm:0.10.0"
+"graphql-query-complexity@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "graphql-query-complexity@npm:0.11.0"
   dependencies:
     lodash.get: ^4.4.2
   peerDependencies:
-    graphql: ^14.5.0 || ^15.0.0
-  checksum: a26e1e6320d9a0701785ef2b65c595a602879b6af6e5fed5c7554b837c7b03f12a25386d98a364f733c6ad422168c6525637bf3082471cd27f155d6eb6d7d9cb
+    graphql: ^14.6.0 || ^15.0.0 || ^16.0.0
+  checksum: 7086c26f39eda9e2b4a538e6619486819dd65a48f319ea0bad732712875d86169c10a1a570bab00b3c82440dc6c083e2bff11334e950911b08a8b15cee82823f
   languageName: node
   linkType: hard
 
