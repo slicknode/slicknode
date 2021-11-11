@@ -29,7 +29,10 @@ jobs:
       S3_IMAGE_ENDPOINT_CDN: http://s3:9000/image/
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - name: Launch Services
         run: docker-compose up -d
         if: ${{ matrix.os == 'ubuntu-latest' }}
