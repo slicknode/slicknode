@@ -1,6 +1,6 @@
 {
   "name": "@slicknode/slicknode-express",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Slicknode GraphQL Server",
   "main": "dist/index.js",
   "repository": "https://github.com/slicknode/slicknode-express.git",
