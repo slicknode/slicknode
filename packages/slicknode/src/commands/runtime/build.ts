@@ -14,7 +14,7 @@ import { IModuleListItem } from '../../utils/getModuleList';
 
 export class RuntimeBuildCommand extends EnvCommand {
   public static description =
-    'Builds the source package for the runtime to be deployed';
+    'Builds the source package for the runtime with the custom extensions';
   public static args = [
     {
       name: 'output',
@@ -306,6 +306,7 @@ Deploy the build to the google cloud, for example:
 
   gcloud functions deploy ${functionName} \\
     --runtime nodejs14 \\
+    --entry-point handler \\
     --allow-unauthenticated \\
     --trigger-http \\
     --source ${input.args.output} \\

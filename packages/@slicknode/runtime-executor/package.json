@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "node-fetch": "^2.6.1",
-    "slicknode-runtime": "^0.4.4"
+    "slicknode-runtime": "^0.4.5"
   },
   "files": [
     "dist",

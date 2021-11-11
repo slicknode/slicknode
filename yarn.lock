@@ -1749,7 +1749,7 @@ __metadata:
     node-fetch: ^2.6.1
     prettier: ^2.3.1
     rimraf: ^3.0.2
-    slicknode-runtime: ^0.4.4
+    slicknode-runtime: ^0.4.5
     typescript: ^4.4.3
     uuid: ^8.3.2
   languageName: unknown
@@ -11674,10 +11674,10 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"slicknode-runtime@npm:^0.4.4":
-  version: 0.4.4
-  resolution: "slicknode-runtime@npm:0.4.4"
-  checksum: 4b10e514f520f27e5e4029888cf16a1c127a4a2134d2da6a7c34294a71da6654ca485493f8d1ae45a3f336d47376b9f936418ba646bf9bcd3e1310d5c875428c
+"slicknode-runtime@npm:^0.4.5":
+  version: 0.4.5
+  resolution: "slicknode-runtime@npm:0.4.5"
+  checksum: 8be2a0a5c4f1a2882f4719bef6e53e2e150a1beb5deac9bb34edfec83572c4411deb3e64c9c2f1a363abdb47f54b780f917e390968944140072ec45786ee4ff3
   languageName: node
   linkType: hard
 
@@ -11750,7 +11750,7 @@ fsevents@~2.3.2:
     prettier: ^2.3.1
     rimraf: ^3.0.2
     sinon: ^11.1.1
-    slicknode-runtime: ^0.4.4
+    slicknode-runtime: ^0.4.5
     supertest: ^4.0.2
     tar: ^6.0.5
     ts-mock-imports: ^1.3.7
