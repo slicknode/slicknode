@@ -1,6 +1,6 @@
 import { flags } from '@oclif/command';
 import cli from 'cli-ux';
-import { mkdirpSync, pathExists, readdir } from 'fs-extra';
+import { mkdirpSync, pathExists, readdir, statSync } from 'fs-extra';
 import * as _ from 'lodash';
 import * as path from 'path';
 import { Uploadable } from '@slicknode/client-node';
@@ -13,6 +13,7 @@ import { packProject, randomName } from '../utils';
 import { importGitRepository } from '../utils/importGitRepository';
 import { pullDependencies } from '../utils/pullDependencies';
 import { copyTemplate } from '../utils/copyTemplate';
+import { directory } from '../parsers';
 
 export const LIST_CLUSTER_QUERY = `query {
   listCluster(first: 100, filter: {node: {openForProjects: true}}) {
@@ -50,10 +51,21 @@ export default class InitCommand extends BaseCommand {
       description: 'Git repository URL to be used as template',
       parse: (value: string) => {
         if (
-          !validator.isURL(value, {
+          validator.isURL(value, {
             protocols: ['http', 'https', 'ssh', 'git'],
           })
         ) {
+          return value;
+        }
+
+        const [basePath] = value.split('#');
+        let isDirectory = false;
+        try {
+          isDirectory = statSync(basePath).isDirectory();
+        } catch (e) {
+          // ignore
+        }
+        if (!isDirectory) {
           throw new Error(
             `The template URL is invalid or has an unsupported format: "${value}". Please provide a public Git URL`
           );
