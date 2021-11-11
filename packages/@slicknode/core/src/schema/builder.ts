@@ -64,6 +64,7 @@ import { sanitizeInput, validateInput } from '../validation/index';
 
 import {
   DirectiveLocationEnum,
+  getNamedType,
   graphql,
   GraphQLBoolean,
   GraphQLDirective,
@@ -471,9 +472,8 @@ export class SchemaBuilder {
           if (isOneToOneRelation(connectionConfig, this.typeConfigs)) {
             return;
           }
-          const connectionType = connectionConfigToConnectionType(
-            connectionConfig
-          );
+          const connectionType =
+            connectionConfigToConnectionType(connectionConfig);
           const edgeType = connectionConfigToEdgeType(
             connectionConfig,
             this.typeConfigs
@@ -618,7 +618,7 @@ export class SchemaBuilder {
           inputType = new GraphQLInputObjectType({
             name: inputTypeName,
             fields: (): GraphQLInputFieldConfigMap => {
-              return (_.mapValues(
+              return _.mapValues(
                 mutationConfig.inputFields,
                 (fieldConfig: FieldConfig, fieldName: string) => {
                   // @TODO: Create fieldConfigToInputField function that returns proper type
@@ -629,7 +629,7 @@ export class SchemaBuilder {
                     typeName: inputTypeName,
                   });
                 }
-              ) as unknown) as GraphQLInputFieldConfigMap; // @TODO: Fix types here
+              ) as unknown as GraphQLInputFieldConfigMap; // @TODO: Fix types here
             },
           });
         }
@@ -762,12 +762,13 @@ export class SchemaBuilder {
               try {
                 // Execute sequential hooks while updating / re-validating args
                 // Build variable definitions for re-validation of listener return values through GraphQL type schema
-                const variableDefinitions = (parse(
-                  `query A($input: ${this._getMutationInputTypeName(
-                    mutationConfig.name
-                  )}!){a(input: $input)}`
-                ).definitions[0] as OperationDefinitionNode)
-                  .variableDefinitions;
+                const variableDefinitions = (
+                  parse(
+                    `query A($input: ${this._getMutationInputTypeName(
+                      mutationConfig.name
+                    )}!){a(input: $input)}`
+                  ).definitions[0] as OperationDefinitionNode
+                ).variableDefinitions;
 
                 // Execute hooks sequentially
                 for (let i = 0; i < sequentialHooks.length; i++) {
@@ -824,9 +825,10 @@ export class SchemaBuilder {
             // Check for mutation hooks if there are any
             if (this._postMutationHooks.hasOwnProperty(mutationConfig.name)) {
               // Create schema with mutation payload as query node to get hook payload
-              const query = info.schema.getTypeMap()[
-                mutationConfig.name + 'Payload'
-              ];
+              const query = getNamedType(
+                info.schema.getMutationType().getFields()[mutationConfig.name]
+                  .type
+              );
               if (!(query instanceof GraphQLObjectType)) {
                 throw new Error(
                   'Mutation Payload needs to be of GraphQLObjectType'
@@ -1403,7 +1405,7 @@ export class SchemaBuilder {
       deprecationReason: config.deprecationReason,
     } as GraphQLFieldConfig<any, Context>;
     if (input && config.hasOwnProperty('defaultValue')) {
-      ((gqlFieldConfig as unknown) as GraphQLInputFieldConfig).defaultValue =
+      (gqlFieldConfig as unknown as GraphQLInputFieldConfig).defaultValue =
         config.defaultValue;
     }
 
