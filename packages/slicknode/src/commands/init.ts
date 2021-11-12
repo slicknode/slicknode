@@ -180,7 +180,7 @@ export default class InitCommand extends BaseCommand {
         // Install node modules if we have package.json
         if (await pathExists(path.join(targetDir, 'package.json'))) {
           cli.action.start('Installing node dependencies');
-          const npmInstallResult = execSync('npm install', {
+          const npmInstallResult = execSync('npm install --prefer-online', {
             cwd: targetDir,
             encoding: 'utf8',
             stdio: 'inherit',
