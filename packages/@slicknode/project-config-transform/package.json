@@ -49,5 +49,8 @@
   "peerDependencies": {
     "@slicknode/core": "*",
     "@slicknode/project-config-schema": "*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
