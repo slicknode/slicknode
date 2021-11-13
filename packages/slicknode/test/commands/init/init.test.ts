@@ -293,12 +293,12 @@ describe('init', () => {
           .toString()
       );
       expect(blogSchema.kind).to.equal(Kind.DOCUMENT);
-      expect(blogSchema.definitions.length).to.be.above(1);
+      expect(blogSchema.definitions.length).to.equal(1);
 
       const postType: DefinitionNode = blogSchema
         .definitions[0] as ObjectTypeDefinitionNode;
       expect(postType.kind).to.equal(Kind.OBJECT_TYPE_DEFINITION);
-      expect(postType.name.value).to.equal('Blog_Post');
+      expect(postType.name.value).to.equal('Blog_Page');
 
       // Check if node_modules was installed
       const nextPackageJson = JSON.parse(
@@ -308,13 +308,13 @@ describe('init', () => {
               ctx.workspace!,
               'test-dir',
               'node_modules',
-              'next',
+              'graphql',
               'package.json'
             )
           )
           .toString()
       );
-      expect(nextPackageJson.name).to.equal('next');
+      expect(nextPackageJson.name).to.equal('graphql');
     });
 
   mockRegistry(test)
@@ -331,7 +331,7 @@ describe('init', () => {
     .workspaceCommand(EMPTY_DIR, [
       'init',
       'test-dir',
-      `${REPO_PATH}#ce1827449ab1d9508616e902645291a348f9a128`,
+      `${REPO_PATH}#94ded0d013ba309a90023ad48503c038f68918dd`,
     ])
     .it('initializes from commit hash successfully', (ctx) => {
       // Check slicknode.yml content
@@ -344,9 +344,7 @@ describe('init', () => {
         dependencies: {
           '@private/blog': './modules/blog',
           auth: 'latest',
-          content: 'latest',
           core: 'latest',
-          image: 'latest',
           relay: 'latest',
         },
       });
@@ -399,9 +397,7 @@ describe('init', () => {
           .toString()
       );
       expect(packageJson.dependencies).to.deep.equal({
-        next: '^9.5.3',
-        react: '^16.13.1',
-        'react-dom': '^16.13.1',
+        graphql: '^16.0.1',
       });
     });
 });
