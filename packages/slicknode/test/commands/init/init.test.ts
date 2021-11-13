@@ -331,7 +331,7 @@ describe('init', () => {
     .workspaceCommand(EMPTY_DIR, [
       'init',
       'test-dir',
-      `${REPO_PATH}#b3262fc1ac2793e7199ba8b2b546d767c45ad4e2`,
+      `${REPO_PATH}#ce1827449ab1d9508616e902645291a348f9a128`,
     ])
     .it('initializes from commit hash successfully', (ctx) => {
       // Check slicknode.yml content
@@ -342,8 +342,11 @@ describe('init', () => {
       );
       expect(slicknodeYml).to.deep.equal({
         dependencies: {
+          '@private/blog': './modules/blog',
           auth: 'latest',
+          content: 'latest',
           core: 'latest',
+          image: 'latest',
           relay: 'latest',
         },
       });
