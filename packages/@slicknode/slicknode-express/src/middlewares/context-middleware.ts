@@ -321,7 +321,7 @@ async function loadProject(params: {
 
     // Get all dynamic modules
     const dynamicModules = modules.filter(
-      (module) => module.kind === ModuleKind.DYNAMIC
+      (module) => module.kind === ModuleKind.DYNAMIC && module.runtime
     );
 
     const defaultRuntime = new NodeRuntime({
