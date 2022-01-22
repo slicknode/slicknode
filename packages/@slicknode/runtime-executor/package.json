@@ -22,7 +22,7 @@
     "lib": "./dist"
   },
   "dependencies": {
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "slicknode-runtime": "^0.4.5"
   },
   "files": [
