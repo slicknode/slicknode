@@ -85,6 +85,8 @@ export const createImageMutation: MutationConfig = {
       key,
       bucket: S3_IMAGE_BUCKET,
       mimeType,
+      size: contentLength,
+      createdBy: context.auth.uid,
     });
 
     // Generate upload URL
