@@ -13,6 +13,7 @@ import { promisify } from 'util';
 import fs from 'fs';
 import fetch from 'node-fetch';
 import path from 'path';
+import { fromGlobalId } from '../../../../utils/id';
 
 const TEST_IMAGES = {
   png: path.resolve(__dirname, './assets/testimage.png'),
@@ -31,6 +32,10 @@ mutation M($input: createImageInput!) {
       height
       mimeType
       url
+      createdBy {
+        id
+      }
+      size
     }
     uploadUrl
   }
@@ -170,5 +175,29 @@ describe('createImage mutation', () => {
         );
       }
     }
+  });
+
+  it('set size, createdBy auto values', async () => {
+    const file = await promisify(fs.readFile)(TEST_IMAGES.png);
+    const result = await executeQuery(
+      CREATE_IMAGE_MUTATION,
+      context,
+      {
+        input: {
+          fileName: 'test-image.png',
+          contentLength: file.length,
+        },
+      },
+      {
+        authContext: user.auth,
+      }
+    );
+
+    const data = result.createImage;
+    expect(data.node.size).to.equal(file.length);
+    expect(fromGlobalId(data.node.createdBy.id).id).to.equal(
+      String(user.user.id)
+    );
+    expect(data.node.url).to.include('test-image.png');
   });
 });
