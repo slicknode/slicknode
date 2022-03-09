@@ -1,3 +1,6 @@
 [submodule "packages/slicknode/test/commands/init/fixtures/project-repo"]
 	path = packages/slicknode/test/commands/init/fixtures/project-repo
 	url = https://github.com/slicknode/slicknode-project-template-ci.git
+[submodule "packages/slicknode/src/utils/__tests__/fixtures/project-repo"]
+	path = packages/slicknode/src/utils/__tests__/fixtures/project-repo
+	url = https://github.com/slicknode/slicknode-project-template-ci.git

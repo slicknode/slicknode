@@ -124,9 +124,8 @@ describe('status', () => {
     ])
     .catch(/Abort/)
     .it('fails for invalid module slicknode.yml', (ctx) => {
-      expect(ctx.stderr).to.contain(
-        'Invalid value at path "module,invalidAttribute"'
-      );
+      expect(ctx.stderr).to.contain('Invalid value at path');
+      expect(ctx.stderr).to.contain('"module,invalidAttribute"');
     });
 
   test

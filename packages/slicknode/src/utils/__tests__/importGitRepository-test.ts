@@ -10,6 +10,7 @@ chai.use(chaiAsPromised);
 
 describe('importGitRepository', () => {
   let dir: string;
+  const REPO_PATH = path.join(__dirname, 'fixtures', 'project-repo');
 
   beforeEach(async () => {
     // Create test dir
@@ -24,7 +25,7 @@ describe('importGitRepository', () => {
 
   it('loads git repository into folder', async () => {
     await importGitRepository({
-      repository: 'https://github.com/slicknode/slicknode.git',
+      repository: REPO_PATH,
       targetDir: dir,
     });
 
@@ -37,12 +38,12 @@ describe('importGitRepository', () => {
     const result = JSON.parse(
       (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
-    expect(result.private).to.equal(true);
+    expect(result.main).to.equal('index.js');
   });
 
   it('loads git repository into folder keeping .git files', async () => {
     await importGitRepository({
-      repository: 'https://github.com/slicknode/slicknode.git',
+      repository: REPO_PATH,
       targetDir: dir,
       keepGit: true,
     });
@@ -56,13 +57,12 @@ describe('importGitRepository', () => {
     const result = JSON.parse(
       (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
-    expect(result.private).to.equal(true);
+    expect(result.main).to.equal('index.js');
   });
 
   it('can checkout specific commit hash', async () => {
     await importGitRepository({
-      repository:
-        'https://github.com/slicknode/slicknode.git#5e2fd55e355244fc819d7b29aa86d11dbcae34d6',
+      repository: `${REPO_PATH}#94ded0d013ba309a90023ad48503c038f68918dd`,
       targetDir: dir,
     });
 
@@ -75,8 +75,8 @@ describe('importGitRepository', () => {
     const result = JSON.parse(
       (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
-    expect(result.name).to.equal('slicknode');
-    expect(result.version).to.equal('0.7.0');
+    expect(result.name).to.equal('slicknode-project-template-ci');
+    expect(result.version).to.equal('1.0.0');
   });
 
   it('throws error if directory is not empty', async () => {
@@ -85,7 +85,7 @@ describe('importGitRepository', () => {
 
     return expect(
       importGitRepository({
-        repository: 'https://github.com/slicknode/slicknode.git',
+        repository: REPO_PATH,
         targetDir: dir,
       })
     ).to.eventually.rejectedWith('The directory is not empty');
@@ -97,7 +97,7 @@ describe('importGitRepository', () => {
     await writeFile(path.join(dir, existingFileName), 'test');
 
     await importGitRepository({
-      repository: 'https://github.com/slicknode/slicknode.git',
+      repository: REPO_PATH,
       targetDir: dir,
       force: true,
     });
@@ -114,7 +114,7 @@ describe('importGitRepository', () => {
     const result = JSON.parse(
       (await readFile(path.join(dir, 'package.json'))).toString('utf-8')
     );
-    expect(result.private).to.equal(true);
+    expect(result.main).to.equal('index.js');
   });
 
   it('throws error for invalid git repo', async () => {
@@ -129,8 +129,7 @@ describe('importGitRepository', () => {
   it('throws error for invalid git reference', async () => {
     return expect(
       importGitRepository({
-        repository:
-          'https://github.com/slicknode/slicknode.git#invalidreference',
+        repository: `${REPO_PATH}#invalidreference`,
         targetDir: dir,
       })
     ).to.eventually.rejectedWith(
