@@ -1653,7 +1653,7 @@ __metadata:
     "@types/sinon-chai": ^3.2.8
     "@types/supertest": ^2.0.12
     "@types/uuid": ^3.4.10
-    "@types/validator": ^10.11.3
+    "@types/validator": ^13.7.2
     adm-zip: ^0.5.9
     aws-sdk: ^2.1121.0
     babel-runtime: ^6.26.0
@@ -1704,7 +1704,7 @@ __metadata:
     tsconfig-paths: ^3.14.1
     typescript: ^4.6.3
     uuid: ^8.3.2
-    validator: ^9.4.1
+    validator: ^13.7.0
   languageName: unknown
   linkType: soft
 
@@ -2662,17 +2662,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/validator@npm:^10.11.3":
-  version: 10.11.3
-  resolution: "@types/validator@npm:10.11.3"
-  checksum: 07db233c8717043594a41d3f9e044216ed29da0e7db74b345bc6b8a6cb0e3fc4f808e98f7ce63d3912ba1890af692a9673924bfa6078493ce5576ce857b20fa0
-  languageName: node
-  linkType: hard
-
-"@types/validator@npm:^9.4.4":
-  version: 9.4.4
-  resolution: "@types/validator@npm:9.4.4"
-  checksum: d639ffbdb8dcbba951780977376701b7d5ecc574129ffcd591479461bcd40439ae5bf9663d2bfa513ef3f4f58c2e8ac7edbce994b58dfd2f82205cc2e38cc804
+"@types/validator@npm:^13.7.2":
+  version: 13.7.2
+  resolution: "@types/validator@npm:13.7.2"
+  checksum: e679261dd5392adfeb9b20ba2eaf7d668049ad03b24409a6921bb6a3ee4c3135d46cc536a0eafbbda7f642b196696a6e3e1e615b2d1194330d49b22f1f0acb59
   languageName: node
   linkType: hard
 
@@ -12012,7 +12005,7 @@ fsevents@~2.3.2:
     "@types/supertest": ^2.0.12
     "@types/tar": ^4.0.5
     "@types/uuid": ^3.4.10
-    "@types/validator": ^9.4.4
+    "@types/validator": ^13.7.2
     "@types/wrap-ansi": ^3.0.0
     adm-zip: ^0.5.9
     aws-sdk: ^2.1121.0
@@ -13619,13 +13612,6 @@ typescript@^4.6.3:
   version: 13.7.0
   resolution: "validator@npm:13.7.0"
   checksum: 2b83283de1222ca549a7ef57f46e8d49c6669213348db78b7045bce36a3b5843ff1e9f709ebf74574e06223461ee1f264f8cc9a26a0060a79a27de079d8286ef
-  languageName: node
-  linkType: hard
-
-"validator@npm:^9.4.1":
-  version: 9.4.1
-  resolution: "validator@npm:9.4.1"
-  checksum: b54e9537dd0f1f0de62cb24b0aa31b1e55125ce3d402b63deefb6518e45af2120a4f9a00c787a6e6895fb29914d368b26593610f1c56685bfea2c0ebae1e7eb9
   languageName: node
   linkType: hard
 

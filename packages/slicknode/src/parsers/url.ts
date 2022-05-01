@@ -1,5 +1,5 @@
-import * as validator from 'validator';
-import IsURLOptions = ValidatorJS.IsURLOptions;
+import validator from 'validator';
+import type { IsURLOptions } from 'validator/lib/isURL';
 
 interface IUrlParserParams extends IsURLOptions {
   message?: string;
