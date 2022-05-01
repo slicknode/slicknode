@@ -47,7 +47,7 @@
     "@types/form-data": "^2.5.0",
     "@types/mocha": "^9.1.1",
     "@types/nock": "^11.1.0",
-    "@types/node": "^16.11.29",
+    "@types/node": "^14.18.15",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "chai": "^4.3.6",

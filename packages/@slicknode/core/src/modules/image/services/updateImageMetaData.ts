@@ -43,7 +43,9 @@ export async function updateImageMetaData(params: {
     // Load actual file
     const fileResult = await imageClient.getObject(headObjectParams).promise();
     // Get image dimensions, check if is valid image
-    const { width, height } = imageSize(Buffer.from(fileResult.Body));
+    const { width, height } = imageSize(
+      Buffer.from(fileResult.Body as unknown as Buffer)
+    );
     if (!width || !height) {
       await imageClient.deleteObject(headObjectParams).promise();
       throw new Error('Could not determine image size');

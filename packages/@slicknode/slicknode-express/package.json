@@ -47,7 +47,7 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "@types/adm-zip": "^0.4.34",
+    "@types/adm-zip": "^0.5.0",
     "@types/chai": "^4.3.1",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
@@ -55,7 +55,7 @@
     "@types/i18n": "^0.13.2",
     "@types/mocha": "^9.1.1",
     "@types/multer": "^1.4.7",
-    "@types/node": "^16.11.29",
+    "@types/node": "^14.18.15",
     "chai": "^4.3.6",
     "eslint": "^7.32.0",
     "esm": "^3.2.25",
