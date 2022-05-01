@@ -17,6 +17,7 @@ import { fromGlobalId } from '../../../../utils/id';
 
 import AbstractFieldHandler from './AbstractFieldHandler';
 import { FieldStorageType } from '../../../../definition/FieldStorageType';
+import validator from 'validator';
 
 /* eslint-disable no-unused-vars */
 export default class IDHandler extends AbstractFieldHandler {
