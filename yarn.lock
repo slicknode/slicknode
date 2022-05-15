@@ -2867,15 +2867,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wry/equality@npm:^0.1.2":
-  version: 0.1.11
-  resolution: "@wry/equality@npm:0.1.11"
-  dependencies:
-    tslib: ^1.9.3
-  checksum: 1a26a0fd11e3e3a6a197d9a54a5bec523caf693daa24ad2709f496e43dd3cd12290a0d17df81f8a783437795f6c64a1ca2717cdac6e79022bde4450c11e705c9
-  languageName: node
-  linkType: hard
-
 "JSONStream@npm:^1.0.4":
   version: 1.3.5
   resolution: "JSONStream@npm:1.3.5"
@@ -3120,34 +3111,6 @@ __metadata:
     normalize-path: ^3.0.0
     picomatch: ^2.0.4
   checksum: 985163db2292fac9e5a1e072bf99f1b5baccf196e4de25a0b0b81865ebddeb3b3eb4480734ef0a2ac8c002845396b91aa89121f5b84f93981a4658164a9ec6e9
-  languageName: node
-  linkType: hard
-
-"apollo-link@npm:^1.2.14":
-  version: 1.2.14
-  resolution: "apollo-link@npm:1.2.14"
-  dependencies:
-    apollo-utilities: ^1.3.0
-    ts-invariant: ^0.4.0
-    tslib: ^1.9.3
-    zen-observable-ts: ^0.8.21
-  peerDependencies:
-    graphql: ^0.11.3 || ^0.12.3 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: ad8d051ffceb270cdbbcc71d499bce2fda437a65fac6edc859a9e2dc0dbcb10b6a3f4da41789e786270aa358719c8b71315f383a698a74957df0d7aeea042918
-  languageName: node
-  linkType: hard
-
-"apollo-utilities@npm:^1.0.1, apollo-utilities@npm:^1.3.0":
-  version: 1.3.4
-  resolution: "apollo-utilities@npm:1.3.4"
-  dependencies:
-    "@wry/equality": ^0.1.2
-    fast-json-stable-stringify: ^2.0.0
-    ts-invariant: ^0.4.0
-    tslib: ^1.10.0
-  peerDependencies:
-    graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 6e0192a3420782909c930f5230808d7fbbdbcdfccddd960120e19bab251b77a16e590b05dbb4a7da2c27c59077fbfd53e56819a9fae694debe7f898e8b0ec1e9
   languageName: node
   linkType: hard
 
@@ -5001,13 +4964,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deprecated-decorator@npm:^0.1.6":
-  version: 0.1.6
-  resolution: "deprecated-decorator@npm:0.1.6"
-  checksum: 26e4ca36e6ac4c2c19a7330d602c12344337f39472f46ec3dc5fe2dc15eeeefa89634c88596d0d9bcf032619cf266a0daeb385f98a1130449db20d0d8cfebb7d
-  languageName: node
-  linkType: hard
-
 "deprecation@npm:^2.0.0, deprecation@npm:^2.3.1":
   version: 2.3.1
   resolution: "deprecation@npm:2.3.1"
@@ -6683,21 +6639,6 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"graphql-tools@npm:^4.0.8":
-  version: 4.0.8
-  resolution: "graphql-tools@npm:4.0.8"
-  dependencies:
-    apollo-link: ^1.2.14
-    apollo-utilities: ^1.0.1
-    deprecated-decorator: ^0.1.6
-    iterall: ^1.1.3
-    uuid: ^3.1.0
-  peerDependencies:
-    graphql: ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 6a2dc7f158a87444943db0762dafdbcc6dbfd57a398c6615721a6c1a150641d76f5efca2109685aadb0c1df6ba8ff5bd0fdddcb690c36d3d4f608b46e40427a7
-  languageName: node
-  linkType: hard
-
 "graphql@npm:14.1.1":
   version: 14.1.1
   resolution: "graphql@npm:14.1.1"
@@ -7959,7 +7900,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"iterall@npm:^1.1.3, iterall@npm:^1.2.2":
+"iterall@npm:^1.2.2":
   version: 1.3.0
   resolution: "iterall@npm:1.3.0"
   checksum: c78b99678f8c99be488cca7f33e4acca9b72c1326e050afbaf023f086e55619ee466af0464af94a0cb3f292e60cb5bac53a8fd86bd4249ecad26e09f17bb158b
@@ -12067,6 +12008,7 @@ fsevents@~2.3.2:
   version: 0.0.0-use.local
   resolution: "slicknode@workspace:packages/slicknode"
   dependencies:
+    "@graphql-tools/wrap": ^8.4.17
     "@oclif/command": ^1.8.16
     "@oclif/config": ^1.18.3
     "@oclif/dev-cli": ^1.26.10
@@ -12115,7 +12057,6 @@ fsevents@~2.3.2:
     fs-extra: ^9.1.0
     glob: ^7.2.0
     graphql: ^15.8.0
-    graphql-tools: ^4.0.8
     indent-string: ^4.0.0
     inquirer: ^7.3.3
     joi: ^17.6.0
@@ -13109,15 +13050,6 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"ts-invariant@npm:^0.4.0":
-  version: 0.4.4
-  resolution: "ts-invariant@npm:0.4.4"
-  dependencies:
-    tslib: ^1.9.3
-  checksum: 58b32fb6b7c479e602e55b9eb63bb99a203c5db09367d3aa7c3cbe000ba62f919eea7f031f55172df9b6d362a6f1a87e906df84b04b8c74c88e507ac58f7a554
-  languageName: node
-  linkType: hard
-
 "ts-mock-imports@npm:^1.3.8":
   version: 1.3.8
   resolution: "ts-mock-imports@npm:1.3.8"
@@ -13199,7 +13131,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.10.0, tslib@npm:^1.14.1, tslib@npm:^1.8.0, tslib@npm:^1.8.1, tslib@npm:^1.9.0, tslib@npm:^1.9.3":
+"tslib@npm:^1.14.1, tslib@npm:^1.8.0, tslib@npm:^1.8.1, tslib@npm:^1.9.0":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
@@ -13642,7 +13574,7 @@ typescript@^4.6.3:
   languageName: node
   linkType: hard
 
-"uuid@npm:^3.1.0, uuid@npm:^3.3.2, uuid@npm:^3.3.3":
+"uuid@npm:^3.3.2, uuid@npm:^3.3.3":
   version: 3.4.0
   resolution: "uuid@npm:3.4.0"
   bin:
@@ -14160,22 +14092,5 @@ typescript@^4.6.3:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
-  languageName: node
-  linkType: hard
-
-"zen-observable-ts@npm:^0.8.21":
-  version: 0.8.21
-  resolution: "zen-observable-ts@npm:0.8.21"
-  dependencies:
-    tslib: ^1.9.3
-    zen-observable: ^0.8.0
-  checksum: 2931628598937effcc77acf88ac8d3468c0584bbc4488726ae2c94f6a02615ff80e9d6dc0943b71bc874466ab371837737ce8245eed3bfea38daa466a2fdc6ce
-  languageName: node
-  linkType: hard
-
-"zen-observable@npm:^0.8.0":
-  version: 0.8.15
-  resolution: "zen-observable@npm:0.8.15"
-  checksum: b7289084bc1fc74a559b7259faa23d3214b14b538a8843d2b001a35e27147833f4107590b1b44bf5bc7f6dfe6f488660d3a3725f268e09b3925b3476153b7821
   languageName: node
   linkType: hard

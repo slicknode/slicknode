@@ -1,7 +1,5 @@
 /**
  * Created by Ivo Meißner on 11.08.17.
- *
- * @flow
  */
 
 import fs from 'fs';
@@ -21,7 +19,8 @@ import {
   printSchema,
   validateSchema as graphqlValidateSchema,
 } from 'graphql';
-import { RenameRootFields, RenameTypes, transformSchema } from 'graphql-tools';
+
+import { RenameTypes, RenameRootFields, wrapSchema } from '@graphql-tools/wrap';
 import * as _ from 'lodash';
 
 async function validateSchema(
@@ -107,13 +106,15 @@ function transformRemoteSchema(
   schema: string,
   namespace: string | null
 ): string {
-  let transformedSchema = buildSchema(schema);
-  transformedSchema = transformSchema(transformedSchema, [
-    new RenameTypes((name) => (namespace ? `${namespace}_${name}` : name)),
-    new RenameRootFields((operation, name) =>
-      namespace ? `${namespace}_${name}` : name
-    ),
-  ]);
+  const transformedSchema = wrapSchema({
+    schema: buildSchema(schema),
+    transforms: [
+      new RenameTypes((name) => (namespace ? `${namespace}_${name}` : name)),
+      new RenameRootFields((operation, name) =>
+        namespace ? `${namespace}_${name}` : name
+      ),
+    ],
+  });
   const rootTypeNames: string[] = [];
   const mutationType = transformedSchema.getMutationType();
   if (mutationType) {
