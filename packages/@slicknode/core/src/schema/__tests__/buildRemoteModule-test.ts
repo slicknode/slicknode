@@ -275,7 +275,7 @@ describe('SchemaBuilder', () => {
         });
       } catch (e) {
         expect(formatError(e)).to.deep.equal({
-          message: 'Some other error occured\nSome error occured',
+          message: 'Some other error occured, \nSome error occured',
           locations: [{ line: 6, column: 11 }],
           path: ['Test_posts'],
           extensions: { code: 'REMOTE_API_ERROR' },
@@ -369,15 +369,15 @@ describe('SchemaBuilder', () => {
           variables,
           query: `{
           posts {
+            ... on Post {
+              id
+            }
             title
             ... on Post {
               title
               ... on Post {
                 id
               }
-            }
-            ... on Post {
-              id
             }
             ... on Post {
               id
