@@ -101,3 +101,4 @@ export * from './helpers';
 export { ProjectStatus } from './ProjectStatus';
 
 export { IndexConfig } from './IndexConfig';
+export { MergeInfo } from './MergeInfo';

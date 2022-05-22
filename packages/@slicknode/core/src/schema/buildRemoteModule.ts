@@ -14,29 +14,24 @@ import {
   ModuleConfig,
   ObjectTypeConfig,
   TypeConfig,
+  MergeInfo,
 } from '../definition';
 import {
-  makeRemoteExecutableSchema,
-  transformSchema,
   RenameTypes,
   RenameRootFields,
-  MergeInfo,
-} from 'graphql-tools';
+  wrapSchema,
+  defaultCreateProxyingResolver,
+} from '@graphql-tools/wrap';
 import Context from '../context';
 import fetch from 'node-fetch';
 import {
   assertOutputType,
+  buildSchema,
   FieldNode,
-  FragmentSpreadNode,
-  GraphQLFieldConfigMap,
-  GraphQLFieldMap,
-  GraphQLObjectTypeConfig,
   InlineFragmentNode,
   Kind,
   print,
   SelectionNode,
-} from 'graphql';
-import {
   GraphQLArgument,
   GraphQLEnumValue,
   GraphQLField,
@@ -46,8 +41,6 @@ import {
   GraphQLOutputType,
   GraphQLResolveInfo,
   SelectionSetNode,
-} from 'graphql';
-import {
   getNamedType,
   GraphQLEnumType,
   GraphQLInputObjectType,
@@ -65,6 +58,7 @@ import { builtInTypes } from './builder';
 import { deepReplaceVariables } from '../utils/object';
 import { CACHE_MIN_AGE, CACHE_REMOTE_DATA_DEFAULT_AGE } from '../config';
 import { RemoteApiError } from '../errors';
+import { AsyncExecutor } from '@graphql-tools/utils';
 
 export type FetcherOperation = {
   query: DocumentNode;
@@ -82,10 +76,10 @@ export type FetcherOperation = {
  * @param moduleConfig
  * @returns {function(FetcherOperation)}
  */
-function createFetcher(moduleConfig: ModuleConfig) {
-  return async (operation: FetcherOperation) => {
+function createFetcher(moduleConfig: ModuleConfig): AsyncExecutor {
+  return async (operation) => {
     // Replace variables in config
-    const context = operation.context && operation.context.graphqlContext;
+    const context = operation.context;
     if (!context) {
       throw new Error('No GraphQL execution context available');
     }
@@ -103,7 +97,7 @@ function createFetcher(moduleConfig: ModuleConfig) {
     const config = {
       method: 'POST',
       body: JSON.stringify({
-        query: print(operation.query),
+        query: print(operation.document),
         variables: operation.variables || {},
         ...(operation.operationName
           ? { operationName: operation.operationName }
@@ -158,18 +152,23 @@ export default function buildRemoteModule(
     const newConfig = {
       ...config,
     };
-    let schema = makeRemoteExecutableSchema({
-      schema: config.rawSchema,
-      fetcher: createFetcher(config),
+
+    const originalSchema = wrapSchema({
+      schema: buildSchema(config.rawSchema),
+      executor: createFetcher(config),
     });
-    schema = transformSchema(schema, [
-      new RenameTypes((name) =>
-        config.namespace ? `${config.namespace}_${name}` : name
-      ),
-      new RenameRootFields((operation, name) =>
-        config.namespace ? `${config.namespace}_${name}` : name
-      ),
-    ]);
+    const schema = wrapSchema({
+      schema: originalSchema,
+      transforms: [
+        new RenameTypes((name) =>
+          config.namespace ? `${config.namespace}_${name}` : name
+        ),
+        new RenameRootFields((operation, name) =>
+          config.namespace ? `${config.namespace}_${name}` : name
+        ),
+      ],
+      createProxyingResolver: defaultCreateProxyingResolver,
+    });
 
     const mutationType = schema.getMutationType();
     const queryType = schema.getQueryType();
@@ -301,10 +300,10 @@ function typeToTypeConfig(type: GraphQLType): TypeConfig {
       kind: TypeKinds.TypeKind.INPUT_OBJECT,
       name: type.name,
       description: type.description,
-      fields: (_.mapValues(
+      fields: _.mapValues(
         type.getFields(),
         fieldToFieldConfig
-      ) as unknown) as FieldConfigMap,
+      ) as unknown as FieldConfigMap,
     };
     return inputObjectTypeConfig;
   } else if (type instanceof GraphQLEnumType) {
@@ -336,9 +335,7 @@ function typeToTypeConfig(type: GraphQLType): TypeConfig {
   throw new Error(`Unknown type ${type}`);
 }
 
-function unwrapType(
-  type: GraphQLType
-): {
+function unwrapType(type: GraphQLType): {
   required: boolean;
   list: boolean | Array<boolean>;
   typeName: string;
@@ -403,7 +400,7 @@ function fieldToFieldConfig(field: GraphQLField<any, any>): FieldConfig {
 }
 
 /**
- * Creates a new field resolver that also load data dependencies (for connections for example). The dependent
+ * Creates a new field resolver that also loads data dependencies (for connections for example). The dependent
  * fields are added to the selection set and passed to the original resolver
  *
  * @param resolver
@@ -428,6 +425,19 @@ function extendedRootResolver(
         ...(info.mergeInfo ? info.mergeInfo : {}),
         fragments,
       },
+      fieldNodes: info.fieldNodes.map((fieldNode) => {
+        if (fieldNode.selectionSet) {
+          return {
+            ...fieldNode,
+            selectionSet: extendSelectionSet({
+              selectionSet: fieldNode.selectionSet,
+              context,
+              type: info.returnType,
+            }),
+          };
+        }
+        return fieldNode.selectionSet;
+      }) as ReadonlyArray<FieldNode>,
       operation: {
         ...info.operation,
         selectionSet: extendSelectionSet({
@@ -440,9 +450,14 @@ function extendedRootResolver(
 
     // Catch error so we can expose remote API error to user with RemoteApiError
     try {
-      return await Promise.resolve(
+      const result = await Promise.resolve(
         resolver(source, args, context, extendedInfo)
       );
+      if (result instanceof Error) {
+        throw new RemoteApiError(result.message);
+      }
+
+      return result;
     } catch (e) {
       throw new RemoteApiError(e.message);
     }
@@ -504,10 +519,10 @@ function extendSelectionSet(options: {
   // Check if any of those are connections
   const namedType = getNamedType(type);
   loadedFields.filter((field) => {
-    const connectionConfig: ConnectionConfig = (_.get(
+    const connectionConfig: ConnectionConfig = _.get(
       context.schemaBuilder.connectionConfigs,
       `${namedType.name}.${field}`
-    ) as unknown) as ConnectionConfig | null;
+    ) as unknown as ConnectionConfig | null;
     if (connectionConfig) {
       const keyField: string = connectionConfig.source.keyField;
 

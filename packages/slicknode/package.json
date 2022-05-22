@@ -32,6 +32,7 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
+    "@graphql-tools/wrap": "^8.4.17",
     "@oclif/command": "^1.8.16",
     "@oclif/config": "^1.18.3",
     "@oclif/plugin-help": "^2.2.3",
@@ -48,7 +49,6 @@
     "fs-extra": "^9.1.0",
     "glob": "^7.2.0",
     "graphql": "^15.8.0",
-    "graphql-tools": "^4.0.8",
     "indent-string": "^4.0.0",
     "inquirer": "^7.3.3",
     "joi": "^17.6.0",
