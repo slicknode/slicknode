@@ -36,6 +36,8 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
+    "@graphql-tools/utils": "^8.6.10",
+    "@graphql-tools/wrap": "^8.4.17",
     "@slicknode/client-node": "workspace:*",
     "@slicknode/runtime-executor": "workspace:*",
     "adm-zip": "^0.5.9",
@@ -44,7 +46,7 @@
     "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "dataloader": "^1.4.0",
+    "dataloader": "^2.1.0",
     "deep-equal": "^1.1.1",
     "deep-freeze": "^0.0.1",
     "dotenv": "^8.6.0",
@@ -54,7 +56,6 @@
     "glob": "^7.2.0",
     "graphql": "^15.8.0",
     "graphql-query-complexity": "^0.11.0",
-    "graphql-tools": "^4.0.8",
     "helmet": "^3.23.3",
     "i18n": "^0.13.4",
     "image-size": "^0.8.3",
