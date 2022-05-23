@@ -1,6 +1,6 @@
 {
   "name": "slicknode",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "description": "GraphQL-First Application Framework and CMS for rapid software development: Serverless, declarative and extensible.",
   "bin": "./bin/run",
   "bugs": "https://github.com/slicknode/slicknode/issues",
