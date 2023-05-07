@@ -96,7 +96,7 @@
     "@types/es6-promisify": "^6.0.1",
     "@types/express": "^4.17.13",
     "@types/fs-extra": "^5.1.0",
-    "@types/glob": "^5.0.37",
+    "@types/glob": "^5.0.38",
     "@types/inquirer": "^0.0.43",
     "@types/js-yaml": "^3.12.7",
     "@types/listr": "^0.13.0",
@@ -104,7 +104,7 @@
     "@types/mocha": "^9.1.1",
     "@types/morgan": "^1.9.3",
     "@types/nock": "^10.0.3",
-    "@types/node": "^14.18.15",
+    "@types/node": "^14.18.45",
     "@types/node-fetch": "^2.6.1",
     "@types/rimraf": "^2.0.5",
     "@types/sinon": "^10.0.11",
@@ -128,7 +128,7 @@
     "ts-mock-imports": "^1.3.8",
     "ts-node": "^10.7.0",
     "tslint": "^5.20.1",
-    "typescript": "^4.6.3"
+    "typescript": "^4.9.5"
   },
   "oclif": {
     "commands": "./lib/commands",
