@@ -47,7 +47,7 @@
     "@types/form-data": "^2.5.0",
     "@types/mocha": "^9.1.1",
     "@types/nock": "^11.1.0",
-    "@types/node": "^14.18.15",
+    "@types/node": "^14.18.45",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "chai": "^4.3.6",
@@ -58,7 +58,7 @@
     "mocha": "^9.2.2",
     "nock": "^13.2.4",
     "rimraf": "^3.0.2",
-    "typescript": "^4.6.3",
+    "typescript": "^4.9.5",
     "typescript-eslint-parser": "^22.0.0"
   },
   "publishConfig": {
