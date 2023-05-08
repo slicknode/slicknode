@@ -40,7 +40,7 @@
     "@slicknode/core": "workspace:*",
     "@slicknode/slicknode-express": "workspace:*",
     "adm-zip": "^0.5.9",
-    "aws-sdk": "^2.1121.0",
+    "aws-sdk": "^2.1373.0",
     "body-parser": "^1.20.0",
     "chalk": "^4.1.2",
     "cli-ux": "^5.6.7",
