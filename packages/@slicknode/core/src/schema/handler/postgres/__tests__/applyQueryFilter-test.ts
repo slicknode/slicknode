@@ -4,9 +4,6 @@ import { createContextMock } from '../../../../test/utils';
 import toTableName from '../toTableName';
 import applyQueryFilter from '../applyQueryFilter';
 import { expect } from 'chai';
-import { QueryBuilder } from 'knex';
-import { ObjectTypeConfig } from '../../../../definition';
-import Context from '../../../../context';
 
 describe('applyQueryFilter', () => {
   testApplyQueryFilter(

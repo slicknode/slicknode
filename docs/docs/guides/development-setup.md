@@ -33,7 +33,8 @@ services:
     image: minio/minio
     ports:
       - '9000:9000'
-    command: minio server /export
+      - '9001:9001'
+    command: minio server /export --console-address ":9001"
     environment:
       - MINIO_ACCESS_KEY=fake_access
       - MINIO_SECRET_KEY=fake_secret
@@ -64,8 +65,8 @@ services:
       mc mb minio/upload || true &&
       mc mb minio/publicupload || true &&
       mc mb minio/image || true &&
-      mc policy set download minio/publicupload || true &&
-      mc policy set download minio/image || true &&
+      mc anonymous set download minio/publicupload || true &&
+      mc anonymous set download minio/image || true &&
       exit 0
       "
 ```

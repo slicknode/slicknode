@@ -12,11 +12,7 @@ import {
   TypeConfig,
 } from '../../../../definition';
 
-import {
-  HANDLER_POSTGRES,
-  HandlerError,
-  MigrationScope,
-} from '../../base';
+import { HANDLER_POSTGRES, HandlerError, MigrationScope } from '../../base';
 
 import { DEFAULT_PRIMARY_KEY } from '../constants';
 
@@ -28,7 +24,7 @@ import toUniqueConstraintName from '../toUniqueConstraintName';
 import applyQueryFilter from '../applyQueryFilter';
 import applyPermissionQueryFilter from '../applyPermissionQueryFilter';
 
-import Knex$Knex, { ColumnBuilder, QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 
 import { ID } from './index';
 
@@ -63,7 +59,7 @@ export default class RelatedObjectHandler extends AbstractFieldHandler {
       fieldType.fields[DEFAULT_PRIMARY_KEY];
 
     // Create column
-    let column: ColumnBuilder;
+    let column: Knex.ColumnBuilder;
     if (referencedIdField.storageType === FieldStorageType.UUID) {
       column = table.uuid(toColumnName(fieldName));
     } else {
@@ -86,7 +82,7 @@ export default class RelatedObjectHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   createFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -161,7 +157,7 @@ export default class RelatedObjectHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   updateFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -262,7 +258,7 @@ export default class RelatedObjectHandler extends AbstractFieldHandler {
     const referencedIdField: FieldConfig =
       fieldType.fields[DEFAULT_PRIMARY_KEY];
 
-    let column: ColumnBuilder;
+    let column: Knex.ColumnBuilder;
     if (referencedIdField.storageType === FieldStorageType.UUID) {
       column = table.uuid(toColumnName(fieldName));
     } else {
@@ -313,7 +309,7 @@ export default class RelatedObjectHandler extends AbstractFieldHandler {
    * @return Returns the query builder with filter arguments applied
    */
   applyQueryFilter(
-    queryBuilder: QueryBuilder,
+    queryBuilder: Knex.QueryBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     tableName: string,
@@ -322,7 +318,7 @@ export default class RelatedObjectHandler extends AbstractFieldHandler {
     context: Context,
     noPermissionFilters: boolean,
     preview: boolean
-  ): QueryBuilder {
+  ): Knex.QueryBuilder {
     // Check if we can do the filtering inline in object of if we need a join
     const keys = Object.keys(filterValue);
     if (keys.length === 1 && keys[0] === DEFAULT_PRIMARY_KEY) {
@@ -339,9 +335,8 @@ export default class RelatedObjectHandler extends AbstractFieldHandler {
       );
     } else if (keys.length > 0) {
       // Get object type config
-      const typeConfig: ObjectTypeConfig = context.schemaBuilder.getObjectTypeConfig(
-        fieldConfig.typeName
-      );
+      const typeConfig: ObjectTypeConfig =
+        context.schemaBuilder.getObjectTypeConfig(fieldConfig.typeName);
       if (!typeConfig.handler || typeConfig.handler.kind !== HANDLER_POSTGRES) {
         throw new Error('Related query filtering only allowed on RDBMS types');
       }
@@ -404,7 +399,7 @@ export default class RelatedObjectHandler extends AbstractFieldHandler {
     fieldName: string,
     fieldConfig: FieldConfig,
     addDefault: boolean,
-    db: Knex$Knex,
+    db: Knex,
     context: Context
   ): {
     [x: string]: any;
@@ -438,7 +433,7 @@ export default class RelatedObjectHandler extends AbstractFieldHandler {
    * The FieldConfig.defaultValue is passed as an argument and the function
    * returns a value that is then passed to knex.insert({fieldName: value})
    */
-  prepareDefaultValue(defaultValue: any, knex: Knex$Knex): any {
+  prepareDefaultValue(defaultValue: any, knex: Knex): any {
     return defaultValue;
   }
 

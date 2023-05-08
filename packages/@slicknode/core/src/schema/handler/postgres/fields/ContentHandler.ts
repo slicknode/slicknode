@@ -13,11 +13,7 @@ import {
 } from '../../../../definition';
 import _ from 'lodash';
 
-import {
-  HANDLER_POSTGRES,
-  HandlerError,
-  MigrationScope,
-} from '../../base';
+import { HANDLER_POSTGRES, HandlerError, MigrationScope } from '../../base';
 
 import toColumnName from '../toColumnName';
 import toTableName, { TableType } from '../toTableName';
@@ -27,7 +23,7 @@ import toUniqueConstraintName from '../toUniqueConstraintName';
 import applyQueryFilter from '../applyQueryFilter';
 import applyPermissionQueryFilter from '../applyPermissionQueryFilter';
 
-import Knex$Knex, { ColumnBuilder, QueryBuilder, SchemaBuilder } from 'knex';
+import type { Knex } from 'knex';
 import Context from '../../../../context';
 
 import AbstractFieldHandler from './AbstractFieldHandler';
@@ -49,7 +45,7 @@ export default class ContentHandler extends AbstractFieldHandler {
     assertFieldConfigSupported(fieldConfig);
 
     // Create column
-    let column: ColumnBuilder;
+    let column: Knex.ColumnBuilder;
     if (fieldConfig.list) {
       column = table.specificType(toColumnName(fieldName), 'uuid[]');
     } else {
@@ -72,7 +68,7 @@ export default class ContentHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   createFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -85,7 +81,7 @@ export default class ContentHandler extends AbstractFieldHandler {
     );
     const columnName = toColumnName(fieldName);
 
-    let schemaBuilder: SchemaBuilder;
+    let schemaBuilder: Knex.SchemaBuilder;
     // Create foreign key
     // Foreign keys don't work for array fields yet in postgres, ignore for list fields
     if (!fieldConfig.list) {
@@ -140,7 +136,7 @@ export default class ContentHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   updateFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -236,7 +232,7 @@ export default class ContentHandler extends AbstractFieldHandler {
     assertFieldConfigSupported(fieldConfig);
 
     // Create column
-    let column: ColumnBuilder;
+    let column: Knex.ColumnBuilder;
     if (fieldConfig.list) {
       column = table.specificType(toColumnName(fieldName), 'uuid[]');
     } else {
@@ -293,7 +289,7 @@ export default class ContentHandler extends AbstractFieldHandler {
    * @return Returns the query builder with filter arguments applied
    */
   applyQueryFilter(
-    queryBuilder: QueryBuilder,
+    queryBuilder: Knex.QueryBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     tableName: string,
@@ -302,11 +298,10 @@ export default class ContentHandler extends AbstractFieldHandler {
     context: Context,
     noPermissionFilters: boolean,
     preview: boolean
-  ): QueryBuilder {
+  ): Knex.QueryBuilder {
     // Get object type config
-    const typeConfig: ObjectTypeConfig = context.schemaBuilder.getObjectTypeConfig(
-      fieldConfig.typeName
-    );
+    const typeConfig: ObjectTypeConfig =
+      context.schemaBuilder.getObjectTypeConfig(fieldConfig.typeName);
     if (!typeConfig.handler || typeConfig.handler.kind !== HANDLER_POSTGRES) {
       throw new Error('Related query filtering only allowed on RDBMS types');
     }
@@ -368,7 +363,7 @@ export default class ContentHandler extends AbstractFieldHandler {
     fieldName: string,
     fieldConfig: FieldConfig,
     addDefault: boolean,
-    db: Knex$Knex,
+    db: Knex,
     context: Context
   ): {
     [x: string]: any;
@@ -397,7 +392,7 @@ export default class ContentHandler extends AbstractFieldHandler {
    * The FieldConfig.defaultValue is passed as an argument and the function
    * returns a value that is then passed to knex.insert({fieldName: value})
    */
-  prepareDefaultValue(defaultValue: any, knex: Knex$Knex): any {
+  prepareDefaultValue(defaultValue: any, knex: Knex): any {
     return defaultValue;
   }
 

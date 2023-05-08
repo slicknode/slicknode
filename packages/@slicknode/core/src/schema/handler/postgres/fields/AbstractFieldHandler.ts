@@ -3,7 +3,7 @@
  *
  */
 
-import Knex, { QueryBuilder, SchemaBuilder, TableBuilder } from 'knex';
+import type { Knex } from 'knex';
 
 import { FieldConfig, ObjectTypeConfig } from '../../../../definition';
 
@@ -20,7 +20,7 @@ export default class AbstractFieldHandler {
    * This can be used to create foreignKey constraints.
    */
   createField(
-    table: TableBuilder,
+    table: Knex.TableBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     scope: MigrationScope
@@ -65,7 +65,7 @@ export default class AbstractFieldHandler {
    * Deletes the DB columns for the table
    */
   deleteField(
-    table: TableBuilder,
+    table: Knex.TableBuilder,
     fieldName: string,
     fieldConfig: FieldConfig
   ): void {
@@ -76,7 +76,7 @@ export default class AbstractFieldHandler {
    * Updates the field in the existing table
    */
   updateField(
-    table: TableBuilder,
+    table: Knex.TableBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     previousConfig: FieldConfig,
@@ -99,7 +99,7 @@ export default class AbstractFieldHandler {
    * @return Returns the query builder with filter arguments applied
    */
   applyQueryFilter(
-    queryBuilder: QueryBuilder,
+    queryBuilder: Knex.QueryBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     tableName: string,
@@ -108,7 +108,7 @@ export default class AbstractFieldHandler {
     context: Context,
     noPermissionFilters: boolean,
     preview: boolean
-  ): QueryBuilder {
+  ): Knex.QueryBuilder {
     throw new Error('applyQueryFilter is not implemented');
   }
 

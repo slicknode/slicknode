@@ -6,7 +6,7 @@
 import { ObjectTypeConfig } from '../../../definition';
 import Context from '../../../context';
 import toTableName from './toTableName';
-import Knex, { QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 import permissionQueryToFilter from '../../../auth/permissionQueryToFilter';
 import applyQueryFilter from './applyQueryFilter';
 
@@ -54,14 +54,14 @@ function isMultiTableFilter(filter: Object, typeConfig: ObjectTypeConfig, contex
  * @private
  */
 export default function applyPermissionQueryFilter(params: {
-  query: QueryBuilder;
+  query: Knex.QueryBuilder;
   typeConfig: ObjectTypeConfig;
   permissions: Array<Permission> | undefined | null;
   tableName: string;
   getTableAlias: () => string;
   context: Context;
   preview: boolean;
-}): QueryBuilder {
+}): Knex.QueryBuilder {
   const {
     query,
     typeConfig,

@@ -13,7 +13,7 @@ import {
 import Context from '../../../context';
 import toColumnName from './toColumnName';
 import toTableName from './toTableName';
-import { QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 import PostgresHandler from './PostgresHandler';
 import { DEFAULT_PRIMARY_KEY } from './constants';
 import _ from 'lodash';
@@ -32,7 +32,7 @@ import { addNodeToSurrogateCache } from '../../../cache/surrogate/utils';
  * @private
  */
 export default function applyQueryFilter(params: {
-  query: QueryBuilder;
+  query: Knex.QueryBuilder;
   filter: {
     [x: string]: any;
   };
@@ -42,7 +42,7 @@ export default function applyQueryFilter(params: {
   context: Context;
   noPermissionFilters?: boolean;
   preview: boolean;
-}): QueryBuilder {
+}): Knex.QueryBuilder {
   const {
     query,
     filter,

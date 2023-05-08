@@ -2,7 +2,8 @@
  * Created by Ivo Meißner on 09.12.16.
  *
  */
-import Knex$Knex from 'knex';
+// import Knex from 'knex';
+import type { Knex } from 'knex';
 import knex from 'knex';
 import * as uuid from 'uuid';
 import { ProjectRuntimeInfo } from '../definition';
@@ -58,7 +59,7 @@ export function generateProjectDBName(): string {
 export function getConnection(
   project?: ProjectRuntimeInfo | undefined | null,
   readOnly: boolean = false
-): Knex$Knex {
+): Knex {
   let config;
   let useReadReplica = false;
   if (!project) {
@@ -169,7 +170,7 @@ export function getSchemaName(
  */
 export async function initializeSchema(
   schemaName: string | undefined | null,
-  dbConn: Knex$Knex
+  dbConn: Knex
 ): Promise<void> {
   const hasVersionTable = await dbConn.schema
     .withSchema(schemaName)

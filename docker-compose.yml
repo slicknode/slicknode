@@ -22,8 +22,8 @@ services:
       mc mb minio/upload || true &&
       mc mb minio/publicupload || true &&
       mc mb minio/image || true &&
-      mc policy set download minio/publicupload || true &&
-      mc policy set download minio/image || true &&
+      mc anonymous set download minio/publicupload || true &&
+      mc anonymous set download minio/image || true &&
       exit 0
       "
   postgres:

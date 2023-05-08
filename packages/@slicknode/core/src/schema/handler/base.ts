@@ -20,7 +20,7 @@ import {
   UnionTypeConfig,
 } from '../../definition';
 
-import Knex from 'knex';
+import type { Knex } from 'knex';
 
 import Context from '../../context';
 
@@ -163,9 +163,8 @@ export class Handler {
     const newTypeMap = {};
 
     // Related field maps
-    const currentTypeExtensionMap = getPersistedTypeExtensionMap(
-      currentModules
-    );
+    const currentTypeExtensionMap =
+      getPersistedTypeExtensionMap(currentModules);
     const newTypeExtensionMap = getPersistedTypeExtensionMap(newModules);
 
     // Build current type map

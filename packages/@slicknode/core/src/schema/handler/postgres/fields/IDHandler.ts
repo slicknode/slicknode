@@ -9,7 +9,7 @@ import { HandlerError, MigrationScope } from '../../base';
 
 import toColumnName from '../toColumnName';
 
-import Knex$Knex, { QueryBuilder, TableBuilder } from 'knex';
+import type { Knex } from 'knex';
 
 import Context from '../../../../context';
 import _ from 'lodash';
@@ -28,7 +28,7 @@ export default class IDHandler extends AbstractFieldHandler {
    * This can be used to create foreignKey constraints.
    */
   createField(
-    table: TableBuilder,
+    table: Knex.TableBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     scope: MigrationScope
@@ -56,7 +56,7 @@ export default class IDHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   createFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -71,7 +71,7 @@ export default class IDHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   updateFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -114,7 +114,7 @@ export default class IDHandler extends AbstractFieldHandler {
    * @return Returns the query builder with filter arguments applied
    */
   applyQueryFilter(
-    queryBuilder: QueryBuilder,
+    queryBuilder: Knex.QueryBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     tableName: string,
@@ -122,7 +122,7 @@ export default class IDHandler extends AbstractFieldHandler {
     getTableAlias: () => string,
     context: Context,
     preview: boolean
-  ): QueryBuilder {
+  ): Knex.QueryBuilder {
     const columnName = toColumnName(fieldName);
     _.forOwn(filterValue, (value: any, operator: string) => {
       /* eslint-disable no-case-declarations */
@@ -243,7 +243,7 @@ export default class IDHandler extends AbstractFieldHandler {
     fieldName: string,
     fieldConfig: FieldConfig,
     addDefault: boolean,
-    db: Knex$Knex
+    db: Knex
   ): {
     [x: string]: any;
   } {
@@ -268,7 +268,7 @@ export default class IDHandler extends AbstractFieldHandler {
    * The FieldConfig.defaultValue is passed as an argument and the function
    * returns a value that is then passed to knex.insert({fieldName: value})
    */
-  prepareDefaultValue(defaultValue: any, knex: Knex$Knex): any {
+  prepareDefaultValue(defaultValue: any, knex: Knex): any {
     return defaultValue;
   }
 
