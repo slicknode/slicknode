@@ -15,7 +15,7 @@ import {
   isNode,
   isContentUnion,
 } from '../definition';
-import Knex$Knex from 'knex';
+import type { Knex } from 'knex';
 import { GraphQLSchema } from 'graphql';
 import { DEFAULT_LOCALE } from '../config';
 import { getAuthContext } from '../auth/utils';
@@ -93,12 +93,12 @@ export default class Context {
   /**
    * Knex instance for read DB
    */
-  _dbRead: Knex$Knex | undefined | null;
+  _dbRead: Knex | undefined | null;
 
   /**
    * Knex instance for write DB
    */
-  _dbWrite: Knex$Knex | undefined | null;
+  _dbWrite: Knex | undefined | null;
 
   /**
    * The DB schema name
@@ -255,7 +255,7 @@ export default class Context {
    * If a connection to the write DB has already been established,
    * returns the write DB instance
    */
-  getDBRead(): Knex$Knex {
+  getDBRead(): Knex {
     return (
       this._dbWrite ||
       this._dbRead ||
@@ -266,7 +266,7 @@ export default class Context {
   /**
    * Returns the knex DB instance for write access
    */
-  getDBWrite(): Knex$Knex {
+  getDBWrite(): Knex {
     return (
       this._dbWrite || (this._dbWrite = getConnection(this.project, false))
     );
@@ -276,7 +276,7 @@ export default class Context {
    * Sets the write DB for the context
    * @param db
    */
-  setDBWrite(db: Knex$Knex): void {
+  setDBWrite(db: Knex): void {
     this._dbWrite = db;
   }
 
@@ -284,7 +284,7 @@ export default class Context {
    * Sets the read DB for the context
    * @param db
    */
-  setDBRead(db: Knex$Knex): void {
+  setDBRead(db: Knex): void {
     this._dbRead = db;
   }
 
@@ -530,7 +530,7 @@ export default class Context {
       }
       this.transacting = true;
 
-      db.transaction(async (trx: Knex$Knex) => {
+      db.transaction(async (trx: Knex) => {
         const trxContext: Context = _.clone(this as Context);
         trxContext.setDBWrite(trx);
         trxContext.db = createDbProxy(trxContext);

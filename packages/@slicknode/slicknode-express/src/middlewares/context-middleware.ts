@@ -14,7 +14,8 @@ import {
 } from '@slicknode/core';
 import { NodeRuntime, RuntimeInterface } from '@slicknode/runtime-executor';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import Knex from 'knex';
+import type { Knex } from 'knex';
+import knex from 'knex';
 import {
   DatabaseConfig,
   DatabaseConnectionConfig,
@@ -219,7 +220,7 @@ export const contextMiddleware = (
  * @returns
  */
 function createKnex(config: DatabaseConnectionConfig): Knex {
-  const knex = Knex({
+  return knex({
     client: 'pg',
     connection: config.url,
     acquireConnectionTimeout: 5000,
@@ -228,7 +229,6 @@ function createKnex(config: DatabaseConnectionConfig): Knex {
       max: config.pool?.max || 25,
     },
   });
-  return knex;
 }
 
 type WatcherOptions = {

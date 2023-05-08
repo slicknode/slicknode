@@ -7,9 +7,9 @@ import { ObjectTypeConfig } from '../../definition';
 import { getHandler } from './index';
 import toTableName from './postgres/toTableName';
 import toColumnName from './postgres/toColumnName';
-import { QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 
-type QueryFilterFunction = (qb: QueryBuilder) => void;
+type QueryFilterFunction = (qb: Knex.QueryBuilder) => void;
 
 interface DbNameProxy {
   /**
@@ -205,9 +205,8 @@ export default function createDbProxy(originalContext: Context): DbProxy {
           return createNameProxy(context);
         }
 
-        const typeConfig: ObjectTypeConfig = context.schemaBuilder.getObjectTypeConfig(
-          name
-        );
+        const typeConfig: ObjectTypeConfig =
+          context.schemaBuilder.getObjectTypeConfig(name);
 
         return {
           /**

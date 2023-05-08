@@ -37,8 +37,7 @@ describe('Postgres Field Handler: ID', () => {
       required: true,
       storageType: FieldStorageType.UUID,
     },
-    'create table "schema_name"."n_test_type" ("id" uuid default uuid_generate_v4());\n' +
-      'alter table "schema_name"."n_test_type" add constraint "n_test_type_pkey" primary key ("id")',
+    'create table "schema_name"."n_test_type" ("id" uuid default uuid_generate_v4(), constraint "n_test_type_pkey" primary key ("id"))',
     {},
     'schema_name'
   );
@@ -52,8 +51,7 @@ describe('Postgres Field Handler: ID', () => {
       required: true,
       storageType: FieldStorageType.UUID,
     },
-    'create table "n_test_type" ("id" uuid default uuid_generate_v4());\n' +
-      'alter table "n_test_type" add constraint "n_test_type_pkey" primary key ("id")',
+    'create table "n_test_type" ("id" uuid default uuid_generate_v4(), constraint "n_test_type_pkey" primary key ("id"))',
     {}
   );
 });
