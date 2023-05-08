@@ -5,7 +5,7 @@
 
 import { FieldConfig } from '../../../../definition';
 
-import { QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 
 import Context from '../../../../context';
 
@@ -27,14 +27,14 @@ export default class BooleanHandler extends AbstractScalarFieldHandler {
    * @return Returns the query builder with filter arguments applied
    */
   applyQueryFilter(
-    queryBuilder: QueryBuilder,
+    queryBuilder: Knex.QueryBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     tableName: string,
     filterValue: any,
     getTableAlias: () => string,
     context: Context
-  ): QueryBuilder {
+  ): Knex.QueryBuilder {
     const columnName = toColumnName(fieldName);
     if (filterValue === null) {
       queryBuilder.whereNull(tableName + '.' + columnName);

@@ -31,7 +31,7 @@ import toColumnName from './toColumnName';
 import { DEFAULT_PRIMARY_KEY } from './constants';
 import applyQueryFilter from './applyQueryFilter';
 import applyPermissionQueryFilter from './applyPermissionQueryFilter';
-import Knex, { QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 import { getPgTypeName } from './fields/IDHandler';
 
 /**
@@ -797,7 +797,7 @@ function createTotalCountBatchLoader({
   sourceKeyValues,
   sourceKeyPgTypeName,
 }: {
-  query: QueryBuilder;
+  query: Knex.QueryBuilder;
   context: Context;
   sourceKeyValues: any[];
   db: Knex;

@@ -23,7 +23,7 @@ import toIndexName from '../toIndexName';
 import toUniqueConstraintName from '../toUniqueConstraintName';
 import toCheckConstraintName from '../toCheckConstraintName';
 
-import Knex$Knex, { QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 
 import { MigrationScope } from '../../base';
 
@@ -80,7 +80,7 @@ export default class EnumHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   createFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -190,7 +190,7 @@ export default class EnumHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   updateFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -233,9 +233,7 @@ export default class EnumHandler extends AbstractFieldHandler {
       if (isContent(typeConfig) && fieldName !== 'locale') {
         columns.push(toColumnName('locale'));
       }
-      queryBuilder = (
-        queryBuilder || db
-      ).raw(
+      queryBuilder = (queryBuilder || db).raw(
         `create unique index ?? on ?? (${columns
           .map(() => '??')
           .join(', ')}) where ?? is not null`,
@@ -353,14 +351,14 @@ export default class EnumHandler extends AbstractFieldHandler {
    * @return Returns the query builder with filter arguments applied
    */
   applyQueryFilter(
-    queryBuilder: QueryBuilder,
+    queryBuilder: Knex.QueryBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     tableName: string,
     filterValue: any,
     getTableAlias: () => string,
     context: Context
-  ): QueryBuilder {
+  ): Knex.QueryBuilder {
     const columnName = toColumnName(fieldName);
     _.forOwn(filterValue, (value: any, operator: string) => {
       switch (operator) {
@@ -429,7 +427,7 @@ export default class EnumHandler extends AbstractFieldHandler {
    * The FieldConfig.defaultValue is passed as an argument and the function
    * returns a value that is then passed to knex.insert({fieldName: value})
    */
-  prepareDefaultValue(defaultValue: any, knex: Knex$Knex): any {
+  prepareDefaultValue(defaultValue: any, knex: Knex): any {
     return defaultValue;
   }
 

@@ -13,7 +13,6 @@ import { ModuleConfig, ObjectTypeConfig } from '../../../../definition';
 import { Permission, Role } from '../../../../auth/type';
 
 import toTableName from '../toTableName';
-import { QueryBuilder } from 'knex';
 import Context from '../../../../context';
 
 export function testAddPermissionFilter(
@@ -42,8 +41,8 @@ export function testAddPermissionFilter(
     const result = applyPermissionQueryFilter({
       query: queryBuilder,
       typeConfig: context.schemaBuilder.getObjectTypeConfig(typeName),
-      permissions: context.schemaBuilder.getObjectTypeConfig(typeName)
-        .permissions,
+      permissions:
+        context.schemaBuilder.getObjectTypeConfig(typeName).permissions,
       tableName,
       getTableAlias,
       context,

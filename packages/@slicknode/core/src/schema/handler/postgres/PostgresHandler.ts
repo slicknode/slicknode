@@ -38,7 +38,8 @@ import getConnectionListResult from './getConnectionListResult';
 import getOneToOneResult from './getOneToOneResult';
 import toColumnName from './toColumnName';
 import toTableName, { TableType } from './toTableName';
-import Knex, { QueryBuilder } from 'knex';
+// import type { QueryBuilder, Knex } from 'knex';
+import type { Knex } from 'knex';
 import applyPermissionQueryFilter from './applyPermissionQueryFilter';
 import DataLoader from 'dataloader';
 
@@ -547,12 +548,11 @@ export default class PostgresHandler extends Handler {
             !_.has(values, fieldName) &&
             !_.isUndefined(fieldConfig.defaultValue)
           ) {
-            preparedValues[
-              fieldName
-            ] = PostgresHandler.getFieldHandlerFromContext(
-              fieldConfig,
-              context
-            ).prepareDefaultValue(fieldConfig.defaultValue, db);
+            preparedValues[fieldName] =
+              PostgresHandler.getFieldHandlerFromContext(
+                fieldConfig,
+                context
+              ).prepareDefaultValue(fieldConfig.defaultValue, db);
           }
         }
       );
@@ -1116,15 +1116,16 @@ export default class PostgresHandler extends Handler {
    *
    * @param context
    */
-  static getBatchLoader(context: Context): DataLoader<QueryBuilder, any> {
-    const cache = context.getTempCache<string, DataLoader<QueryBuilder, any>>(
-      'handler:Postgres'
-    );
+  static getBatchLoader(context: Context): DataLoader<Knex.QueryBuilder, any> {
+    const cache = context.getTempCache<
+      string,
+      DataLoader<Knex.QueryBuilder, any>
+    >('handler:Postgres');
     if (cache.has(BATCH_LOADER_CACHE_KEY)) {
       return cache.get(BATCH_LOADER_CACHE_KEY);
     }
     const batchLoader = new DataLoader<any, any>(
-      async (queries: Array<QueryBuilder>) => {
+      async (queries: Array<Knex.QueryBuilder>) => {
         let bindings = [];
 
         const fields = queries
@@ -1153,7 +1154,7 @@ export default class PostgresHandler extends Handler {
         );
       },
       {
-        cacheKeyFn: (qb: QueryBuilder) => qb.toString(),
+        cacheKeyFn: (qb: Knex.QueryBuilder) => qb.toString(),
       }
     );
     cache.set(BATCH_LOADER_CACHE_KEY, batchLoader);

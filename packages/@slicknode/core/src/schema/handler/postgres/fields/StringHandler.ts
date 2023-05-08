@@ -7,7 +7,7 @@ import { FieldConfig } from '../../../../definition';
 
 import toColumnName from '../toColumnName';
 
-import Knex$Knex, { QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 
 import Context from '../../../../context';
 
@@ -29,14 +29,14 @@ export default class StringHandler extends AbstractScalarFieldHandler {
    * @return Returns the query builder with filter arguments applied
    */
   applyQueryFilter(
-    queryBuilder: QueryBuilder,
+    queryBuilder: Knex.QueryBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     tableName: string,
     filterValue: any,
     getTableAlias: () => string,
     context: Context
-  ): QueryBuilder {
+  ): Knex.QueryBuilder {
     const columnName = toColumnName(fieldName);
     const db = context.getDBRead();
     _.forOwn(filterValue, (value: any, operator: string) => {
@@ -161,7 +161,7 @@ export default class StringHandler extends AbstractScalarFieldHandler {
  * @param value
  * @param db
  */
-function castParameterValue(value: any, db: Knex$Knex) {
+function castParameterValue(value: any, db: Knex) {
   if (typeof value === 'string') {
     return db.raw('?::text', [value]);
   } else if (_.isArray(value)) {

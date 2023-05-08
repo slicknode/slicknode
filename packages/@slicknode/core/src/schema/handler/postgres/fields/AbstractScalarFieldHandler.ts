@@ -17,7 +17,7 @@ import toColumnName from '../toColumnName';
 import toIndexName from '../toIndexName';
 import toUniqueConstraintName from '../toUniqueConstraintName';
 
-import Knex$Knex, { QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 
 import Context from '../../../../context';
 
@@ -63,7 +63,7 @@ export default class AbstractScalarFieldHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   createFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -113,7 +113,7 @@ export default class AbstractScalarFieldHandler extends AbstractFieldHandler {
    * are created within the migration
    */
   updateFieldDependencies(
-    db: Knex$Knex,
+    db: Knex,
     typeConfig: ObjectTypeConfig,
     fieldName: string,
     fieldConfig: FieldConfig,
@@ -237,7 +237,7 @@ export default class AbstractScalarFieldHandler extends AbstractFieldHandler {
     fieldName: string,
     fieldConfig: FieldConfig,
     addDefault: boolean,
-    db: Knex$Knex
+    db: Knex
   ): {
     [x: string]: any;
   } {
@@ -251,7 +251,7 @@ export default class AbstractScalarFieldHandler extends AbstractFieldHandler {
    * The FieldConfig.defaultValue is passed as an argument and the function
    * returns a value that is then passed to knex.insert({fieldName: value})
    */
-  prepareDefaultValue(defaultValue: any, knex: Knex$Knex): any {
+  prepareDefaultValue(defaultValue: any, knex: Knex): any {
     return defaultValue;
   }
 
@@ -294,14 +294,14 @@ export default class AbstractScalarFieldHandler extends AbstractFieldHandler {
    * @return Returns the query builder with filter arguments applied
    */
   applyQueryFilter(
-    queryBuilder: QueryBuilder,
+    queryBuilder: Knex.QueryBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     tableName: string,
     filterValue: any,
     getTableAlias: () => string,
     context: Context
-  ): QueryBuilder {
+  ): Knex.QueryBuilder {
     throw new Error('applyQueryFilter is not implemented');
   }
 

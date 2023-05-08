@@ -11,7 +11,7 @@ import {
   TypeKind,
 } from '../../../../definition';
 import _ from 'lodash';
-import Knex from 'knex';
+import type { Knex } from 'knex';
 import AbstractFieldHandler from '../fields/AbstractFieldHandler';
 import * as fields from '../fields';
 import { deleteAutoCompleteIndex } from './deleteAutoCompleteIndex';

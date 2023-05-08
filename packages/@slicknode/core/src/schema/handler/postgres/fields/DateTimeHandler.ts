@@ -10,7 +10,7 @@ import toColumnName from '../toColumnName';
 import Context from '../../../../context';
 import _ from 'lodash';
 
-import Knex$Knex, { QueryBuilder } from 'knex';
+import type { Knex } from 'knex';
 
 import AbstractScalarFieldHandler from './AbstractScalarFieldHandler';
 
@@ -28,14 +28,14 @@ export default class DateTimeHandler extends AbstractScalarFieldHandler {
    * @return Returns the query builder with filter arguments applied
    */
   applyQueryFilter(
-    queryBuilder: QueryBuilder,
+    queryBuilder: Knex.QueryBuilder,
     fieldName: string,
     fieldConfig: FieldConfig,
     tableName: string,
     filterValue: any,
     getTableAlias: () => string,
     context: Context
-  ): QueryBuilder {
+  ): Knex.QueryBuilder {
     const columnName = toColumnName(fieldName);
     _.forOwn(filterValue, (value: any, operator: string) => {
       switch (operator) {
@@ -84,7 +84,7 @@ export default class DateTimeHandler extends AbstractScalarFieldHandler {
    * The FieldConfig.defaultValue is passed as an argument and the function
    * returns a value that is then passed to knex.insert({fieldName: value})
    */
-  prepareDefaultValue(defaultValue: any, knex: Knex$Knex): any {
+  prepareDefaultValue(defaultValue: any, knex: Knex): any {
     if (defaultValue === 'now') {
       return knex.fn.now();
     }

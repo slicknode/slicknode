@@ -5,7 +5,7 @@
 
 import _ from 'lodash';
 
-import Knex$Knex from 'knex';
+import type { Knex } from 'knex';
 import { ModuleConfig } from '../definition';
 import { initializeSchema, VERSION_TABLE } from '../db';
 import Context, { createContext } from '../context';
@@ -23,7 +23,7 @@ export { getNewSemverVersion } from './versioning';
  */
 export async function createProjectSchema(params: {
   // DB connection
-  db: Knex$Knex;
+  db: Knex;
   // The user name that should get usage permissions on the schema objects
   user?: string;
   // The schema name
@@ -68,7 +68,7 @@ export async function createProjectSchema(params: {
  */
 export async function migrateModules(
   newModules: Array<ModuleConfig>,
-  db: Knex$Knex,
+  db: Knex,
   dbSchemaName?: string | undefined | null
 ): Promise<any> {
   const schemaName = dbSchemaName || 'public';
@@ -104,7 +104,7 @@ export async function migrateModules(
     await db
       .withSchema(schemaName)
       .from(VERSION_TABLE)
-      .whereNot('id', addedVersion[0])
+      .whereNot('id', addedVersion[0].id)
       .delete();
   }
 
@@ -124,7 +124,7 @@ export async function migrateModules(
  * Returns NULL if schema is not initialized
  */
 export async function loadCurrentModules(params: {
-  db: Knex$Knex;
+  db: Knex;
   schemaName: string;
 }): Promise<ModuleConfig[] | null> {
   const { db, schemaName } = params;
@@ -156,7 +156,7 @@ export async function loadCurrentModules(params: {
 async function importFixtures(params: {
   newModules: ModuleConfig[];
   currentModules: ModuleConfig[];
-  db: Knex$Knex;
+  db: Knex;
   schemaName: string | null;
 }) {
   const { newModules, currentModules, db, schemaName } = params;
@@ -202,7 +202,7 @@ async function importFixtures(params: {
  * @param db
  * @param value
  */
-function prepareJsonValue(db: Knex$Knex, value: any) {
+function prepareJsonValue(db: Knex, value: any) {
   if (typeof value === 'string') {
     return value;
   }
