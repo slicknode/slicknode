@@ -1,6 +1,6 @@
 {
   "name": "@slicknode/client-node",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Lightweight GraphQL client for slicknode GraphQL servers",
   "types": "dist/cjs/index.d.ts",
   "main": "dist/cjs/index.js",

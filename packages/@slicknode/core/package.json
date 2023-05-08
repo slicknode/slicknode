@@ -1,6 +1,6 @@
 {
   "name": "@slicknode/core",
-  "version": "0.16.3",
+  "version": "0.16.4",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
