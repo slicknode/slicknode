@@ -1,5 +1,5 @@
 backports-abc==0.5
-certifi==2019.3.9
+certifi==2023.7.22
 cfn-flip==1.2.1
 Click==7.0
 csscompressor==0.9.5
